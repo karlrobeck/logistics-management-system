@@ -1,0 +1,46 @@
+{
+  "name": "logistics-management-system",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev:backend": "pylon dev -c \"bun run .pylon/index.js\" --client --client-port 3000 --client-path gqty/index.ts",
+    "dev:frontend": "rsbuild dev --open",
+    "dev": "concurrently 'bun run dev:backend' 'bun run dev:frontend' -n backend,frontend",
+    "build:backend": "pylon build && rsbuild build --environment bun",
+    "build:frontend": "rsbuild build --environment web",
+    "build": "bun run format && bun run check && bun run build:backend && bun run build:frontend",
+    "check": "biome check --write",
+    "format": "biome format --write",
+    "preview": "bun run dist/server/index.js",
+    "docker:build": "docker build -t registry.marahuyo.dev/logistics-management-system:latest .",
+    "docker:push": "docker push registry.marahuyo.dev/logistics-management-system:latest",
+    "generate-types": "bun kysely-codegen --out-file src/db/types.ts --runtime-enums --camel-case"
+  },
+  "dependencies": {
+    "@getcronit/pylon": "^2.0.0",
+    "@gqty/react": "^3.1.1",
+    "@types/pg": "^8.15.4",
+    "bun-types": "^1.1.18",
+    "kysely": "^0.28.3",
+    "pg": "^8.16.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.0.6",
+    "@getcronit/pylon-dev": "^1.0.0",
+    "@rsbuild/core": "^1.4.3",
+    "@rsbuild/plugin-react": "^1.3.3",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "kysely-codegen": "^0.18.5",
+    "kysely-ctl": "^0.14.0",
+    "typescript": "^5.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getcronit/pylon.git"
+  },
+  "homepage": "https://pylon.cronit.io"
+}
