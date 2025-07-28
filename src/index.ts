@@ -1,9 +1,9 @@
-import { app, PylonConfig } from "@getcronit/pylon";
-import { serveStatic } from "hono/bun";
-import authResolver from "./resolvers/auth";
-import crmResolver from "./resolvers/crm";
-import lmsResolver from "./resolvers/lms";
-import orgResolver from "./resolvers/org";
+import { app, PylonConfig } from '@getcronit/pylon';
+import { serveStatic } from 'hono/bun';
+import authResolver from './resolvers/auth';
+import crmResolver from './resolvers/crm';
+import lmsResolver from './resolvers/lms';
+import orgResolver from './resolvers/org';
 
 export const graphql = {
   Query: {
