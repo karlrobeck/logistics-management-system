@@ -1,12 +1,18 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { LmsPackageNode } from './packages';
-import { LmsShipmentNode } from './shipments';
-import { LmsWarehouseNode } from './warehouses';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { LmsPackageNode } from "./packages";
+import { LmsShipmentNode } from "./shipments";
+import { LmsWarehouseNode } from "./warehouses";
+import {
+  LmsWarehouseInventoriesInsert,
+  lmsWarehouseInventoriesInsertSchema,
+  LmsWarehouseInventoriesUpdate,
+  lmsWarehouseInventoriesUpdateSchema,
+} from "../../db/schemas";
 
 export class LmsWarehouseInventoryNode {
-  constructor(private model: Selectable<DB['lmsWarehouseInventories']>) {}
+  constructor(private model: Selectable<DB["lmsWarehouseInventories"]>) {}
 
   id() {
     return this.model.id;
@@ -30,9 +36,9 @@ export class LmsWarehouseInventoryNode {
 
   async warehouse() {
     const warehouse = await db
-      .selectFrom('lmsWarehouses')
+      .selectFrom("lmsWarehouses")
       .selectAll()
-      .where('id', '=', this.model.warehouseId)
+      .where("id", "=", this.model.warehouseId)
       .executeTakeFirst();
 
     return warehouse ? new LmsWarehouseNode(warehouse) : null;
@@ -40,9 +46,9 @@ export class LmsWarehouseInventoryNode {
 
   async shipment() {
     const shipment = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('id', '=', this.model.shipmentId)
+      .where("id", "=", this.model.shipmentId)
       .executeTakeFirst();
 
     return shipment ? new LmsShipmentNode(shipment) : null;
@@ -50,9 +56,9 @@ export class LmsWarehouseInventoryNode {
 
   async package() {
     const packageItem = await db
-      .selectFrom('lmsPackages')
+      .selectFrom("lmsPackages")
       .selectAll()
-      .where('id', '=', this.model.packageId)
+      .where("id", "=", this.model.packageId)
       .executeTakeFirst();
 
     return packageItem ? new LmsPackageNode(packageItem) : null;
@@ -70,7 +76,7 @@ export class LmsWarehouseInventoryNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const inventories = await db
-      .selectFrom('lmsWarehouseInventories')
+      .selectFrom("lmsWarehouseInventories")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -82,18 +88,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const inventory = await db
-      .selectFrom('lmsWarehouseInventories')
+      .selectFrom("lmsWarehouseInventories")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsWarehouseInventoryNode(inventory);
   },
   listByWarehouse: async (warehouseId: string) => {
     const inventories = await db
-      .selectFrom('lmsWarehouseInventories')
+      .selectFrom("lmsWarehouseInventories")
       .selectAll()
-      .where('warehouseId', '=', warehouseId)
+      .where("warehouseId", "=", warehouseId)
       .execute();
 
     return inventories.map(
@@ -102,9 +108,9 @@ export const queries = {
   },
   listByShipment: async (shipmentId: string) => {
     const inventories = await db
-      .selectFrom('lmsWarehouseInventories')
+      .selectFrom("lmsWarehouseInventories")
       .selectAll()
-      .where('shipmentId', '=', shipmentId)
+      .where("shipmentId", "=", shipmentId)
       .execute();
 
     return inventories.map(
@@ -113,9 +119,9 @@ export const queries = {
   },
   listByPackage: async (packageId: string) => {
     const inventories = await db
-      .selectFrom('lmsWarehouseInventories')
+      .selectFrom("lmsWarehouseInventories")
       .selectAll()
-      .where('packageId', '=', packageId)
+      .where("packageId", "=", packageId)
       .execute();
 
     return inventories.map(
@@ -124,9 +130,9 @@ export const queries = {
   },
   listByStatus: async (status: string) => {
     const inventories = await db
-      .selectFrom('lmsWarehouseInventories')
+      .selectFrom("lmsWarehouseInventories")
       .selectAll()
-      .where('status', '=', status as any)
+      .where("status", "=", status as any)
       .execute();
 
     return inventories.map(
@@ -137,11 +143,12 @@ export const queries = {
 
 export const mutations = {
   createLmsWarehouseInventory: async (
-    payload: Insertable<DB['lmsWarehouseInventories']>,
+    payload: LmsWarehouseInventoriesInsert,
   ) => {
+    const parsedPayload = lmsWarehouseInventoriesInsertSchema.parse(payload);
     const newInventory = await db
-      .insertInto('lmsWarehouseInventories')
-      .values(payload)
+      .insertInto("lmsWarehouseInventories")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -149,12 +156,13 @@ export const mutations = {
   },
   updateLmsWarehouseInventory: async (
     id: string,
-    payload: Updateable<DB['lmsWarehouseInventories']>,
+    payload: LmsWarehouseInventoriesUpdate,
   ) => {
+    const parsedPayload = lmsWarehouseInventoriesUpdateSchema.parse(payload);
     const updatedInventory = await db
-      .updateTable('lmsWarehouseInventories')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsWarehouseInventories")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -162,13 +170,13 @@ export const mutations = {
   },
   deleteLmsWarehouseInventory: async (id: string) => {
     await db
-      .deleteFrom('lmsWarehouseInventories')
-      .where('id', '=', id)
+      .deleteFrom("lmsWarehouseInventories")
+      .where("id", "=", id)
       .execute();
 
     return {
       success: true,
-      message: 'Warehouse inventory deleted successfully.',
+      message: "Warehouse inventory deleted successfully.",
     };
   },
 };

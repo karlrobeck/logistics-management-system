@@ -1,9 +1,15 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  LmsProviderRatesInsert,
+  lmsProviderRatesInsertSchema,
+  LmsProviderRatesUpdate,
+  lmsProviderRatesUpdateSchema,
+} from "../../db/schemas";
 
 class LmsProviderRateNode {
-  constructor(private model: Selectable<DB['lmsProviderRates']>) {}
+  constructor(private model: Selectable<DB["lmsProviderRates"]>) {}
 
   id() {
     return this.model.id;
@@ -65,7 +71,7 @@ class LmsProviderRateNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const providerRates = await db
-      .selectFrom('lmsProviderRates')
+      .selectFrom("lmsProviderRates")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -75,28 +81,28 @@ export const queries = {
   },
   view: async (id: string) => {
     const providerRate = await db
-      .selectFrom('lmsProviderRates')
+      .selectFrom("lmsProviderRates")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsProviderRateNode(providerRate);
   },
   listByService: async (providerServiceId: string) => {
     const providerRates = await db
-      .selectFrom('lmsProviderRates')
+      .selectFrom("lmsProviderRates")
       .selectAll()
-      .where('providerServiceId', '=', providerServiceId)
+      .where("providerServiceId", "=", providerServiceId)
       .execute();
 
     return providerRates.map((rate) => new LmsProviderRateNode(rate));
   },
   listByRoute: async (originZoneId: string, destinationZoneId: string) => {
     const providerRates = await db
-      .selectFrom('lmsProviderRates')
+      .selectFrom("lmsProviderRates")
       .selectAll()
-      .where('originZoneId', '=', originZoneId)
-      .where('destinationZoneId', '=', destinationZoneId)
+      .where("originZoneId", "=", originZoneId)
+      .where("destinationZoneId", "=", destinationZoneId)
       .execute();
 
     return providerRates.map((rate) => new LmsProviderRateNode(rate));
@@ -104,14 +110,14 @@ export const queries = {
   listActive: async () => {
     const currentDate = new Date();
     const providerRates = await db
-      .selectFrom('lmsProviderRates')
+      .selectFrom("lmsProviderRates")
       .selectAll()
-      .where('effectiveDate', '<=', currentDate)
+      .where("effectiveDate", "<=", currentDate)
       .where((eb) =>
         eb.or([
-          eb('expiryDate', 'is', null),
-          eb('expiryDate', '>', currentDate),
-        ]),
+          eb("expiryDate", "is", null),
+          eb("expiryDate", ">", currentDate),
+        ])
       )
       .execute();
 
@@ -121,11 +127,12 @@ export const queries = {
 
 export const mutations = {
   createLmsProviderRate: async (
-    payload: Insertable<DB['lmsProviderRates']>,
+    payload: LmsProviderRatesInsert,
   ) => {
+    const parsedPayload = lmsProviderRatesInsertSchema.parse(payload);
     const newProviderRate = await db
-      .insertInto('lmsProviderRates')
-      .values(payload)
+      .insertInto("lmsProviderRates")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -133,21 +140,22 @@ export const mutations = {
   },
   updateLmsProviderRate: async (
     id: string,
-    payload: Updateable<DB['lmsProviderRates']>,
+    payload: LmsProviderRatesUpdate,
   ) => {
+    const parsedPayload = lmsProviderRatesUpdateSchema.parse(payload);
     const updatedProviderRate = await db
-      .updateTable('lmsProviderRates')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsProviderRates")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsProviderRateNode(updatedProviderRate);
   },
   deleteLmsProviderRate: async (id: string) => {
-    await db.deleteFrom('lmsProviderRates').where('id', '=', id).execute();
+    await db.deleteFrom("lmsProviderRates").where("id", "=", id).execute();
 
-    return { success: true, message: 'Provider rate deleted successfully.' };
+    return { success: true, message: "Provider rate deleted successfully." };
   },
 };
 

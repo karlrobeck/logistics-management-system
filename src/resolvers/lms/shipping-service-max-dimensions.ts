@@ -1,10 +1,16 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  LmsShippingServiceMaxDimensionsInsert,
+  lmsShippingServiceMaxDimensionsInsertSchema,
+  LmsShippingServiceMaxDimensionsUpdate,
+  lmsShippingServiceMaxDimensionsUpdateSchema,
+} from "../../db/schemas";
 
 class LmsShippingServiceMaxDimensionNode {
   constructor(
-    private model: Selectable<DB['lmsShippingServiceMaxDimensions']>,
+    private model: Selectable<DB["lmsShippingServiceMaxDimensions"]>,
   ) {}
 
   id() {
@@ -35,7 +41,7 @@ class LmsShippingServiceMaxDimensionNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const dimensions = await db
-      .selectFrom('lmsShippingServiceMaxDimensions')
+      .selectFrom("lmsShippingServiceMaxDimensions")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -47,18 +53,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const dimension = await db
-      .selectFrom('lmsShippingServiceMaxDimensions')
+      .selectFrom("lmsShippingServiceMaxDimensions")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsShippingServiceMaxDimensionNode(dimension);
   },
   listByShippingService: async (shippingServiceId: string) => {
     const dimensions = await db
-      .selectFrom('lmsShippingServiceMaxDimensions')
+      .selectFrom("lmsShippingServiceMaxDimensions")
       .selectAll()
-      .where('shippingServiceId', '=', shippingServiceId)
+      .where("shippingServiceId", "=", shippingServiceId)
       .execute();
 
     return dimensions.map(
@@ -67,9 +73,9 @@ export const queries = {
   },
   findByShippingService: async (shippingServiceId: string) => {
     const dimension = await db
-      .selectFrom('lmsShippingServiceMaxDimensions')
+      .selectFrom("lmsShippingServiceMaxDimensions")
       .selectAll()
-      .where('shippingServiceId', '=', shippingServiceId)
+      .where("shippingServiceId", "=", shippingServiceId)
       .executeTakeFirst();
 
     return dimension ? new LmsShippingServiceMaxDimensionNode(dimension) : null;
@@ -78,11 +84,14 @@ export const queries = {
 
 export const mutations = {
   createLmsShippingServiceMaxDimension: async (
-    payload: Insertable<DB['lmsShippingServiceMaxDimensions']>,
+    payload: LmsShippingServiceMaxDimensionsInsert,
   ) => {
+    const parsedPayload = lmsShippingServiceMaxDimensionsInsertSchema.parse(
+      payload,
+    );
     const newDimension = await db
-      .insertInto('lmsShippingServiceMaxDimensions')
-      .values(payload)
+      .insertInto("lmsShippingServiceMaxDimensions")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -90,12 +99,15 @@ export const mutations = {
   },
   updateLmsShippingServiceMaxDimension: async (
     id: string,
-    payload: Updateable<DB['lmsShippingServiceMaxDimensions']>,
+    payload: LmsShippingServiceMaxDimensionsUpdate,
   ) => {
+    const parsedPayload = lmsShippingServiceMaxDimensionsUpdateSchema.parse(
+      payload,
+    );
     const updatedDimension = await db
-      .updateTable('lmsShippingServiceMaxDimensions')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsShippingServiceMaxDimensions")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -103,13 +115,13 @@ export const mutations = {
   },
   deleteLmsShippingServiceMaxDimension: async (id: string) => {
     await db
-      .deleteFrom('lmsShippingServiceMaxDimensions')
-      .where('id', '=', id)
+      .deleteFrom("lmsShippingServiceMaxDimensions")
+      .where("id", "=", id)
       .execute();
 
     return {
       success: true,
-      message: 'Shipping service max dimension deleted successfully.',
+      message: "Shipping service max dimension deleted successfully.",
     };
   },
 };

@@ -1,14 +1,20 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { AuthUserNode } from '../auth';
-import { CrmCompanyNode } from '../crm/companies';
-import { CrmContactNode } from '../crm/contacts';
-import { OrgDepartmentNode } from '../org/departments';
-import { LmsAddressNode } from './addresses';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { AuthUserNode } from "../auth";
+import { CrmCompanyNode } from "../crm/companies";
+import { CrmContactNode } from "../crm/contacts";
+import { OrgDepartmentNode } from "../org/departments";
+import { LmsAddressNode } from "./addresses";
+import {
+  LmsShipmentsInsert,
+  lmsShipmentsInsertSchema,
+  LmsShipmentsUpdate,
+  lmsShipmentsUpdateSchema,
+} from "../../db/schemas";
 
 export class LmsShipmentNode {
-  constructor(private model: Selectable<DB['lmsShipments']>) {}
+  constructor(private model: Selectable<DB["lmsShipments"]>) {}
 
   id() {
     return this.model.id;
@@ -64,9 +70,9 @@ export class LmsShipmentNode {
 
   async senderAddress() {
     const address = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
-      .where('id', '=', this.model.senderAddressId)
+      .where("id", "=", this.model.senderAddressId)
       .executeTakeFirst();
 
     return address ? new LmsAddressNode(address) : null;
@@ -74,9 +80,9 @@ export class LmsShipmentNode {
 
   async receiverAddress() {
     const address = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
-      .where('id', '=', this.model.receiverAddressId)
+      .where("id", "=", this.model.receiverAddressId)
       .executeTakeFirst();
 
     return address ? new LmsAddressNode(address) : null;
@@ -86,9 +92,9 @@ export class LmsShipmentNode {
     if (!this.model.senderCompanyId) return null;
 
     const company = await db
-      .selectFrom('crmCompanies')
+      .selectFrom("crmCompanies")
       .selectAll()
-      .where('id', '=', this.model.senderCompanyId)
+      .where("id", "=", this.model.senderCompanyId)
       .executeTakeFirst();
 
     return company ? new CrmCompanyNode(company) : null;
@@ -98,9 +104,9 @@ export class LmsShipmentNode {
     if (!this.model.receiverCompanyId) return null;
 
     const company = await db
-      .selectFrom('crmCompanies')
+      .selectFrom("crmCompanies")
       .selectAll()
-      .where('id', '=', this.model.receiverCompanyId)
+      .where("id", "=", this.model.receiverCompanyId)
       .executeTakeFirst();
 
     return company ? new CrmCompanyNode(company) : null;
@@ -110,9 +116,9 @@ export class LmsShipmentNode {
     if (!this.model.senderContactId) return null;
 
     const contact = await db
-      .selectFrom('crmContacts')
+      .selectFrom("crmContacts")
       .selectAll()
-      .where('id', '=', this.model.senderContactId)
+      .where("id", "=", this.model.senderContactId)
       .executeTakeFirst();
 
     return contact ? new CrmContactNode(contact) : null;
@@ -122,9 +128,9 @@ export class LmsShipmentNode {
     if (!this.model.receiverContactId) return null;
 
     const contact = await db
-      .selectFrom('crmContacts')
+      .selectFrom("crmContacts")
       .selectAll()
-      .where('id', '=', this.model.receiverContactId)
+      .where("id", "=", this.model.receiverContactId)
       .executeTakeFirst();
 
     return contact ? new CrmContactNode(contact) : null;
@@ -134,9 +140,9 @@ export class LmsShipmentNode {
     if (!this.model.assignedDepartmentId) return null;
 
     const department = await db
-      .selectFrom('orgDepartments')
+      .selectFrom("orgDepartments")
       .selectAll()
-      .where('id', '=', this.model.assignedDepartmentId)
+      .where("id", "=", this.model.assignedDepartmentId)
       .executeTakeFirst();
 
     return department ? new OrgDepartmentNode(department) : null;
@@ -146,9 +152,9 @@ export class LmsShipmentNode {
     if (!this.model.createdBy) return null;
 
     const user = await db
-      .selectFrom('authUsers')
+      .selectFrom("authUsers")
       .selectAll()
-      .where('id', '=', this.model.createdBy)
+      .where("id", "=", this.model.createdBy)
       .executeTakeFirst();
 
     return user ? new AuthUserNode(user) : null;
@@ -166,7 +172,7 @@ export class LmsShipmentNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const shipments = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -176,45 +182,45 @@ export const queries = {
   },
   view: async (id: string) => {
     const shipment = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsShipmentNode(shipment);
   },
   viewByTrackingNumber: async (trackingNumber: string) => {
     const shipment = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('trackingNumber', '=', trackingNumber)
+      .where("trackingNumber", "=", trackingNumber)
       .executeTakeFirstOrThrow();
 
     return new LmsShipmentNode(shipment);
   },
   listByStatus: async (status: string) => {
     const shipments = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('status', '=', status as any)
+      .where("status", "=", status as any)
       .execute();
 
     return shipments.map((shipment) => new LmsShipmentNode(shipment));
   },
   listByDepartment: async (departmentId: string) => {
     const shipments = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('assignedDepartmentId', '=', departmentId)
+      .where("assignedDepartmentId", "=", departmentId)
       .execute();
 
     return shipments.map((shipment) => new LmsShipmentNode(shipment));
   },
   listByService: async (serviceId: string) => {
     const shipments = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('serviceId', '=', serviceId)
+      .where("serviceId", "=", serviceId)
       .execute();
 
     return shipments.map((shipment) => new LmsShipmentNode(shipment));
@@ -222,10 +228,12 @@ export const queries = {
 };
 
 export const mutations = {
-  createLmsShipment: async (payload: Insertable<DB['lmsShipments']>) => {
+  createLmsShipment: async (payload: LmsShipmentsInsert) => {
+    const parsedPayload = lmsShipmentsInsertSchema.parse(payload);
+
     const newShipment = await db
-      .insertInto('lmsShipments')
-      .values(payload)
+      .insertInto("lmsShipments")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -233,21 +241,23 @@ export const mutations = {
   },
   updateLmsShipment: async (
     id: string,
-    payload: Updateable<DB['lmsShipments']>,
+    payload: LmsShipmentsUpdate,
   ) => {
+    const parsedPayload = lmsShipmentsUpdateSchema.parse(payload);
+
     const updatedShipment = await db
-      .updateTable('lmsShipments')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsShipments")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsShipmentNode(updatedShipment);
   },
   deleteLmsShipment: async (id: string) => {
-    await db.deleteFrom('lmsShipments').where('id', '=', id).execute();
+    await db.deleteFrom("lmsShipments").where("id", "=", id).execute();
 
-    return { success: true, message: 'Shipment deleted successfully.' };
+    return { success: true, message: "Shipment deleted successfully." };
   },
 };
 

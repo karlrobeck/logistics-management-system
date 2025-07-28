@@ -1,10 +1,16 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { LmsShipmentNode } from './shipments';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { LmsShipmentNode } from "./shipments";
+import {
+  LmsPackagesInsert,
+  lmsPackagesInsertSchema,
+  LmsPackagesUpdate,
+  lmsPackagesUpdateSchema,
+} from "../../db/schemas";
 
 export class LmsPackageNode {
-  constructor(private model: Selectable<DB['lmsPackages']>) {}
+  constructor(private model: Selectable<DB["lmsPackages"]>) {}
 
   id() {
     return this.model.id;
@@ -44,9 +50,9 @@ export class LmsPackageNode {
 
   async shipment() {
     const shipment = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('id', '=', this.model.shipmentId)
+      .where("id", "=", this.model.shipmentId)
       .executeTakeFirst();
 
     return shipment ? new LmsShipmentNode(shipment) : null;
@@ -64,7 +70,7 @@ export class LmsPackageNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const packages = await db
-      .selectFrom('lmsPackages')
+      .selectFrom("lmsPackages")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -74,27 +80,27 @@ export const queries = {
   },
   view: async (id: string) => {
     const pkg = await db
-      .selectFrom('lmsPackages')
+      .selectFrom("lmsPackages")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsPackageNode(pkg);
   },
   listByShipment: async (shipmentId: string) => {
     const packages = await db
-      .selectFrom('lmsPackages')
+      .selectFrom("lmsPackages")
       .selectAll()
-      .where('shipmentId', '=', shipmentId)
+      .where("shipmentId", "=", shipmentId)
       .execute();
 
     return packages.map((pkg) => new LmsPackageNode(pkg));
   },
   listByType: async (packageType: string) => {
     const packages = await db
-      .selectFrom('lmsPackages')
+      .selectFrom("lmsPackages")
       .selectAll()
-      .where('packageType', '=', packageType as any)
+      .where("packageType", "=", packageType as any)
       .execute();
 
     return packages.map((pkg) => new LmsPackageNode(pkg));
@@ -102,10 +108,12 @@ export const queries = {
 };
 
 export const mutations = {
-  createLmsPackage: async (payload: Insertable<DB['lmsPackages']>) => {
+  createLmsPackage: async (payload: LmsPackagesInsert) => {
+    const parsedPayload = lmsPackagesInsertSchema.parse(payload);
+
     const newPackage = await db
-      .insertInto('lmsPackages')
-      .values(payload)
+      .insertInto("lmsPackages")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -113,21 +121,23 @@ export const mutations = {
   },
   updateLmsPackage: async (
     id: string,
-    payload: Updateable<DB['lmsPackages']>,
+    payload: LmsPackagesUpdate,
   ) => {
+    const parsedPayload = lmsPackagesUpdateSchema.parse(payload);
+
     const updatedPackage = await db
-      .updateTable('lmsPackages')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsPackages")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsPackageNode(updatedPackage);
   },
   deleteLmsPackage: async (id: string) => {
-    await db.deleteFrom('lmsPackages').where('id', '=', id).execute();
+    await db.deleteFrom("lmsPackages").where("id", "=", id).execute();
 
-    return { success: true, message: 'Package deleted successfully.' };
+    return { success: true, message: "Package deleted successfully." };
   },
 };
 

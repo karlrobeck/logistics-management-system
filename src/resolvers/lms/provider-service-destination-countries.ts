@@ -1,10 +1,16 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  LmsProviderServiceDestinationCountriesInsert,
+  lmsProviderServiceDestinationCountriesInsertSchema,
+  LmsProviderServiceDestinationCountriesUpdate,
+  lmsProviderServiceDestinationCountriesUpdateSchema,
+} from "../../db/schemas";
 
 class LmsProviderServiceDestinationCountryNode {
   constructor(
-    private model: Selectable<DB['lmsProviderServiceDestinationCountries']>,
+    private model: Selectable<DB["lmsProviderServiceDestinationCountries"]>,
   ) {}
 
   id() {
@@ -27,7 +33,7 @@ class LmsProviderServiceDestinationCountryNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const countries = await db
-      .selectFrom('lmsProviderServiceDestinationCountries')
+      .selectFrom("lmsProviderServiceDestinationCountries")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -39,18 +45,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const country = await db
-      .selectFrom('lmsProviderServiceDestinationCountries')
+      .selectFrom("lmsProviderServiceDestinationCountries")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsProviderServiceDestinationCountryNode(country);
   },
   listByProviderService: async (providerServiceId: string) => {
     const countries = await db
-      .selectFrom('lmsProviderServiceDestinationCountries')
+      .selectFrom("lmsProviderServiceDestinationCountries")
       .selectAll()
-      .where('providerServiceId', '=', providerServiceId)
+      .where("providerServiceId", "=", providerServiceId)
       .execute();
 
     return countries.map(
@@ -59,9 +65,9 @@ export const queries = {
   },
   listByCountryCode: async (countryCode: string) => {
     const countries = await db
-      .selectFrom('lmsProviderServiceDestinationCountries')
+      .selectFrom("lmsProviderServiceDestinationCountries")
       .selectAll()
-      .where('countryCode', '=', countryCode)
+      .where("countryCode", "=", countryCode)
       .execute();
 
     return countries.map(
@@ -72,11 +78,13 @@ export const queries = {
 
 export const mutations = {
   createLmsProviderServiceDestinationCountry: async (
-    payload: Insertable<DB['lmsProviderServiceDestinationCountries']>,
+    payload: LmsProviderServiceDestinationCountriesInsert,
   ) => {
+    const parsedPayload = lmsProviderServiceDestinationCountriesInsertSchema
+      .parse(payload);
     const newCountry = await db
-      .insertInto('lmsProviderServiceDestinationCountries')
-      .values(payload)
+      .insertInto("lmsProviderServiceDestinationCountries")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -84,12 +92,14 @@ export const mutations = {
   },
   updateLmsProviderServiceDestinationCountry: async (
     id: string,
-    payload: Updateable<DB['lmsProviderServiceDestinationCountries']>,
+    payload: LmsProviderServiceDestinationCountriesUpdate,
   ) => {
+    const parsedPayload = lmsProviderServiceDestinationCountriesUpdateSchema
+      .parse(payload);
     const updatedCountry = await db
-      .updateTable('lmsProviderServiceDestinationCountries')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsProviderServiceDestinationCountries")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -97,13 +107,13 @@ export const mutations = {
   },
   deleteLmsProviderServiceDestinationCountry: async (id: string) => {
     await db
-      .deleteFrom('lmsProviderServiceDestinationCountries')
-      .where('id', '=', id)
+      .deleteFrom("lmsProviderServiceDestinationCountries")
+      .where("id", "=", id)
       .execute();
 
     return {
       success: true,
-      message: 'Provider service destination country deleted successfully.',
+      message: "Provider service destination country deleted successfully.",
     };
   },
 };

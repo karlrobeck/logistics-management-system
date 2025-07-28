@@ -1,11 +1,17 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { OrgDriverNode } from '../org/drivers';
-import { OrgVehicleNode } from '../org/vehicles';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { OrgDriverNode } from "../org/drivers";
+import { OrgVehicleNode } from "../org/vehicles";
+import {
+  LmsRoutesInsert,
+  lmsRoutesInsertSchema,
+  LmsRoutesUpdate,
+  lmsRoutesUpdateSchema,
+} from "../../db/schemas";
 
 export class LmsRouteNode {
-  constructor(private model: Selectable<DB['lmsRoutes']>) {}
+  constructor(private model: Selectable<DB["lmsRoutes"]>) {}
 
   id() {
     return this.model.id;
@@ -43,9 +49,9 @@ export class LmsRouteNode {
     if (!this.model.driverId) return null;
 
     const driver = await db
-      .selectFrom('orgDrivers')
+      .selectFrom("orgDrivers")
       .selectAll()
-      .where('id', '=', this.model.driverId)
+      .where("id", "=", this.model.driverId)
       .executeTakeFirst();
 
     return driver ? new OrgDriverNode(driver) : null;
@@ -55,9 +61,9 @@ export class LmsRouteNode {
     if (!this.model.vehicleId) return null;
 
     const vehicle = await db
-      .selectFrom('orgVehicles')
+      .selectFrom("orgVehicles")
       .selectAll()
-      .where('id', '=', this.model.vehicleId)
+      .where("id", "=", this.model.vehicleId)
       .executeTakeFirst();
 
     return vehicle ? new OrgVehicleNode(vehicle) : null;
@@ -75,7 +81,7 @@ export class LmsRouteNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const routes = await db
-      .selectFrom('lmsRoutes')
+      .selectFrom("lmsRoutes")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -85,36 +91,36 @@ export const queries = {
   },
   view: async (id: string) => {
     const route = await db
-      .selectFrom('lmsRoutes')
+      .selectFrom("lmsRoutes")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsRouteNode(route);
   },
   listByStatus: async (status: string) => {
     const routes = await db
-      .selectFrom('lmsRoutes')
+      .selectFrom("lmsRoutes")
       .selectAll()
-      .where('status', '=', status as any)
+      .where("status", "=", status as any)
       .execute();
 
     return routes.map((route) => new LmsRouteNode(route));
   },
   listByDriver: async (driverId: string) => {
     const routes = await db
-      .selectFrom('lmsRoutes')
+      .selectFrom("lmsRoutes")
       .selectAll()
-      .where('driverId', '=', driverId)
+      .where("driverId", "=", driverId)
       .execute();
 
     return routes.map((route) => new LmsRouteNode(route));
   },
   listByVehicle: async (vehicleId: string) => {
     const routes = await db
-      .selectFrom('lmsRoutes')
+      .selectFrom("lmsRoutes")
       .selectAll()
-      .where('vehicleId', '=', vehicleId)
+      .where("vehicleId", "=", vehicleId)
       .execute();
 
     return routes.map((route) => new LmsRouteNode(route));
@@ -122,29 +128,33 @@ export const queries = {
 };
 
 export const mutations = {
-  createLmsRoute: async (payload: Insertable<DB['lmsRoutes']>) => {
+  createLmsRoute: async (payload: LmsRoutesInsert) => {
+    const parsedPayload = lmsRoutesInsertSchema.parse(payload);
+
     const newRoute = await db
-      .insertInto('lmsRoutes')
-      .values(payload)
+      .insertInto("lmsRoutes")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsRouteNode(newRoute);
   },
-  updateLmsRoute: async (id: string, payload: Updateable<DB['lmsRoutes']>) => {
+  updateLmsRoute: async (id: string, payload: LmsRoutesUpdate) => {
+    const parsedPayload = lmsRoutesUpdateSchema.parse(payload);
+
     const updatedRoute = await db
-      .updateTable('lmsRoutes')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsRoutes")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsRouteNode(updatedRoute);
   },
   deleteLmsRoute: async (id: string) => {
-    await db.deleteFrom('lmsRoutes').where('id', '=', id).execute();
+    await db.deleteFrom("lmsRoutes").where("id", "=", id).execute();
 
-    return { success: true, message: 'Route deleted successfully.' };
+    return { success: true, message: "Route deleted successfully." };
   },
 };
 

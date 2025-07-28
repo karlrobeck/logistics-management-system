@@ -1,15 +1,8 @@
 import "./App.css";
-import { useMutation, useQuery } from "../gqty/index";
-import { CrmContactsInsert } from "./db/schemas";
+import { useQuery } from "../gqty/index";
 
 const App = () => {
   const { crm } = useQuery();
-
-  const [crmCreateContact] = useMutation<void, CrmContactsInsert>(
-    (mutation, input) => {
-      const createContact = mutation.createCrmContact({ payload: input });
-    },
-  );
 
   return (
     <div className="content">

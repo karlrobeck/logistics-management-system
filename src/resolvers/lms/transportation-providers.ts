@@ -1,11 +1,17 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { OrgDepartmentNode } from '../org/departments';
-import { LmsAddressNode } from './addresses';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { OrgDepartmentNode } from "../org/departments";
+import { LmsAddressNode } from "./addresses";
+import {
+  LmsTransportationProvidersInsert,
+  lmsTransportationProvidersInsertSchema,
+  LmsTransportationProvidersUpdate,
+  lmsTransportationProvidersUpdateSchema,
+} from "../../db/schemas";
 
 export class LmsTransportationProviderNode {
-  constructor(private model: Selectable<DB['lmsTransportationProviders']>) {}
+  constructor(private model: Selectable<DB["lmsTransportationProviders"]>) {}
 
   id() {
     return this.model.id;
@@ -67,9 +73,9 @@ export class LmsTransportationProviderNode {
     if (!this.model.addressId) return null;
 
     const address = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
-      .where('id', '=', this.model.addressId)
+      .where("id", "=", this.model.addressId)
       .executeTakeFirst();
 
     return address ? new LmsAddressNode(address) : null;
@@ -79,9 +85,9 @@ export class LmsTransportationProviderNode {
     if (!this.model.preferredByDepartmentId) return null;
 
     const department = await db
-      .selectFrom('orgDepartments')
+      .selectFrom("orgDepartments")
       .selectAll()
-      .where('id', '=', this.model.preferredByDepartmentId)
+      .where("id", "=", this.model.preferredByDepartmentId)
       .executeTakeFirst();
 
     return department ? new OrgDepartmentNode(department) : null;
@@ -99,7 +105,7 @@ export class LmsTransportationProviderNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const providers = await db
-      .selectFrom('lmsTransportationProviders')
+      .selectFrom("lmsTransportationProviders")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -111,18 +117,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const provider = await db
-      .selectFrom('lmsTransportationProviders')
+      .selectFrom("lmsTransportationProviders")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsTransportationProviderNode(provider);
   },
   listActive: async () => {
     const providers = await db
-      .selectFrom('lmsTransportationProviders')
+      .selectFrom("lmsTransportationProviders")
       .selectAll()
-      .where('isActive', '=', true)
+      .where("isActive", "=", true)
       .execute();
 
     return providers.map(
@@ -131,9 +137,9 @@ export const queries = {
   },
   listByType: async (providerType: string) => {
     const providers = await db
-      .selectFrom('lmsTransportationProviders')
+      .selectFrom("lmsTransportationProviders")
       .selectAll()
-      .where('providerType', '=', providerType as any)
+      .where("providerType", "=", providerType as any)
       .execute();
 
     return providers.map(
@@ -142,9 +148,9 @@ export const queries = {
   },
   listByDepartment: async (departmentId: string) => {
     const providers = await db
-      .selectFrom('lmsTransportationProviders')
+      .selectFrom("lmsTransportationProviders")
       .selectAll()
-      .where('preferredByDepartmentId', '=', departmentId)
+      .where("preferredByDepartmentId", "=", departmentId)
       .execute();
 
     return providers.map(
@@ -155,11 +161,12 @@ export const queries = {
 
 export const mutations = {
   createLmsTransportationProvider: async (
-    payload: Insertable<DB['lmsTransportationProviders']>,
+    payload: LmsTransportationProvidersInsert,
   ) => {
+    const parsedPayload = lmsTransportationProvidersInsertSchema.parse(payload);
     const newProvider = await db
-      .insertInto('lmsTransportationProviders')
-      .values(payload)
+      .insertInto("lmsTransportationProviders")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -167,12 +174,13 @@ export const mutations = {
   },
   updateLmsTransportationProvider: async (
     id: string,
-    payload: Updateable<DB['lmsTransportationProviders']>,
+    payload: LmsTransportationProvidersUpdate,
   ) => {
+    const parsedPayload = lmsTransportationProvidersUpdateSchema.parse(payload);
     const updatedProvider = await db
-      .updateTable('lmsTransportationProviders')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsTransportationProviders")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -180,13 +188,13 @@ export const mutations = {
   },
   deleteLmsTransportationProvider: async (id: string) => {
     await db
-      .deleteFrom('lmsTransportationProviders')
-      .where('id', '=', id)
+      .deleteFrom("lmsTransportationProviders")
+      .where("id", "=", id)
       .execute();
 
     return {
       success: true,
-      message: 'Transportation provider deleted successfully.',
+      message: "Transportation provider deleted successfully.",
     };
   },
 };

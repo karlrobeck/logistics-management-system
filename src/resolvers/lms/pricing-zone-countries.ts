@@ -1,9 +1,15 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  LmsPricingZoneCountriesInsert,
+  lmsPricingZoneCountriesInsertSchema,
+  LmsPricingZoneCountriesUpdate,
+  lmsPricingZoneCountriesUpdateSchema,
+} from "../../db/schemas";
 
 class LmsPricingZoneCountryNode {
-  constructor(private model: Selectable<DB['lmsPricingZoneCountries']>) {}
+  constructor(private model: Selectable<DB["lmsPricingZoneCountries"]>) {}
 
   id() {
     return this.model.id;
@@ -25,7 +31,7 @@ class LmsPricingZoneCountryNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const pricingZoneCountries = await db
-      .selectFrom('lmsPricingZoneCountries')
+      .selectFrom("lmsPricingZoneCountries")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -37,18 +43,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const pricingZoneCountry = await db
-      .selectFrom('lmsPricingZoneCountries')
+      .selectFrom("lmsPricingZoneCountries")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsPricingZoneCountryNode(pricingZoneCountry);
   },
   listByZone: async (pricingZoneId: string) => {
     const pricingZoneCountries = await db
-      .selectFrom('lmsPricingZoneCountries')
+      .selectFrom("lmsPricingZoneCountries")
       .selectAll()
-      .where('pricingZoneId', '=', pricingZoneId)
+      .where("pricingZoneId", "=", pricingZoneId)
       .execute();
 
     return pricingZoneCountries.map(
@@ -57,9 +63,9 @@ export const queries = {
   },
   listByCountry: async (countryCode: string) => {
     const pricingZoneCountries = await db
-      .selectFrom('lmsPricingZoneCountries')
+      .selectFrom("lmsPricingZoneCountries")
       .selectAll()
-      .where('countryCode', '=', countryCode)
+      .where("countryCode", "=", countryCode)
       .execute();
 
     return pricingZoneCountries.map(
@@ -70,11 +76,12 @@ export const queries = {
 
 export const mutations = {
   createLmsPricingZoneCountry: async (
-    payload: Insertable<DB['lmsPricingZoneCountries']>,
+    payload: LmsPricingZoneCountriesInsert,
   ) => {
+    const parsedPayload = lmsPricingZoneCountriesInsertSchema.parse(payload);
     const newPricingZoneCountry = await db
-      .insertInto('lmsPricingZoneCountries')
-      .values(payload)
+      .insertInto("lmsPricingZoneCountries")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -82,12 +89,13 @@ export const mutations = {
   },
   updateLmsPricingZoneCountry: async (
     id: string,
-    payload: Updateable<DB['lmsPricingZoneCountries']>,
+    payload: LmsPricingZoneCountriesUpdate,
   ) => {
+    const parsedPayload = lmsPricingZoneCountriesUpdateSchema.parse(payload);
     const updatedPricingZoneCountry = await db
-      .updateTable('lmsPricingZoneCountries')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsPricingZoneCountries")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -95,13 +103,13 @@ export const mutations = {
   },
   deleteLmsPricingZoneCountry: async (id: string) => {
     await db
-      .deleteFrom('lmsPricingZoneCountries')
-      .where('id', '=', id)
+      .deleteFrom("lmsPricingZoneCountries")
+      .where("id", "=", id)
       .execute();
 
     return {
       success: true,
-      message: 'Pricing zone country deleted successfully.',
+      message: "Pricing zone country deleted successfully.",
     };
   },
 };

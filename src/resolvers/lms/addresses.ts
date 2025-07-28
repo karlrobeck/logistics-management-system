@@ -1,9 +1,15 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  LmsAddressesInsert,
+  lmsAddressesInsertSchema,
+  LmsAddressesUpdate,
+  lmsAddressesUpdateSchema,
+} from "../../db/schemas";
 
 export class LmsAddressNode {
-  constructor(private model: Selectable<DB['lmsAddresses']>) {}
+  constructor(private model: Selectable<DB["lmsAddresses"]>) {}
 
   id() {
     return this.model.id;
@@ -61,7 +67,7 @@ export class LmsAddressNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const addresses = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -71,36 +77,36 @@ export const queries = {
   },
   view: async (id: string) => {
     const address = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsAddressNode(address);
   },
   listByType: async (addressType: string) => {
     const addresses = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
-      .where('addressType', '=', addressType as any)
+      .where("addressType", "=", addressType as any)
       .execute();
 
     return addresses.map((address) => new LmsAddressNode(address));
   },
   listByCountry: async (country: string) => {
     const addresses = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
-      .where('country', '=', country)
+      .where("country", "=", country)
       .execute();
 
     return addresses.map((address) => new LmsAddressNode(address));
   },
   listValidated: async () => {
     const addresses = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
-      .where('isValidated', '=', true)
+      .where("isValidated", "=", true)
       .execute();
 
     return addresses.map((address) => new LmsAddressNode(address));
@@ -108,10 +114,12 @@ export const queries = {
 };
 
 export const mutations = {
-  createLmsAddress: async (payload: Insertable<DB['lmsAddresses']>) => {
+  createLmsAddress: async (payload: LmsAddressesInsert) => {
+    const parsedPayload = lmsAddressesInsertSchema.parse(payload);
+
     const newAddress = await db
-      .insertInto('lmsAddresses')
-      .values(payload)
+      .insertInto("lmsAddresses")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -119,21 +127,23 @@ export const mutations = {
   },
   updateLmsAddress: async (
     id: string,
-    payload: Updateable<DB['lmsAddresses']>,
+    payload: LmsAddressesUpdate,
   ) => {
+    const parsedPayload = lmsAddressesUpdateSchema.parse(payload);
+
     const updatedAddress = await db
-      .updateTable('lmsAddresses')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsAddresses")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsAddressNode(updatedAddress);
   },
   deleteLmsAddress: async (id: string) => {
-    await db.deleteFrom('lmsAddresses').where('id', '=', id).execute();
+    await db.deleteFrom("lmsAddresses").where("id", "=", id).execute();
 
-    return { success: true, message: 'Address deleted successfully.' };
+    return { success: true, message: "Address deleted successfully." };
   },
 };
 

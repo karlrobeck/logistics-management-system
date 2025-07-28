@@ -1,9 +1,15 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  LmsShippingServicesInsert,
+  lmsShippingServicesInsertSchema,
+  LmsShippingServicesUpdate,
+  lmsShippingServicesUpdateSchema,
+} from "../../db/schemas";
 
 class LmsShippingServiceNode {
-  constructor(private model: Selectable<DB['lmsShippingServices']>) {}
+  constructor(private model: Selectable<DB["lmsShippingServices"]>) {}
 
   id() {
     return this.model.id;
@@ -49,7 +55,7 @@ class LmsShippingServiceNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const services = await db
-      .selectFrom('lmsShippingServices')
+      .selectFrom("lmsShippingServices")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -59,27 +65,27 @@ export const queries = {
   },
   view: async (id: string) => {
     const service = await db
-      .selectFrom('lmsShippingServices')
+      .selectFrom("lmsShippingServices")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsShippingServiceNode(service);
   },
   listActive: async () => {
     const services = await db
-      .selectFrom('lmsShippingServices')
+      .selectFrom("lmsShippingServices")
       .selectAll()
-      .where('isActive', '=', true)
+      .where("isActive", "=", true)
       .execute();
 
     return services.map((service) => new LmsShippingServiceNode(service));
   },
   listByType: async (serviceType: string) => {
     const services = await db
-      .selectFrom('lmsShippingServices')
+      .selectFrom("lmsShippingServices")
       .selectAll()
-      .where('serviceType', '=', serviceType as any)
+      .where("serviceType", "=", serviceType as any)
       .execute();
 
     return services.map((service) => new LmsShippingServiceNode(service));
@@ -88,11 +94,12 @@ export const queries = {
 
 export const mutations = {
   createLmsShippingService: async (
-    payload: Insertable<DB['lmsShippingServices']>,
+    payload: LmsShippingServicesInsert,
   ) => {
+    const parsedPayload = lmsShippingServicesInsertSchema.parse(payload);
     const newService = await db
-      .insertInto('lmsShippingServices')
-      .values(payload)
+      .insertInto("lmsShippingServices")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -100,21 +107,22 @@ export const mutations = {
   },
   updateLmsShippingService: async (
     id: string,
-    payload: Updateable<DB['lmsShippingServices']>,
+    payload: LmsShippingServicesUpdate,
   ) => {
+    const parsedPayload = lmsShippingServicesUpdateSchema.parse(payload);
     const updatedService = await db
-      .updateTable('lmsShippingServices')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsShippingServices")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsShippingServiceNode(updatedService);
   },
   deleteLmsShippingService: async (id: string) => {
-    await db.deleteFrom('lmsShippingServices').where('id', '=', id).execute();
+    await db.deleteFrom("lmsShippingServices").where("id", "=", id).execute();
 
-    return { success: true, message: 'Shipping service deleted successfully.' };
+    return { success: true, message: "Shipping service deleted successfully." };
   },
 };
 

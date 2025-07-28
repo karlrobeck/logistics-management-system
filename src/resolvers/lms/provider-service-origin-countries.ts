@@ -1,10 +1,16 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  LmsProviderServiceOriginCountriesInsert,
+  lmsProviderServiceOriginCountriesInsertSchema,
+  LmsProviderServiceOriginCountriesUpdate,
+  lmsProviderServiceOriginCountriesUpdateSchema,
+} from "../../db/schemas";
 
 class LmsProviderServiceOriginCountryNode {
   constructor(
-    private model: Selectable<DB['lmsProviderServiceOriginCountries']>,
+    private model: Selectable<DB["lmsProviderServiceOriginCountries"]>,
   ) {}
 
   id() {
@@ -27,7 +33,7 @@ class LmsProviderServiceOriginCountryNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const countries = await db
-      .selectFrom('lmsProviderServiceOriginCountries')
+      .selectFrom("lmsProviderServiceOriginCountries")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -39,18 +45,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const country = await db
-      .selectFrom('lmsProviderServiceOriginCountries')
+      .selectFrom("lmsProviderServiceOriginCountries")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsProviderServiceOriginCountryNode(country);
   },
   listByProviderService: async (providerServiceId: string) => {
     const countries = await db
-      .selectFrom('lmsProviderServiceOriginCountries')
+      .selectFrom("lmsProviderServiceOriginCountries")
       .selectAll()
-      .where('providerServiceId', '=', providerServiceId)
+      .where("providerServiceId", "=", providerServiceId)
       .execute();
 
     return countries.map(
@@ -59,9 +65,9 @@ export const queries = {
   },
   listByCountryCode: async (countryCode: string) => {
     const countries = await db
-      .selectFrom('lmsProviderServiceOriginCountries')
+      .selectFrom("lmsProviderServiceOriginCountries")
       .selectAll()
-      .where('countryCode', '=', countryCode)
+      .where("countryCode", "=", countryCode)
       .execute();
 
     return countries.map(
@@ -72,11 +78,14 @@ export const queries = {
 
 export const mutations = {
   createLmsProviderServiceOriginCountry: async (
-    payload: Insertable<DB['lmsProviderServiceOriginCountries']>,
+    payload: LmsProviderServiceOriginCountriesInsert,
   ) => {
+    const parsedPayload = lmsProviderServiceOriginCountriesInsertSchema.parse(
+      payload,
+    );
     const newCountry = await db
-      .insertInto('lmsProviderServiceOriginCountries')
-      .values(payload)
+      .insertInto("lmsProviderServiceOriginCountries")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -84,12 +93,15 @@ export const mutations = {
   },
   updateLmsProviderServiceOriginCountry: async (
     id: string,
-    payload: Updateable<DB['lmsProviderServiceOriginCountries']>,
+    payload: LmsProviderServiceOriginCountriesUpdate,
   ) => {
+    const parsedPayload = lmsProviderServiceOriginCountriesUpdateSchema.parse(
+      payload,
+    );
     const updatedCountry = await db
-      .updateTable('lmsProviderServiceOriginCountries')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsProviderServiceOriginCountries")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -97,13 +109,13 @@ export const mutations = {
   },
   deleteLmsProviderServiceOriginCountry: async (id: string) => {
     await db
-      .deleteFrom('lmsProviderServiceOriginCountries')
-      .where('id', '=', id)
+      .deleteFrom("lmsProviderServiceOriginCountries")
+      .where("id", "=", id)
       .execute();
 
     return {
       success: true,
-      message: 'Provider service origin country deleted successfully.',
+      message: "Provider service origin country deleted successfully.",
     };
   },
 };

@@ -1,9 +1,15 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  LmsProviderPerformanceInsert,
+  lmsProviderPerformanceInsertSchema,
+  LmsProviderPerformanceUpdate,
+  lmsProviderPerformanceUpdateSchema,
+} from "../../db/schemas";
 
 class LmsProviderPerformanceNode {
-  constructor(private model: Selectable<DB['lmsProviderPerformance']>) {}
+  constructor(private model: Selectable<DB["lmsProviderPerformance"]>) {}
 
   id() {
     return this.model.id;
@@ -49,7 +55,7 @@ class LmsProviderPerformanceNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const performances = await db
-      .selectFrom('lmsProviderPerformance')
+      .selectFrom("lmsProviderPerformance")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -61,18 +67,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const performance = await db
-      .selectFrom('lmsProviderPerformance')
+      .selectFrom("lmsProviderPerformance")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new LmsProviderPerformanceNode(performance);
   },
   listByProvider: async (providerId: string) => {
     const performances = await db
-      .selectFrom('lmsProviderPerformance')
+      .selectFrom("lmsProviderPerformance")
       .selectAll()
-      .where('providerId', '=', providerId)
+      .where("providerId", "=", providerId)
       .execute();
 
     return performances.map(
@@ -81,9 +87,9 @@ export const queries = {
   },
   listByShipment: async (shipmentId: string) => {
     const performances = await db
-      .selectFrom('lmsProviderPerformance')
+      .selectFrom("lmsProviderPerformance")
       .selectAll()
-      .where('shipmentId', '=', shipmentId)
+      .where("shipmentId", "=", shipmentId)
       .execute();
 
     return performances.map(
@@ -92,9 +98,9 @@ export const queries = {
   },
   listByMetricType: async (metricType: string) => {
     const performances = await db
-      .selectFrom('lmsProviderPerformance')
+      .selectFrom("lmsProviderPerformance")
       .selectAll()
-      .where('metricType', '=', metricType as any)
+      .where("metricType", "=", metricType as any)
       .execute();
 
     return performances.map(
@@ -105,11 +111,12 @@ export const queries = {
 
 export const mutations = {
   createLmsProviderPerformance: async (
-    payload: Insertable<DB['lmsProviderPerformance']>,
+    payload: LmsProviderPerformanceInsert,
   ) => {
+    const parsedPayload = lmsProviderPerformanceInsertSchema.parse(payload);
     const newPerformance = await db
-      .insertInto('lmsProviderPerformance')
-      .values(payload)
+      .insertInto("lmsProviderPerformance")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -117,12 +124,13 @@ export const mutations = {
   },
   updateLmsProviderPerformance: async (
     id: string,
-    payload: Updateable<DB['lmsProviderPerformance']>,
+    payload: LmsProviderPerformanceUpdate,
   ) => {
+    const parsedPayload = lmsProviderPerformanceUpdateSchema.parse(payload);
     const updatedPerformance = await db
-      .updateTable('lmsProviderPerformance')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("lmsProviderPerformance")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -130,13 +138,13 @@ export const mutations = {
   },
   deleteLmsProviderPerformance: async (id: string) => {
     await db
-      .deleteFrom('lmsProviderPerformance')
-      .where('id', '=', id)
+      .deleteFrom("lmsProviderPerformance")
+      .where("id", "=", id)
       .execute();
 
     return {
       success: true,
-      message: 'Provider performance deleted successfully.',
+      message: "Provider performance deleted successfully.",
     };
   },
 };
