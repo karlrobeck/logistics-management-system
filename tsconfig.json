@@ -6,5 +6,5 @@
     // specify output directory to avoid overwriting input files
     "outDir": "dist"
   },
-  "include": ["pylon.d.ts", "src/**/*.ts"]
+  "include": ["pylon.d.ts", "src/**/*.ts","gqty/**/*.ts"],
 }

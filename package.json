@@ -3,9 +3,14 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "author": {
+    "name": "Karl Robeck Alferez",
+    "email": "karlalferezfx@gmail.com",
+    "url": "https://github.com/karlrobeck"
+  },
   "scripts": {
-    "dev:backend": "pylon dev -c \"bun run .pylon/index.js\" --client --client-port 3000 --client-path gqty/index.ts",
-    "dev:frontend": "rsbuild dev --open",
+    "dev:backend": "pylon dev -c \"bun run .pylon/index.js\" --client --client-port 3001 --client-path gqty/index.ts",
+    "dev:frontend": "rsbuild dev --open --environment web --port 3001",
     "dev": "concurrently 'bun run dev:backend' 'bun run dev:frontend' -n backend,frontend",
     "build:backend": "pylon build && rsbuild build --environment bun",
     "build:frontend": "rsbuild build --environment web",
