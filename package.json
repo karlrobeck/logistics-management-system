@@ -13,8 +13,6 @@
     "check": "biome check --write",
     "format": "biome format --write",
     "preview": "bun run dist/server/index.js",
-    "docker:build": "docker build -t registry.marahuyo.dev/logistics-management-system:latest .",
-    "docker:push": "docker push registry.marahuyo.dev/logistics-management-system:latest",
     "generate-types": "bun kysely-codegen --out-file src/db/types.ts --runtime-enums --camel-case"
   },
   "dependencies": {
@@ -40,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/getcronit/pylon.git"
+    "url": "https://github.com/karlrobeck/logistics-management-system.git"
   },
-  "homepage": "https://pylon.cronit.io"
+  "homepage": "https://github.com/karlrobeck/logistics-management-system"
 }
