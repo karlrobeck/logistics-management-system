@@ -1,10 +1,16 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { OrgDepartmentNode } from './departments';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { OrgDepartmentNode } from "./departments";
+import {
+  OrgDepartmentPermissionsInsert,
+  orgDepartmentPermissionsInsertSchema,
+  OrgDepartmentPermissionsUpdate,
+  orgDepartmentPermissionsUpdateSchema,
+} from "../../db/schemas";
 
 export class OrgDepartmentPermissionNode {
-  constructor(private model: Selectable<DB['orgDepartmentPermissions']>) {}
+  constructor(private model: Selectable<DB["orgDepartmentPermissions"]>) {}
 
   id() {
     return this.model.id;
@@ -20,9 +26,9 @@ export class OrgDepartmentPermissionNode {
 
   async department() {
     const department = await db
-      .selectFrom('orgDepartments')
+      .selectFrom("orgDepartments")
       .selectAll()
-      .where('id', '=', this.model.departmentId)
+      .where("id", "=", this.model.departmentId)
       .executeTakeFirst();
 
     return department ? new OrgDepartmentNode(department) : null;
@@ -40,7 +46,7 @@ export class OrgDepartmentPermissionNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const permissions = await db
-      .selectFrom('orgDepartmentPermissions')
+      .selectFrom("orgDepartmentPermissions")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -52,18 +58,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const permission = await db
-      .selectFrom('orgDepartmentPermissions')
+      .selectFrom("orgDepartmentPermissions")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new OrgDepartmentPermissionNode(permission);
   },
   listByDepartment: async (departmentId: string) => {
     const permissions = await db
-      .selectFrom('orgDepartmentPermissions')
+      .selectFrom("orgDepartmentPermissions")
       .selectAll()
-      .where('departmentId', '=', departmentId)
+      .where("departmentId", "=", departmentId)
       .execute();
 
     return permissions.map(
@@ -74,11 +80,13 @@ export const queries = {
 
 export const mutations = {
   createOrgDepartmentPermission: async (
-    payload: Insertable<DB['orgDepartmentPermissions']>,
+    payload: OrgDepartmentPermissionsInsert,
   ) => {
+    const parsedPayload = orgDepartmentPermissionsInsertSchema.parse(payload);
+
     const newPermission = await db
-      .insertInto('orgDepartmentPermissions')
-      .values(payload)
+      .insertInto("orgDepartmentPermissions")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -86,12 +94,14 @@ export const mutations = {
   },
   updateOrgDepartmentPermission: async (
     id: string,
-    payload: Updateable<DB['orgDepartmentPermissions']>,
+    payload: OrgDepartmentPermissionsUpdate,
   ) => {
+    const parsedPayload = orgDepartmentPermissionsUpdateSchema.parse(payload);
+
     const updatedPermission = await db
-      .updateTable('orgDepartmentPermissions')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("orgDepartmentPermissions")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -99,13 +109,13 @@ export const mutations = {
   },
   deleteOrgDepartmentPermission: async (id: string) => {
     await db
-      .deleteFrom('orgDepartmentPermissions')
-      .where('id', '=', id)
+      .deleteFrom("orgDepartmentPermissions")
+      .where("id", "=", id)
       .execute();
 
     return {
       success: true,
-      message: 'Department permission deleted successfully.',
+      message: "Department permission deleted successfully.",
     };
   },
 };

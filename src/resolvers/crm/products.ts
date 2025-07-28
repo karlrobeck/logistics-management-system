@@ -1,9 +1,15 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  CrmProductsInsert,
+  crmProductsInsertSchema,
+  CrmProductsUpdate,
+  crmProductsUpdateSchema,
+} from "../../db/schemas";
 
 export class CrmProductNode {
-  constructor(private model: Selectable<DB['crmProducts']>) {}
+  constructor(private model: Selectable<DB["crmProducts"]>) {}
 
   id() {
     return this.model.id;
@@ -37,7 +43,7 @@ export class CrmProductNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const products = await db
-      .selectFrom('crmProducts')
+      .selectFrom("crmProducts")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -47,9 +53,9 @@ export const queries = {
   },
   view: async (id: string) => {
     const product = await db
-      .selectFrom('crmProducts')
+      .selectFrom("crmProducts")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new CrmProductNode(product);
@@ -57,10 +63,12 @@ export const queries = {
 };
 
 export const mutations = {
-  createCrmProduct: async (payload: Insertable<DB['crmProducts']>) => {
+  createCrmProduct: async (payload: CrmProductsInsert) => {
+    const parsedPayload = crmProductsInsertSchema.parse(payload);
+
     const newProduct = await db
-      .insertInto('crmProducts')
-      .values(payload)
+      .insertInto("crmProducts")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -68,21 +76,23 @@ export const mutations = {
   },
   updateCrmProduct: async (
     id: string,
-    payload: Updateable<DB['crmProducts']>,
+    payload: CrmProductsUpdate,
   ) => {
+    const parsedPayload = crmProductsUpdateSchema.parse(payload);
+
     const updatedProduct = await db
-      .updateTable('crmProducts')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("crmProducts")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmProductNode(updatedProduct);
   },
   deleteCrmProduct: async (id: string) => {
-    await db.deleteFrom('crmProducts').where('id', '=', id).execute();
+    await db.deleteFrom("crmProducts").where("id", "=", id).execute();
 
-    return { success: true, message: 'Product deleted successfully.' };
+    return { success: true, message: "Product deleted successfully." };
   },
 };
 

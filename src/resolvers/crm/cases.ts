@@ -1,10 +1,16 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { CrmContactNode } from './contacts';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { CrmContactNode } from "./contacts";
+import {
+  CrmCasesInsert,
+  crmCasesInsertSchema,
+  CrmCasesUpdate,
+  crmCasesUpdateSchema,
+} from "../../db/schemas";
 
 export class CrmCaseNode {
-  constructor(private model: Selectable<DB['crmCases']>) {}
+  constructor(private model: Selectable<DB["crmCases"]>) {}
 
   id() {
     return this.model.id;
@@ -34,9 +40,9 @@ export class CrmCaseNode {
     if (!this.model.contactId) return null;
 
     const contact = await db
-      .selectFrom('crmContacts')
+      .selectFrom("crmContacts")
       .selectAll()
-      .where('id', '=', this.model.contactId)
+      .where("id", "=", this.model.contactId)
       .executeTakeFirst();
 
     return contact ? new CrmContactNode(contact) : null;
@@ -54,7 +60,7 @@ export class CrmCaseNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const cases = await db
-      .selectFrom('crmCases')
+      .selectFrom("crmCases")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -64,9 +70,9 @@ export const queries = {
   },
   view: async (id: string) => {
     const caseItem = await db
-      .selectFrom('crmCases')
+      .selectFrom("crmCases")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new CrmCaseNode(caseItem);
@@ -74,29 +80,33 @@ export const queries = {
 };
 
 export const mutations = {
-  createCrmCase: async (payload: Insertable<DB['crmCases']>) => {
+  createCrmCase: async (payload: CrmCasesInsert) => {
+    const parsedPayload = crmCasesInsertSchema.parse(payload);
+
     const newCase = await db
-      .insertInto('crmCases')
-      .values(payload)
+      .insertInto("crmCases")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmCaseNode(newCase);
   },
-  updateCrmCase: async (id: string, payload: Updateable<DB['crmCases']>) => {
+  updateCrmCase: async (id: string, payload: CrmCasesUpdate) => {
+    const parsedPayload = crmCasesUpdateSchema.parse(payload);
+
     const updatedCase = await db
-      .updateTable('crmCases')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("crmCases")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmCaseNode(updatedCase);
   },
   deleteCrmCase: async (id: string) => {
-    await db.deleteFrom('crmCases').where('id', '=', id).execute();
+    await db.deleteFrom("crmCases").where("id", "=", id).execute();
 
-    return { success: true, message: 'Case deleted successfully.' };
+    return { success: true, message: "Case deleted successfully." };
   },
 };
 

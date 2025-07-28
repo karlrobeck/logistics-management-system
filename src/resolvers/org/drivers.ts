@@ -1,9 +1,15 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import {
+  OrgDriversInsert,
+  orgDriversInsertSchema,
+  OrgDriversUpdate,
+  orgDriversUpdateSchema,
+} from "../../db/schemas";
 
 export class OrgDriverNode {
-  constructor(private model: Selectable<DB['orgDrivers']>) {}
+  constructor(private model: Selectable<DB["orgDrivers"]>) {}
 
   id() {
     return this.model.id;
@@ -53,7 +59,7 @@ export class OrgDriverNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const drivers = await db
-      .selectFrom('orgDrivers')
+      .selectFrom("orgDrivers")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -63,36 +69,36 @@ export const queries = {
   },
   view: async (id: string) => {
     const driver = await db
-      .selectFrom('orgDrivers')
+      .selectFrom("orgDrivers")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new OrgDriverNode(driver);
   },
   listByStatus: async (status: string) => {
     const drivers = await db
-      .selectFrom('orgDrivers')
+      .selectFrom("orgDrivers")
       .selectAll()
-      .where('status', '=', status as any)
+      .where("status", "=", status as any)
       .execute();
 
     return drivers.map((driver) => new OrgDriverNode(driver));
   },
   viewByEmployeeId: async (employeeId: string) => {
     const driver = await db
-      .selectFrom('orgDrivers')
+      .selectFrom("orgDrivers")
       .selectAll()
-      .where('employeeId', '=', employeeId)
+      .where("employeeId", "=", employeeId)
       .executeTakeFirstOrThrow();
 
     return new OrgDriverNode(driver);
   },
   viewByLicenseNumber: async (licenseNumber: string) => {
     const driver = await db
-      .selectFrom('orgDrivers')
+      .selectFrom("orgDrivers")
       .selectAll()
-      .where('licenseNumber', '=', licenseNumber)
+      .where("licenseNumber", "=", licenseNumber)
       .executeTakeFirstOrThrow();
 
     return new OrgDriverNode(driver);
@@ -100,10 +106,12 @@ export const queries = {
 };
 
 export const mutations = {
-  createOrgDriver: async (payload: Insertable<DB['orgDrivers']>) => {
+  createOrgDriver: async (payload: OrgDriversInsert) => {
+    const parsedPayload = orgDriversInsertSchema.parse(payload);
+
     const newDriver = await db
-      .insertInto('orgDrivers')
-      .values(payload)
+      .insertInto("orgDrivers")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -111,21 +119,23 @@ export const mutations = {
   },
   updateOrgDriver: async (
     id: string,
-    payload: Updateable<DB['orgDrivers']>,
+    payload: OrgDriversUpdate,
   ) => {
+    const parsedPayload = orgDriversUpdateSchema.parse(payload);
+
     const updatedDriver = await db
-      .updateTable('orgDrivers')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("orgDrivers")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new OrgDriverNode(updatedDriver);
   },
   deleteOrgDriver: async (id: string) => {
-    await db.deleteFrom('orgDrivers').where('id', '=', id).execute();
+    await db.deleteFrom("orgDrivers").where("id", "=", id).execute();
 
-    return { success: true, message: 'Driver deleted successfully.' };
+    return { success: true, message: "Driver deleted successfully." };
   },
 };
 

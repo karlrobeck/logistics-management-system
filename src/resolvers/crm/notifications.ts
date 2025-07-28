@@ -1,11 +1,17 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { LmsShipmentNode } from '../lms/shipments';
-import { CrmContactNode } from './contacts';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { LmsShipmentNode } from "../lms/shipments";
+import { CrmContactNode } from "./contacts";
+import {
+  CrmNotificationsInsert,
+  crmNotificationsInsertSchema,
+  CrmNotificationsUpdate,
+  crmNotificationsUpdateSchema,
+} from "../../db/schemas";
 
 export class CrmNotificationNode {
-  constructor(private model: Selectable<DB['crmNotifications']>) {}
+  constructor(private model: Selectable<DB["crmNotifications"]>) {}
 
   id() {
     return this.model.id;
@@ -41,9 +47,9 @@ export class CrmNotificationNode {
 
   async contact() {
     const contact = await db
-      .selectFrom('crmContacts')
+      .selectFrom("crmContacts")
       .selectAll()
-      .where('id', '=', this.model.contactId)
+      .where("id", "=", this.model.contactId)
       .executeTakeFirst();
 
     return contact ? new CrmContactNode(contact) : null;
@@ -51,9 +57,9 @@ export class CrmNotificationNode {
 
   async shipment() {
     const shipment = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('id', '=', this.model.shipmentId)
+      .where("id", "=", this.model.shipmentId)
       .executeTakeFirst();
 
     return shipment ? new LmsShipmentNode(shipment) : null;
@@ -71,7 +77,7 @@ export class CrmNotificationNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const notifications = await db
-      .selectFrom('crmNotifications')
+      .selectFrom("crmNotifications")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -83,18 +89,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const notification = await db
-      .selectFrom('crmNotifications')
+      .selectFrom("crmNotifications")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new CrmNotificationNode(notification);
   },
   listByContact: async (contactId: string) => {
     const notifications = await db
-      .selectFrom('crmNotifications')
+      .selectFrom("crmNotifications")
       .selectAll()
-      .where('contactId', '=', contactId)
+      .where("contactId", "=", contactId)
       .execute();
 
     return notifications.map(
@@ -103,9 +109,9 @@ export const queries = {
   },
   listByShipment: async (shipmentId: string) => {
     const notifications = await db
-      .selectFrom('crmNotifications')
+      .selectFrom("crmNotifications")
       .selectAll()
-      .where('shipmentId', '=', shipmentId)
+      .where("shipmentId", "=", shipmentId)
       .execute();
 
     return notifications.map(
@@ -116,11 +122,13 @@ export const queries = {
 
 export const mutations = {
   createCrmNotification: async (
-    payload: Insertable<DB['crmNotifications']>,
+    payload: CrmNotificationsInsert,
   ) => {
+    const parsedPayload = crmNotificationsInsertSchema.parse(payload);
+
     const newNotification = await db
-      .insertInto('crmNotifications')
-      .values(payload)
+      .insertInto("crmNotifications")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -128,21 +136,23 @@ export const mutations = {
   },
   updateCrmNotification: async (
     id: string,
-    payload: Updateable<DB['crmNotifications']>,
+    payload: CrmNotificationsUpdate,
   ) => {
+    const parsedPayload = crmNotificationsUpdateSchema.parse(payload);
+
     const updatedNotification = await db
-      .updateTable('crmNotifications')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("crmNotifications")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmNotificationNode(updatedNotification);
   },
   deleteCrmNotification: async (id: string) => {
-    await db.deleteFrom('crmNotifications').where('id', '=', id).execute();
+    await db.deleteFrom("crmNotifications").where("id", "=", id).execute();
 
-    return { success: true, message: 'Notification deleted successfully.' };
+    return { success: true, message: "Notification deleted successfully." };
   },
 };
 

@@ -16,7 +16,7 @@ export const orgDriversSchema = baseEntitySchema.extend({
   hireDate: timestampSchema,
   lastName: z.string().min(1, "Last name is required"),
   licenseNumber: z.string().min(1, "License number is required"),
-  phoneNumber: phoneSchema,
+  phoneNumber: z.string().min(1, "Phone number is required"),
   status: z.enum(OrgDriverStatus),
 });
 
@@ -27,7 +27,7 @@ export const orgDriversInsertSchema = optionalBaseEntitySchema.extend({
   hireDate: timestampSchema,
   lastName: z.string().min(1, "Last name is required"),
   licenseNumber: z.string().min(1, "License number is required"),
-  phoneNumber: phoneSchema,
+  phoneNumber: z.string().min(1, "Phone number is required"),
   status: z.enum(OrgDriverStatus),
 });
 

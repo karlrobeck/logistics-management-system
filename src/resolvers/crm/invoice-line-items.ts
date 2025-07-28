@@ -1,11 +1,17 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { LmsShipmentNode } from '../lms/shipments';
-import { CrmInvoiceNode } from './invoices';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { LmsShipmentNode } from "../lms/shipments";
+import { CrmInvoiceNode } from "./invoices";
+import {
+  CrmInvoiceLineItemsInsert,
+  crmInvoiceLineItemsInsertSchema,
+  CrmInvoiceLineItemsUpdate,
+  crmInvoiceLineItemsUpdateSchema,
+} from "../../db/schemas";
 
 export class CrmInvoiceLineItemNode {
-  constructor(private model: Selectable<DB['crmInvoiceLineItems']>) {}
+  constructor(private model: Selectable<DB["crmInvoiceLineItems"]>) {}
 
   id() {
     return this.model.id;
@@ -29,9 +35,9 @@ export class CrmInvoiceLineItemNode {
 
   async invoice() {
     const invoice = await db
-      .selectFrom('crmInvoices')
+      .selectFrom("crmInvoices")
       .selectAll()
-      .where('id', '=', this.model.invoiceId)
+      .where("id", "=", this.model.invoiceId)
       .executeTakeFirst();
 
     return invoice ? new CrmInvoiceNode(invoice) : null;
@@ -41,9 +47,9 @@ export class CrmInvoiceLineItemNode {
     if (!this.model.shipmentId) return null;
 
     const shipment = await db
-      .selectFrom('lmsShipments')
+      .selectFrom("lmsShipments")
       .selectAll()
-      .where('id', '=', this.model.shipmentId)
+      .where("id", "=", this.model.shipmentId)
       .executeTakeFirst();
 
     return shipment ? new LmsShipmentNode(shipment) : null;
@@ -61,7 +67,7 @@ export class CrmInvoiceLineItemNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const invoiceLineItems = await db
-      .selectFrom('crmInvoiceLineItems')
+      .selectFrom("crmInvoiceLineItems")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -71,18 +77,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const invoiceLineItem = await db
-      .selectFrom('crmInvoiceLineItems')
+      .selectFrom("crmInvoiceLineItems")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new CrmInvoiceLineItemNode(invoiceLineItem);
   },
   listByInvoice: async (invoiceId: string) => {
     const invoiceLineItems = await db
-      .selectFrom('crmInvoiceLineItems')
+      .selectFrom("crmInvoiceLineItems")
       .selectAll()
-      .where('invoiceId', '=', invoiceId)
+      .where("invoiceId", "=", invoiceId)
       .execute();
 
     return invoiceLineItems.map((item) => new CrmInvoiceLineItemNode(item));
@@ -91,11 +97,13 @@ export const queries = {
 
 export const mutations = {
   createCrmInvoiceLineItem: async (
-    payload: Insertable<DB['crmInvoiceLineItems']>,
+    payload: CrmInvoiceLineItemsInsert,
   ) => {
+    const parsedPayload = crmInvoiceLineItemsInsertSchema.parse(payload);
+
     const newInvoiceLineItem = await db
-      .insertInto('crmInvoiceLineItems')
-      .values(payload)
+      .insertInto("crmInvoiceLineItems")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -103,23 +111,25 @@ export const mutations = {
   },
   updateCrmInvoiceLineItem: async (
     id: string,
-    payload: Updateable<DB['crmInvoiceLineItems']>,
+    payload: CrmInvoiceLineItemsUpdate,
   ) => {
+    const parsedPayload = crmInvoiceLineItemsUpdateSchema.parse(payload);
+
     const updatedInvoiceLineItem = await db
-      .updateTable('crmInvoiceLineItems')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("crmInvoiceLineItems")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmInvoiceLineItemNode(updatedInvoiceLineItem);
   },
   deleteCrmInvoiceLineItem: async (id: string) => {
-    await db.deleteFrom('crmInvoiceLineItems').where('id', '=', id).execute();
+    await db.deleteFrom("crmInvoiceLineItems").where("id", "=", id).execute();
 
     return {
       success: true,
-      message: 'Invoice line item deleted successfully.',
+      message: "Invoice line item deleted successfully.",
     };
   },
 };

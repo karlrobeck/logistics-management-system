@@ -1,11 +1,17 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { CrmCompanyNode } from './companies';
-import { CrmContactNode } from './contacts';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { CrmCompanyNode } from "./companies";
+import { CrmContactNode } from "./contacts";
+import {
+  CrmInvoicesInsert,
+  crmInvoicesInsertSchema,
+  CrmInvoicesUpdate,
+  crmInvoicesUpdateSchema,
+} from "../../db/schemas";
 
 export class CrmInvoiceNode {
-  constructor(private model: Selectable<DB['crmInvoices']>) {}
+  constructor(private model: Selectable<DB["crmInvoices"]>) {}
 
   id() {
     return this.model.id;
@@ -51,9 +57,9 @@ export class CrmInvoiceNode {
     if (!this.model.contactId) return null;
 
     const contact = await db
-      .selectFrom('crmContacts')
+      .selectFrom("crmContacts")
       .selectAll()
-      .where('id', '=', this.model.contactId)
+      .where("id", "=", this.model.contactId)
       .executeTakeFirst();
 
     return contact ? new CrmContactNode(contact) : null;
@@ -63,9 +69,9 @@ export class CrmInvoiceNode {
     if (!this.model.companyId) return null;
 
     const company = await db
-      .selectFrom('crmCompanies')
+      .selectFrom("crmCompanies")
       .selectAll()
-      .where('id', '=', this.model.companyId)
+      .where("id", "=", this.model.companyId)
       .executeTakeFirst();
 
     return company ? new CrmCompanyNode(company) : null;
@@ -83,7 +89,7 @@ export class CrmInvoiceNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const invoices = await db
-      .selectFrom('crmInvoices')
+      .selectFrom("crmInvoices")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -93,9 +99,9 @@ export const queries = {
   },
   view: async (id: string) => {
     const invoice = await db
-      .selectFrom('crmInvoices')
+      .selectFrom("crmInvoices")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new CrmInvoiceNode(invoice);
@@ -103,10 +109,12 @@ export const queries = {
 };
 
 export const mutations = {
-  createCrmInvoice: async (payload: Insertable<DB['crmInvoices']>) => {
+  createCrmInvoice: async (payload: CrmInvoicesInsert) => {
+    const parsedPayload = crmInvoicesInsertSchema.parse(payload);
+
     const newInvoice = await db
-      .insertInto('crmInvoices')
-      .values(payload)
+      .insertInto("crmInvoices")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -114,21 +122,23 @@ export const mutations = {
   },
   updateCrmInvoice: async (
     id: string,
-    payload: Updateable<DB['crmInvoices']>,
+    payload: CrmInvoicesUpdate,
   ) => {
+    const parsedPayload = crmInvoicesUpdateSchema.parse(payload);
+
     const updatedInvoice = await db
-      .updateTable('crmInvoices')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("crmInvoices")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmInvoiceNode(updatedInvoice);
   },
   deleteCrmInvoice: async (id: string) => {
-    await db.deleteFrom('crmInvoices').where('id', '=', id).execute();
+    await db.deleteFrom("crmInvoices").where("id", "=", id).execute();
 
-    return { success: true, message: 'Invoice deleted successfully.' };
+    return { success: true, message: "Invoice deleted successfully." };
   },
 };
 

@@ -1,10 +1,16 @@
-import { Insertable, Selectable, Updateable } from 'kysely';
-import { db } from '../../db';
-import { DB } from '../../db/types';
-import { LmsAddressNode } from '../lms/addresses';
+import { Insertable, Selectable, Updateable } from "kysely";
+import { db } from "../../db";
+import { DB } from "../../db/types";
+import { LmsAddressNode } from "../lms/addresses";
+import {
+  CrmCompaniesInsert,
+  crmCompaniesInsertSchema,
+  CrmCompaniesUpdate,
+  crmCompaniesUpdateSchema,
+} from "../../db/schemas";
 
 export class CrmCompanyNode {
-  constructor(private model: Selectable<DB['crmCompanies']>) {}
+  constructor(private model: Selectable<DB["crmCompanies"]>) {}
 
   id() {
     return this.model.id;
@@ -38,9 +44,9 @@ export class CrmCompanyNode {
     if (!this.model.addressId) return null;
 
     const address = await db
-      .selectFrom('lmsAddresses')
+      .selectFrom("lmsAddresses")
       .selectAll()
-      .where('id', '=', this.model.addressId)
+      .where("id", "=", this.model.addressId)
       .executeTakeFirst();
 
     return address ? new LmsAddressNode(address) : null;
@@ -58,7 +64,7 @@ export class CrmCompanyNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const companies = await db
-      .selectFrom('crmCompanies')
+      .selectFrom("crmCompanies")
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -68,9 +74,9 @@ export const queries = {
   },
   view: async (id: string) => {
     const company = await db
-      .selectFrom('crmCompanies')
+      .selectFrom("crmCompanies")
       .selectAll()
-      .where('id', '=', id)
+      .where("id", "=", id)
       .executeTakeFirstOrThrow();
 
     return new CrmCompanyNode(company);
@@ -78,10 +84,12 @@ export const queries = {
 };
 
 export const mutations = {
-  createCrmCompany: async (payload: Insertable<DB['crmCompanies']>) => {
+  createCrmCompany: async (payload: CrmCompaniesInsert) => {
+    const parsedPayload = crmCompaniesInsertSchema.parse(payload);
+
     const newCompany = await db
-      .insertInto('crmCompanies')
-      .values(payload)
+      .insertInto("crmCompanies")
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -89,21 +97,23 @@ export const mutations = {
   },
   updateCrmCompany: async (
     id: string,
-    payload: Updateable<DB['crmCompanies']>,
+    payload: CrmCompaniesUpdate,
   ) => {
+    const parsedPayload = crmCompaniesUpdateSchema.parse(payload);
+
     const updatedCompany = await db
-      .updateTable('crmCompanies')
-      .set(payload)
-      .where('id', '=', id)
+      .updateTable("crmCompanies")
+      .set(parsedPayload)
+      .where("id", "=", id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmCompanyNode(updatedCompany);
   },
   deleteCrmCompany: async (id: string) => {
-    await db.deleteFrom('crmCompanies').where('id', '=', id).execute();
+    await db.deleteFrom("crmCompanies").where("id", "=", id).execute();
 
-    return { success: true, message: 'Company deleted successfully.' };
+    return { success: true, message: "Company deleted successfully." };
   },
 };
 
