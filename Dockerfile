@@ -31,4 +31,4 @@ COPY --from=rust /usr/local/cargo/bin/sqlx /usr/local/bin/sqlx
 # run the app
 EXPOSE 3000
 
-CMD [ "bun", "run", "dist/server/index.js" ]
+CMD [ "bun", "--cwd=dist/server", "run", "index.js" ]

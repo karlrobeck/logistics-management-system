@@ -1,7 +1,12 @@
-import '@getcronit/pylon';
+import "@getcronit/pylon";
+import { Kysely } from "kysely";
+import { DB } from "./src/db/types";
 
-declare module '@getcronit/pylon' {
+declare module "@getcronit/pylon" {
   interface Bindings {}
 
-  interface Variables {}
+  interface Variables {
+    db: Kysely<DB>;
+    user: { sub: string };
+  }
 }

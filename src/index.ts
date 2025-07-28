@@ -1,8 +1,9 @@
-import { app } from '@getcronit/pylon';
-import authResolver from './resolvers/auth';
-import crmResolver from './resolvers/crm';
-import lmsResolver from './resolvers/lms';
-import orgResolver from './resolvers/org';
+import { app, PylonConfig } from "@getcronit/pylon";
+import { serveStatic } from "hono/bun";
+import authResolver from "./resolvers/auth";
+import crmResolver from "./resolvers/crm";
+import lmsResolver from "./resolvers/lms";
+import orgResolver from "./resolvers/org";
 
 export const graphql = {
   Query: {
@@ -18,9 +19,5 @@ export const graphql = {
     ...lmsResolver.mutations,
   },
 };
-
-if (import.meta.env.PROD) {
-  console.log('Running in production mode');
-}
 
 export default app;

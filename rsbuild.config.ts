@@ -20,7 +20,7 @@ export default defineConfig({
     bun: {
       source: {
         entry: {
-          index: './.pylon/index.js',
+          index: './src/server.ts',
         },
       },
       output: {
