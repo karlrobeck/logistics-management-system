@@ -2,35 +2,35 @@
  * GQty: You can safely modify this file based on your needs.
  */
 
-import { createReactClient } from '@gqty/react';
+import { createReactClient } from "@gqty/react";
 import {
   Cache,
   createClient,
   defaultResponseHandler,
   type QueryFetcher,
-} from 'gqty';
+} from "gqty";
 import {
-  type GeneratedSchema,
   generatedSchema,
   scalarsEnumsHash,
-} from './schema.generated';
+  type GeneratedSchema,
+} from "./schema.generated";
 
 const queryFetcher: QueryFetcher = async function (
   { query, variables, operationName },
-  fetchOptions,
+  fetchOptions
 ) {
   // Modify "http://localhost:3000/graphql" if needed
-  const response = await fetch('/api/graphql', {
-    method: 'POST',
+  const response = await fetch("http://localhost:3000/graphql", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       query,
       variables,
       operationName,
     }),
-    mode: 'cors',
+    mode: "cors",
     ...fetchOptions,
   });
 
@@ -47,7 +47,7 @@ const cache = new Cache(
     maxAge: 0,
     staleWhileRevalidate: 5 * 60 * 1000,
     normalization: true,
-  },
+  }
 );
 
 export const client = createClient<GeneratedSchema>({
@@ -92,4 +92,4 @@ export const {
   },
 });
 
-export * from './schema.generated';
+export * from "./schema.generated";
