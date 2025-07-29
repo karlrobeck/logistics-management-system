@@ -1,37 +1,53 @@
-import { defineConfig } from '@rsbuild/core';
-import { pluginReact } from '@rsbuild/plugin-react';
+import { defineConfig } from "@rsbuild/core";
+import { pluginReact } from "@rsbuild/plugin-react";
+import tailwindcss from "@tailwindcss/postcss";
+import { tanstackRouter } from "@tanstack/router-plugin/rspack";
 
 export default defineConfig({
   environments: {
     web: {
-      plugins: [pluginReact()],
+      plugins: [
+        pluginReact(),
+      ],
+      tools: {
+        postcss: {
+          postcssOptions: {
+            plugins: [tailwindcss],
+          },
+        },
+        rspack: {
+          plugins: [
+            tanstackRouter({ target: "react", autoCodeSplitting: true }),
+          ],
+        },
+      },
       source: {
         entry: {
-          index: './src/client.tsx',
+          index: "./src/client.tsx",
         },
       },
       output: {
-        target: 'web',
+        target: "web",
         distPath: {
-          root: './dist/server/web',
+          root: "./dist/server/web",
         },
       },
     },
     bun: {
       source: {
         entry: {
-          index: './src/server.ts',
+          index: "./src/server.ts",
         },
       },
       output: {
-        target: 'node',
+        target: "node",
         distPath: {
-          root: './dist/server',
+          root: "./dist/server",
         },
         copy: [
           {
-            from: 'migrations',
-            to: 'migrations',
+            from: "migrations",
+            to: "migrations",
           },
         ],
       },

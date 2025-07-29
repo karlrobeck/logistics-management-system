@@ -4,7 +4,13 @@
     // add Bun type definitions
     "types": ["bun-types"],
     // specify output directory to avoid overwriting input files
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": ["pylon.d.ts", "src/**/*.ts", "gqty/**/*.ts"]
 }
