@@ -1,23 +1,22 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
+} from '../base.js';
 
 // LMS Provider Service Destination Countries Schema
-export const lmsProviderServiceDestinationCountriesSchema = baseEntitySchema
-  .extend({
-    countryCode: z.string().length(3, "Country code must be 3 characters"),
+export const lmsProviderServiceDestinationCountriesSchema =
+  baseEntitySchema.extend({
+    countryCode: z.string().length(3, 'Country code must be 3 characters'),
     providerServiceId: idSchema,
   });
 
 export const lmsProviderServiceDestinationCountriesInsertSchema =
-  optionalBaseEntitySchema
-    .extend({
-      countryCode: z.string().length(3, "Country code must be 3 characters"),
-      providerServiceId: idSchema,
-    });
+  optionalBaseEntitySchema.extend({
+    countryCode: z.string().length(3, 'Country code must be 3 characters'),
+    providerServiceId: idSchema,
+  });
 
 export const lmsProviderServiceDestinationCountriesUpdateSchema =
   lmsProviderServiceDestinationCountriesInsertSchema.partial();

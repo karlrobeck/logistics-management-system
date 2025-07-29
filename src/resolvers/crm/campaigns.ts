@@ -1,15 +1,15 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   CrmCampaignsInsert,
-  crmCampaignsInsertSchema,
   CrmCampaignsUpdate,
+  crmCampaignsInsertSchema,
   crmCampaignsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
 
 export class CrmCampaignNode {
-  constructor(private model: Selectable<DB["crmCampaigns"]>) {}
+  constructor(private model: Selectable<DB['crmCampaigns']>) {}
 
   id() {
     return this.model.id;
@@ -51,7 +51,7 @@ export class CrmCampaignNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const campaigns = await db
-      .selectFrom("crmCampaigns")
+      .selectFrom('crmCampaigns')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -61,9 +61,9 @@ export const queries = {
   },
   view: async (id: string) => {
     const campaign = await db
-      .selectFrom("crmCampaigns")
+      .selectFrom('crmCampaigns')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new CrmCampaignNode(campaign);
@@ -75,32 +75,29 @@ export const mutations = {
     const parsedPayload = crmCampaignsInsertSchema.parse(payload);
 
     const newCampaign = await db
-      .insertInto("crmCampaigns")
+      .insertInto('crmCampaigns')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmCampaignNode(newCampaign);
   },
-  updateCrmCampaign: async (
-    id: string,
-    payload: CrmCampaignsUpdate,
-  ) => {
+  updateCrmCampaign: async (id: string, payload: CrmCampaignsUpdate) => {
     const parsedPayload = crmCampaignsUpdateSchema.parse(payload);
 
     const updatedCampaign = await db
-      .updateTable("crmCampaigns")
+      .updateTable('crmCampaigns')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmCampaignNode(updatedCampaign);
   },
   deleteCrmCampaign: async (id: string) => {
-    await db.deleteFrom("crmCampaigns").where("id", "=", id).execute();
+    await db.deleteFrom('crmCampaigns').where('id', '=', id).execute();
 
-    return { success: true, message: "Campaign deleted successfully." };
+    return { success: true, message: 'Campaign deleted successfully.' };
   },
 };
 

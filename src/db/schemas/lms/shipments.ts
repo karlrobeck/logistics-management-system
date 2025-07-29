@@ -1,4 +1,5 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsShipmentStatus, LmsTransportMode } from '../../types.js';
 import {
   baseEntitySchema,
   currencySchema,
@@ -6,8 +7,7 @@ import {
   numericSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { LmsShipmentStatus, LmsTransportMode } from "../../types.js";
+} from '../base.js';
 
 // LMS Shipments Schema
 export const lmsShipmentsSchema = baseEntitySchema.extend({
@@ -31,7 +31,7 @@ export const lmsShipmentsSchema = baseEntitySchema.extend({
   status: z.enum(LmsShipmentStatus),
   totalValue: numericSchema.nullable().optional(),
   totalWeight: numericSchema,
-  trackingNumber: z.string().min(1, "Tracking number is required"),
+  trackingNumber: z.string().min(1, 'Tracking number is required'),
 });
 
 export const lmsShipmentsInsertSchema = optionalBaseEntitySchema.extend({
@@ -55,7 +55,7 @@ export const lmsShipmentsInsertSchema = optionalBaseEntitySchema.extend({
   status: z.enum(LmsShipmentStatus),
   totalValue: numericSchema.nullable().optional(),
   totalWeight: numericSchema,
-  trackingNumber: z.string().min(1, "Tracking number is required"),
+  trackingNumber: z.string().min(1, 'Tracking number is required'),
 });
 
 export const lmsShipmentsUpdateSchema = lmsShipmentsInsertSchema.partial();

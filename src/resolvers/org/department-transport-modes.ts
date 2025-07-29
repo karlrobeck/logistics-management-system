@@ -1,16 +1,16 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { OrgDepartmentNode } from "./departments";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   OrgDepartmentTransportModesInsert,
-  orgDepartmentTransportModesInsertSchema,
   OrgDepartmentTransportModesUpdate,
+  orgDepartmentTransportModesInsertSchema,
   orgDepartmentTransportModesUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { OrgDepartmentNode } from './departments';
 
 export class OrgDepartmentTransportModeNode {
-  constructor(private model: Selectable<DB["orgDepartmentTransportModes"]>) {}
+  constructor(private model: Selectable<DB['orgDepartmentTransportModes']>) {}
 
   id() {
     return this.model.id;
@@ -26,9 +26,9 @@ export class OrgDepartmentTransportModeNode {
 
   async department() {
     const department = await db
-      .selectFrom("orgDepartments")
+      .selectFrom('orgDepartments')
       .selectAll()
-      .where("id", "=", this.model.departmentId)
+      .where('id', '=', this.model.departmentId)
       .executeTakeFirst();
 
     return department ? new OrgDepartmentNode(department) : null;
@@ -46,7 +46,7 @@ export class OrgDepartmentTransportModeNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const transportModes = await db
-      .selectFrom("orgDepartmentTransportModes")
+      .selectFrom('orgDepartmentTransportModes')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -58,18 +58,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const transportMode = await db
-      .selectFrom("orgDepartmentTransportModes")
+      .selectFrom('orgDepartmentTransportModes')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new OrgDepartmentTransportModeNode(transportMode);
   },
   listByDepartment: async (departmentId: string) => {
     const transportModes = await db
-      .selectFrom("orgDepartmentTransportModes")
+      .selectFrom('orgDepartmentTransportModes')
       .selectAll()
-      .where("departmentId", "=", departmentId)
+      .where('departmentId', '=', departmentId)
       .execute();
 
     return transportModes.map(
@@ -78,10 +78,10 @@ export const queries = {
   },
   listPrimaryByDepartment: async (departmentId: string) => {
     const transportModes = await db
-      .selectFrom("orgDepartmentTransportModes")
+      .selectFrom('orgDepartmentTransportModes')
       .selectAll()
-      .where("departmentId", "=", departmentId)
-      .where("isPrimary", "=", true)
+      .where('departmentId', '=', departmentId)
+      .where('isPrimary', '=', true)
       .execute();
 
     return transportModes.map(
@@ -94,12 +94,11 @@ export const mutations = {
   createOrgDepartmentTransportMode: async (
     payload: OrgDepartmentTransportModesInsert,
   ) => {
-    const parsedPayload = orgDepartmentTransportModesInsertSchema.parse(
-      payload,
-    );
+    const parsedPayload =
+      orgDepartmentTransportModesInsertSchema.parse(payload);
 
     const newTransportMode = await db
-      .insertInto("orgDepartmentTransportModes")
+      .insertInto('orgDepartmentTransportModes')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -110,14 +109,13 @@ export const mutations = {
     id: string,
     payload: OrgDepartmentTransportModesUpdate,
   ) => {
-    const parsedPayload = orgDepartmentTransportModesUpdateSchema.parse(
-      payload,
-    );
+    const parsedPayload =
+      orgDepartmentTransportModesUpdateSchema.parse(payload);
 
     const updatedTransportMode = await db
-      .updateTable("orgDepartmentTransportModes")
+      .updateTable('orgDepartmentTransportModes')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -125,13 +123,13 @@ export const mutations = {
   },
   deleteOrgDepartmentTransportMode: async (id: string) => {
     await db
-      .deleteFrom("orgDepartmentTransportModes")
-      .where("id", "=", id)
+      .deleteFrom('orgDepartmentTransportModes')
+      .where('id', '=', id)
       .execute();
 
     return {
       success: true,
-      message: "Department transport mode deleted successfully.",
+      message: 'Department transport mode deleted successfully.',
     };
   },
 };

@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsDeliveryStatus } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { LmsDeliveryStatus } from "../../types.js";
+} from '../base.js';
 
 // LMS Route Shipments Schema
 export const lmsRouteShipmentsSchema = baseEntitySchema.extend({
@@ -32,8 +32,8 @@ export const lmsRouteShipmentsInsertSchema = optionalBaseEntitySchema.extend({
   signatureRequired: z.boolean().optional().default(false),
 });
 
-export const lmsRouteShipmentsUpdateSchema = lmsRouteShipmentsInsertSchema
-  .partial();
+export const lmsRouteShipmentsUpdateSchema =
+  lmsRouteShipmentsInsertSchema.partial();
 
 export type LmsRouteShipments = z.infer<typeof lmsRouteShipmentsSchema>;
 export type LmsRouteShipmentsInsert = z.infer<

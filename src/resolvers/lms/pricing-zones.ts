@@ -1,15 +1,15 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   LmsPricingZonesInsert,
-  lmsPricingZonesInsertSchema,
   LmsPricingZonesUpdate,
+  lmsPricingZonesInsertSchema,
   lmsPricingZonesUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
 
 class LmsPricingZoneNode {
-  constructor(private model: Selectable<DB["lmsPricingZones"]>) {}
+  constructor(private model: Selectable<DB['lmsPricingZones']>) {}
 
   id() {
     return this.model.id;
@@ -35,7 +35,7 @@ class LmsPricingZoneNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const pricingZones = await db
-      .selectFrom("lmsPricingZones")
+      .selectFrom('lmsPricingZones')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -45,18 +45,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const pricingZone = await db
-      .selectFrom("lmsPricingZones")
+      .selectFrom('lmsPricingZones')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new LmsPricingZoneNode(pricingZone);
   },
   viewByCode: async (zoneCode: string) => {
     const pricingZone = await db
-      .selectFrom("lmsPricingZones")
+      .selectFrom('lmsPricingZones')
       .selectAll()
-      .where("zoneCode", "=", zoneCode)
+      .where('zoneCode', '=', zoneCode)
       .executeTakeFirstOrThrow();
 
     return new LmsPricingZoneNode(pricingZone);
@@ -67,31 +67,28 @@ export const mutations = {
   createLmsPricingZone: async (payload: LmsPricingZonesInsert) => {
     const parsedPayload = lmsPricingZonesInsertSchema.parse(payload);
     const newPricingZone = await db
-      .insertInto("lmsPricingZones")
+      .insertInto('lmsPricingZones')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsPricingZoneNode(newPricingZone);
   },
-  updateLmsPricingZone: async (
-    id: string,
-    payload: LmsPricingZonesUpdate,
-  ) => {
+  updateLmsPricingZone: async (id: string, payload: LmsPricingZonesUpdate) => {
     const parsedPayload = lmsPricingZonesUpdateSchema.parse(payload);
     const updatedPricingZone = await db
-      .updateTable("lmsPricingZones")
+      .updateTable('lmsPricingZones')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsPricingZoneNode(updatedPricingZone);
   },
   deleteLmsPricingZone: async (id: string) => {
-    await db.deleteFrom("lmsPricingZones").where("id", "=", id).execute();
+    await db.deleteFrom('lmsPricingZones').where('id', '=', id).execute();
 
-    return { success: true, message: "Pricing zone deleted successfully." };
+    return { success: true, message: 'Pricing zone deleted successfully.' };
   },
 };
 

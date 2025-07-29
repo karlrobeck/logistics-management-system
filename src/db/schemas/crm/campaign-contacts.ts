@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { CrmCampaignContactsStatus } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { CrmCampaignContactsStatus } from "../../types.js";
+} from '../base.js';
 
 // CRM Campaign Contacts Schema
 export const crmCampaignContactsSchema = baseEntitySchema.extend({
@@ -22,8 +22,8 @@ export const crmCampaignContactsInsertSchema = optionalBaseEntitySchema.extend({
   status: z.enum(CrmCampaignContactsStatus),
 });
 
-export const crmCampaignContactsUpdateSchema = crmCampaignContactsInsertSchema
-  .partial();
+export const crmCampaignContactsUpdateSchema =
+  crmCampaignContactsInsertSchema.partial();
 
 export type CrmCampaignContacts = z.infer<typeof crmCampaignContactsSchema>;
 export type CrmCampaignContactsInsert = z.infer<

@@ -1,16 +1,16 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { CrmContactNode } from "./contacts";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   CrmLeadsInsert,
-  crmLeadsInsertSchema,
   CrmLeadsUpdate,
+  crmLeadsInsertSchema,
   crmLeadsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { CrmContactNode } from './contacts';
 
 export class CrmLeadNode {
-  constructor(private model: Selectable<DB["crmLeads"]>) {}
+  constructor(private model: Selectable<DB['crmLeads']>) {}
 
   id() {
     return this.model.id;
@@ -52,9 +52,9 @@ export class CrmLeadNode {
     if (!this.model.convertedToContactId) return null;
 
     const contact = await db
-      .selectFrom("crmContacts")
+      .selectFrom('crmContacts')
       .selectAll()
-      .where("id", "=", this.model.convertedToContactId)
+      .where('id', '=', this.model.convertedToContactId)
       .executeTakeFirst();
 
     return contact ? new CrmContactNode(contact) : null;
@@ -72,7 +72,7 @@ export class CrmLeadNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const leads = await db
-      .selectFrom("crmLeads")
+      .selectFrom('crmLeads')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -82,9 +82,9 @@ export const queries = {
   },
   view: async (id: string) => {
     const lead = await db
-      .selectFrom("crmLeads")
+      .selectFrom('crmLeads')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new CrmLeadNode(lead);
@@ -96,7 +96,7 @@ export const mutations = {
     const parsedPayload = crmLeadsInsertSchema.parse(payload);
 
     const newLead = await db
-      .insertInto("crmLeads")
+      .insertInto('crmLeads')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -107,18 +107,18 @@ export const mutations = {
     const parsedPayload = crmLeadsUpdateSchema.parse(payload);
 
     const updatedLead = await db
-      .updateTable("crmLeads")
+      .updateTable('crmLeads')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmLeadNode(updatedLead);
   },
   deleteCrmLead: async (id: string) => {
-    await db.deleteFrom("crmLeads").where("id", "=", id).execute();
+    await db.deleteFrom('crmLeads').where('id', '=', id).execute();
 
-    return { success: true, message: "Lead deleted successfully." };
+    return { success: true, message: 'Lead deleted successfully.' };
   },
 };
 

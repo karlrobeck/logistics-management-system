@@ -1,19 +1,19 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsProviderInvoiceStatus } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { LmsProviderInvoiceStatus } from "../../types.js";
+} from '../base.js';
 
 // LMS Provider Invoices Schema
 export const lmsProviderInvoicesSchema = baseEntitySchema.extend({
-  currency: z.string().default("USD"),
+  currency: z.string().default('USD'),
   dueDate: timestampSchema,
   invoiceDate: timestampSchema,
-  invoiceNumber: z.string().min(1, "Invoice number is required"),
+  invoiceNumber: z.string().min(1, 'Invoice number is required'),
   paymentDate: timestampSchema.nullable().optional(),
   providerId: idSchema,
   status: z.enum(LmsProviderInvoiceStatus),
@@ -23,10 +23,10 @@ export const lmsProviderInvoicesSchema = baseEntitySchema.extend({
 });
 
 export const lmsProviderInvoicesInsertSchema = optionalBaseEntitySchema.extend({
-  currency: z.string().optional().default("USD"),
+  currency: z.string().optional().default('USD'),
   dueDate: timestampSchema,
   invoiceDate: timestampSchema,
-  invoiceNumber: z.string().min(1, "Invoice number is required"),
+  invoiceNumber: z.string().min(1, 'Invoice number is required'),
   paymentDate: timestampSchema.nullable().optional(),
   providerId: idSchema,
   status: z.enum(LmsProviderInvoiceStatus),
@@ -35,8 +35,8 @@ export const lmsProviderInvoicesInsertSchema = optionalBaseEntitySchema.extend({
   totalAmount: numericSchema.nullable().optional(),
 });
 
-export const lmsProviderInvoicesUpdateSchema = lmsProviderInvoicesInsertSchema
-  .partial();
+export const lmsProviderInvoicesUpdateSchema =
+  lmsProviderInvoicesInsertSchema.partial();
 
 export type LmsProviderInvoices = z.infer<typeof lmsProviderInvoicesSchema>;
 export type LmsProviderInvoicesInsert = z.infer<

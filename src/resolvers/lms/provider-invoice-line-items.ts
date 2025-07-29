@@ -1,15 +1,15 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   LmsProviderInvoiceLineItemsInsert,
-  lmsProviderInvoiceLineItemsInsertSchema,
   LmsProviderInvoiceLineItemsUpdate,
+  lmsProviderInvoiceLineItemsInsertSchema,
   lmsProviderInvoiceLineItemsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
 
 class LmsProviderInvoiceLineItemNode {
-  constructor(private model: Selectable<DB["lmsProviderInvoiceLineItems"]>) {}
+  constructor(private model: Selectable<DB['lmsProviderInvoiceLineItems']>) {}
 
   id() {
     return this.model.id;
@@ -51,7 +51,7 @@ class LmsProviderInvoiceLineItemNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const lineItems = await db
-      .selectFrom("lmsProviderInvoiceLineItems")
+      .selectFrom('lmsProviderInvoiceLineItems')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -61,27 +61,27 @@ export const queries = {
   },
   view: async (id: string) => {
     const lineItem = await db
-      .selectFrom("lmsProviderInvoiceLineItems")
+      .selectFrom('lmsProviderInvoiceLineItems')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new LmsProviderInvoiceLineItemNode(lineItem);
   },
   listByInvoice: async (providerInvoiceId: string) => {
     const lineItems = await db
-      .selectFrom("lmsProviderInvoiceLineItems")
+      .selectFrom('lmsProviderInvoiceLineItems')
       .selectAll()
-      .where("providerInvoiceId", "=", providerInvoiceId)
+      .where('providerInvoiceId', '=', providerInvoiceId)
       .execute();
 
     return lineItems.map((item) => new LmsProviderInvoiceLineItemNode(item));
   },
   listByTransportLeg: async (transportLegId: string) => {
     const lineItems = await db
-      .selectFrom("lmsProviderInvoiceLineItems")
+      .selectFrom('lmsProviderInvoiceLineItems')
       .selectAll()
-      .where("transportLegId", "=", transportLegId)
+      .where('transportLegId', '=', transportLegId)
       .execute();
 
     return lineItems.map((item) => new LmsProviderInvoiceLineItemNode(item));
@@ -92,11 +92,10 @@ export const mutations = {
   createLmsProviderInvoiceLineItem: async (
     payload: LmsProviderInvoiceLineItemsInsert,
   ) => {
-    const parsedPayload = lmsProviderInvoiceLineItemsInsertSchema.parse(
-      payload,
-    );
+    const parsedPayload =
+      lmsProviderInvoiceLineItemsInsertSchema.parse(payload);
     const newLineItem = await db
-      .insertInto("lmsProviderInvoiceLineItems")
+      .insertInto('lmsProviderInvoiceLineItems')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -107,13 +106,12 @@ export const mutations = {
     id: string,
     payload: LmsProviderInvoiceLineItemsUpdate,
   ) => {
-    const parsedPayload = lmsProviderInvoiceLineItemsUpdateSchema.parse(
-      payload,
-    );
+    const parsedPayload =
+      lmsProviderInvoiceLineItemsUpdateSchema.parse(payload);
     const updatedLineItem = await db
-      .updateTable("lmsProviderInvoiceLineItems")
+      .updateTable('lmsProviderInvoiceLineItems')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -121,13 +119,13 @@ export const mutations = {
   },
   deleteLmsProviderInvoiceLineItem: async (id: string) => {
     await db
-      .deleteFrom("lmsProviderInvoiceLineItems")
-      .where("id", "=", id)
+      .deleteFrom('lmsProviderInvoiceLineItems')
+      .where('id', '=', id)
       .execute();
 
     return {
       success: true,
-      message: "Provider invoice line item deleted successfully.",
+      message: 'Provider invoice line item deleted successfully.',
     };
   },
 };

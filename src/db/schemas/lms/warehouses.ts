@@ -1,31 +1,31 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsWarehouseType } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
-import { LmsWarehouseType } from "../../types.js";
+} from '../base.js';
 
 // LMS Warehouses Schema
 export const lmsWarehousesSchema = baseEntitySchema.extend({
   addressId: idSchema,
   capacity: z.number().positive().nullable().optional(),
-  code: z.string().min(1, "Warehouse code is required"),
+  code: z.string().min(1, 'Warehouse code is required'),
   departmentId: idSchema.nullable().optional(),
   isActive: z.boolean().default(true),
   managerId: idSchema.nullable().optional(),
-  name: z.string().min(1, "Warehouse name is required"),
+  name: z.string().min(1, 'Warehouse name is required'),
   warehouseType: z.enum(LmsWarehouseType),
 });
 
 export const lmsWarehousesInsertSchema = optionalBaseEntitySchema.extend({
   addressId: idSchema,
   capacity: z.number().positive().nullable().optional(),
-  code: z.string().min(1, "Warehouse code is required"),
+  code: z.string().min(1, 'Warehouse code is required'),
   departmentId: idSchema.nullable().optional(),
   isActive: z.boolean().optional().default(true),
   managerId: idSchema.nullable().optional(),
-  name: z.string().min(1, "Warehouse name is required"),
+  name: z.string().min(1, 'Warehouse name is required'),
   warehouseType: z.enum(LmsWarehouseType),
 });
 

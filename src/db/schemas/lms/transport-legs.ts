@@ -1,12 +1,12 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsLegStatus, LmsTransportLegType } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { LmsLegStatus, LmsTransportLegType } from "../../types.js";
+} from '../base.js';
 
 // LMS Transport Legs Schema
 export const lmsTransportLegsSchema = baseEntitySchema.extend({
@@ -55,8 +55,8 @@ export const lmsTransportLegsInsertSchema = optionalBaseEntitySchema.extend({
   vehicleId: idSchema.nullable().optional(),
 });
 
-export const lmsTransportLegsUpdateSchema = lmsTransportLegsInsertSchema
-  .partial();
+export const lmsTransportLegsUpdateSchema =
+  lmsTransportLegsInsertSchema.partial();
 
 export type LmsTransportLegs = z.infer<typeof lmsTransportLegsSchema>;
 export type LmsTransportLegsInsert = z.infer<

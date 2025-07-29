@@ -1,16 +1,16 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { LmsShipmentNode } from "./shipments";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   LmsTrackingEventsInsert,
-  lmsTrackingEventsInsertSchema,
   LmsTrackingEventsUpdate,
+  lmsTrackingEventsInsertSchema,
   lmsTrackingEventsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { LmsShipmentNode } from './shipments';
 
 export class LmsTrackingEventNode {
-  constructor(private model: Selectable<DB["lmsTrackingEvents"]>) {}
+  constructor(private model: Selectable<DB['lmsTrackingEvents']>) {}
 
   id() {
     return this.model.id;
@@ -34,9 +34,9 @@ export class LmsTrackingEventNode {
 
   async shipment() {
     const shipment = await db
-      .selectFrom("lmsShipments")
+      .selectFrom('lmsShipments')
       .selectAll()
-      .where("id", "=", this.model.shipmentId)
+      .where('id', '=', this.model.shipmentId)
       .executeTakeFirst();
 
     return shipment ? new LmsShipmentNode(shipment) : null;
@@ -54,7 +54,7 @@ export class LmsTrackingEventNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const trackingEvents = await db
-      .selectFrom("lmsTrackingEvents")
+      .selectFrom('lmsTrackingEvents')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -64,28 +64,28 @@ export const queries = {
   },
   view: async (id: string) => {
     const trackingEvent = await db
-      .selectFrom("lmsTrackingEvents")
+      .selectFrom('lmsTrackingEvents')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new LmsTrackingEventNode(trackingEvent);
   },
   listByShipment: async (shipmentId: string) => {
     const trackingEvents = await db
-      .selectFrom("lmsTrackingEvents")
+      .selectFrom('lmsTrackingEvents')
       .selectAll()
-      .where("shipmentId", "=", shipmentId)
-      .orderBy("eventTimestamp", "desc")
+      .where('shipmentId', '=', shipmentId)
+      .orderBy('eventTimestamp', 'desc')
       .execute();
 
     return trackingEvents.map((event) => new LmsTrackingEventNode(event));
   },
   listByEventType: async (eventType: string) => {
     const trackingEvents = await db
-      .selectFrom("lmsTrackingEvents")
+      .selectFrom('lmsTrackingEvents')
       .selectAll()
-      .where("eventType", "=", eventType as any)
+      .where('eventType', '=', eventType as any)
       .execute();
 
     return trackingEvents.map((event) => new LmsTrackingEventNode(event));
@@ -93,12 +93,10 @@ export const queries = {
 };
 
 export const mutations = {
-  createLmsTrackingEvent: async (
-    payload: LmsTrackingEventsInsert,
-  ) => {
+  createLmsTrackingEvent: async (payload: LmsTrackingEventsInsert) => {
     const parsedPayload = lmsTrackingEventsInsertSchema.parse(payload);
     const newTrackingEvent = await db
-      .insertInto("lmsTrackingEvents")
+      .insertInto('lmsTrackingEvents')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -111,18 +109,18 @@ export const mutations = {
   ) => {
     const parsedPayload = lmsTrackingEventsUpdateSchema.parse(payload);
     const updatedTrackingEvent = await db
-      .updateTable("lmsTrackingEvents")
+      .updateTable('lmsTrackingEvents')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsTrackingEventNode(updatedTrackingEvent);
   },
   deleteLmsTrackingEvent: async (id: string) => {
-    await db.deleteFrom("lmsTrackingEvents").where("id", "=", id).execute();
+    await db.deleteFrom('lmsTrackingEvents').where('id', '=', id).execute();
 
-    return { success: true, message: "Tracking event deleted successfully." };
+    return { success: true, message: 'Tracking event deleted successfully.' };
   },
 };
 

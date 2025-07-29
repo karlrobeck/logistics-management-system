@@ -1,17 +1,17 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { AuthUserNode } from "../auth";
-import { OrgDepartmentPermissionNode } from "./department-permissions";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   OrgDepartmentUserPermissionsInsert,
-  orgDepartmentUserPermissionsInsertSchema,
   OrgDepartmentUserPermissionsUpdate,
+  orgDepartmentUserPermissionsInsertSchema,
   orgDepartmentUserPermissionsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { AuthUserNode } from '../auth';
+import { OrgDepartmentPermissionNode } from './department-permissions';
 
 export class OrgDepartmentUserPermissionNode {
-  constructor(private model: Selectable<DB["orgDepartmentUserPermissions"]>) {}
+  constructor(private model: Selectable<DB['orgDepartmentUserPermissions']>) {}
 
   id() {
     return this.model.id;
@@ -19,9 +19,9 @@ export class OrgDepartmentUserPermissionNode {
 
   async user() {
     const user = await db
-      .selectFrom("authUsers")
+      .selectFrom('authUsers')
       .selectAll()
-      .where("id", "=", this.model.userId)
+      .where('id', '=', this.model.userId)
       .executeTakeFirst();
 
     return user ? new AuthUserNode(user) : null;
@@ -29,9 +29,9 @@ export class OrgDepartmentUserPermissionNode {
 
   async permission() {
     const permission = await db
-      .selectFrom("orgDepartmentPermissions")
+      .selectFrom('orgDepartmentPermissions')
       .selectAll()
-      .where("id", "=", this.model.permissionId)
+      .where('id', '=', this.model.permissionId)
       .executeTakeFirst();
 
     return permission ? new OrgDepartmentPermissionNode(permission) : null;
@@ -45,7 +45,7 @@ export class OrgDepartmentUserPermissionNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const permissions = await db
-      .selectFrom("orgDepartmentUserPermissions")
+      .selectFrom('orgDepartmentUserPermissions')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -57,18 +57,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const permission = await db
-      .selectFrom("orgDepartmentUserPermissions")
+      .selectFrom('orgDepartmentUserPermissions')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new OrgDepartmentUserPermissionNode(permission);
   },
   listByUser: async (userId: string) => {
     const permissions = await db
-      .selectFrom("orgDepartmentUserPermissions")
+      .selectFrom('orgDepartmentUserPermissions')
       .selectAll()
-      .where("userId", "=", userId)
+      .where('userId', '=', userId)
       .execute();
 
     return permissions.map(
@@ -81,12 +81,11 @@ export const mutations = {
   createOrgDepartmentUserPermission: async (
     payload: OrgDepartmentUserPermissionsInsert,
   ) => {
-    const parsedPayload = orgDepartmentUserPermissionsInsertSchema.parse(
-      payload,
-    );
+    const parsedPayload =
+      orgDepartmentUserPermissionsInsertSchema.parse(payload);
 
     const newPermission = await db
-      .insertInto("orgDepartmentUserPermissions")
+      .insertInto('orgDepartmentUserPermissions')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -97,14 +96,13 @@ export const mutations = {
     id: string,
     payload: OrgDepartmentUserPermissionsUpdate,
   ) => {
-    const parsedPayload = orgDepartmentUserPermissionsUpdateSchema.parse(
-      payload,
-    );
+    const parsedPayload =
+      orgDepartmentUserPermissionsUpdateSchema.parse(payload);
 
     const updatedPermission = await db
-      .updateTable("orgDepartmentUserPermissions")
+      .updateTable('orgDepartmentUserPermissions')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -112,13 +110,13 @@ export const mutations = {
   },
   deleteOrgDepartmentUserPermission: async (id: string) => {
     await db
-      .deleteFrom("orgDepartmentUserPermissions")
-      .where("id", "=", id)
+      .deleteFrom('orgDepartmentUserPermissions')
+      .where('id', '=', id)
       .execute();
 
     return {
       success: true,
-      message: "Department user permission deleted successfully.",
+      message: 'Department user permission deleted successfully.',
     };
   },
 };

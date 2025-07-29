@@ -1,21 +1,21 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   baseEntitySchema,
   numericSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
+} from '../base.js';
 
 // CRM Products Schema
 export const crmProductsSchema = baseEntitySchema.extend({
   description: z.string().nullable().optional(),
-  name: z.string().min(1, "Product name is required"),
+  name: z.string().min(1, 'Product name is required'),
   price: numericSchema,
   sku: z.string().nullable().optional(),
 });
 
 export const crmProductsInsertSchema = optionalBaseEntitySchema.extend({
   description: z.string().nullable().optional(),
-  name: z.string().min(1, "Product name is required"),
+  name: z.string().min(1, 'Product name is required'),
   price: numericSchema,
   sku: z.string().nullable().optional(),
 });

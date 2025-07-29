@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Base schemas for common types
 export const timestampSchema = z.coerce.date();
@@ -12,7 +12,7 @@ export const idSchema = z.string().uuid();
 export const emailSchema = z.string().email();
 export const phoneSchema = z.string().optional();
 export const urlSchema = z.string().url().optional();
-export const currencySchema = z.string().default("PHP");
+export const currencySchema = z.string().default('PHP');
 
 // Common field schemas
 export const baseEntitySchema = z.object({

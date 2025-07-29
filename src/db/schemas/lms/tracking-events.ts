@@ -1,15 +1,15 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsTrackingEventType } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { LmsTrackingEventType } from "../../types.js";
+} from '../base.js';
 
 // LMS Tracking Events Schema
 export const lmsTrackingEventsSchema = baseEntitySchema.extend({
-  eventDescription: z.string().min(1, "Event description is required"),
+  eventDescription: z.string().min(1, 'Event description is required'),
   eventLocation: z.string().nullable().optional(),
   eventTimestamp: timestampSchema,
   eventType: z.enum(LmsTrackingEventType),
@@ -17,15 +17,15 @@ export const lmsTrackingEventsSchema = baseEntitySchema.extend({
 });
 
 export const lmsTrackingEventsInsertSchema = optionalBaseEntitySchema.extend({
-  eventDescription: z.string().min(1, "Event description is required"),
+  eventDescription: z.string().min(1, 'Event description is required'),
   eventLocation: z.string().nullable().optional(),
   eventTimestamp: timestampSchema,
   eventType: z.enum(LmsTrackingEventType),
   shipmentId: idSchema,
 });
 
-export const lmsTrackingEventsUpdateSchema = lmsTrackingEventsInsertSchema
-  .partial();
+export const lmsTrackingEventsUpdateSchema =
+  lmsTrackingEventsInsertSchema.partial();
 
 export type LmsTrackingEvents = z.infer<typeof lmsTrackingEventsSchema>;
 export type LmsTrackingEventsInsert = z.infer<

@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsPackageType } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
-import { LmsPackageType } from "../../types.js";
+} from '../base.js';
 
 // LMS Packages Schema
 export const lmsPackagesSchema = baseEntitySchema.extend({
@@ -13,7 +13,7 @@ export const lmsPackagesSchema = baseEntitySchema.extend({
   declaredValue: numericSchema.nullable().optional(),
   height: numericSchema.nullable().optional(),
   length: numericSchema.nullable().optional(),
-  packageNumber: z.string().min(1, "Package number is required"),
+  packageNumber: z.string().min(1, 'Package number is required'),
   packageType: z.enum(LmsPackageType),
   shipmentId: idSchema,
   weight: numericSchema,
@@ -25,7 +25,7 @@ export const lmsPackagesInsertSchema = optionalBaseEntitySchema.extend({
   declaredValue: numericSchema.nullable().optional(),
   height: numericSchema.nullable().optional(),
   length: numericSchema.nullable().optional(),
-  packageNumber: z.string().min(1, "Package number is required"),
+  packageNumber: z.string().min(1, 'Package number is required'),
   packageType: z.enum(LmsPackageType),
   shipmentId: idSchema,
   weight: numericSchema,

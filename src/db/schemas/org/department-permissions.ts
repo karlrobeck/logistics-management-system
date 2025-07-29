@@ -1,23 +1,23 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { OrgPermissionStatus } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
-import { OrgPermissionStatus } from "../../types.js";
+} from '../base.js';
 
 // ORG Department Permissions Schema
 export const orgDepartmentPermissionsSchema = baseEntitySchema.extend({
   action: z.enum(OrgPermissionStatus),
   departmentId: idSchema,
-  resource: z.string().min(1, "Resource is required"),
+  resource: z.string().min(1, 'Resource is required'),
 });
 
-export const orgDepartmentPermissionsInsertSchema = optionalBaseEntitySchema
-  .extend({
+export const orgDepartmentPermissionsInsertSchema =
+  optionalBaseEntitySchema.extend({
     action: z.enum(OrgPermissionStatus),
     departmentId: idSchema,
-    resource: z.string().min(1, "Resource is required"),
+    resource: z.string().min(1, 'Resource is required'),
   });
 
 export const orgDepartmentPermissionsUpdateSchema =

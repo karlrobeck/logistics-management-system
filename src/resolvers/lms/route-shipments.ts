@@ -1,17 +1,17 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { LmsRouteNode } from "./routes";
-import { LmsShipmentNode } from "./shipments";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   LmsRouteShipmentsInsert,
-  lmsRouteShipmentsInsertSchema,
   LmsRouteShipmentsUpdate,
+  lmsRouteShipmentsInsertSchema,
   lmsRouteShipmentsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { LmsRouteNode } from './routes';
+import { LmsShipmentNode } from './shipments';
 
 export class LmsRouteShipmentNode {
-  constructor(private model: Selectable<DB["lmsRouteShipments"]>) {}
+  constructor(private model: Selectable<DB['lmsRouteShipments']>) {}
 
   id() {
     return this.model.id;
@@ -47,9 +47,9 @@ export class LmsRouteShipmentNode {
 
   async route() {
     const route = await db
-      .selectFrom("lmsRoutes")
+      .selectFrom('lmsRoutes')
       .selectAll()
-      .where("id", "=", this.model.routeId)
+      .where('id', '=', this.model.routeId)
       .executeTakeFirst();
 
     return route ? new LmsRouteNode(route) : null;
@@ -57,9 +57,9 @@ export class LmsRouteShipmentNode {
 
   async shipment() {
     const shipment = await db
-      .selectFrom("lmsShipments")
+      .selectFrom('lmsShipments')
       .selectAll()
-      .where("id", "=", this.model.shipmentId)
+      .where('id', '=', this.model.shipmentId)
       .executeTakeFirst();
 
     return shipment ? new LmsShipmentNode(shipment) : null;
@@ -77,7 +77,7 @@ export class LmsRouteShipmentNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const routeShipments = await db
-      .selectFrom("lmsRouteShipments")
+      .selectFrom('lmsRouteShipments')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -87,37 +87,37 @@ export const queries = {
   },
   view: async (id: string) => {
     const routeShipment = await db
-      .selectFrom("lmsRouteShipments")
+      .selectFrom('lmsRouteShipments')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new LmsRouteShipmentNode(routeShipment);
   },
   listByRoute: async (routeId: string) => {
     const routeShipments = await db
-      .selectFrom("lmsRouteShipments")
+      .selectFrom('lmsRouteShipments')
       .selectAll()
-      .where("routeId", "=", routeId)
-      .orderBy("sequenceNumber", "asc")
+      .where('routeId', '=', routeId)
+      .orderBy('sequenceNumber', 'asc')
       .execute();
 
     return routeShipments.map((item) => new LmsRouteShipmentNode(item));
   },
   listByShipment: async (shipmentId: string) => {
     const routeShipments = await db
-      .selectFrom("lmsRouteShipments")
+      .selectFrom('lmsRouteShipments')
       .selectAll()
-      .where("shipmentId", "=", shipmentId)
+      .where('shipmentId', '=', shipmentId)
       .execute();
 
     return routeShipments.map((item) => new LmsRouteShipmentNode(item));
   },
   listByStatus: async (deliveryStatus: string) => {
     const routeShipments = await db
-      .selectFrom("lmsRouteShipments")
+      .selectFrom('lmsRouteShipments')
       .selectAll()
-      .where("deliveryStatus", "=", deliveryStatus as any)
+      .where('deliveryStatus', '=', deliveryStatus as any)
       .execute();
 
     return routeShipments.map((item) => new LmsRouteShipmentNode(item));
@@ -125,12 +125,10 @@ export const queries = {
 };
 
 export const mutations = {
-  createLmsRouteShipment: async (
-    payload: LmsRouteShipmentsInsert,
-  ) => {
+  createLmsRouteShipment: async (payload: LmsRouteShipmentsInsert) => {
     const parsedPayload = lmsRouteShipmentsInsertSchema.parse(payload);
     const newRouteShipment = await db
-      .insertInto("lmsRouteShipments")
+      .insertInto('lmsRouteShipments')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -143,18 +141,18 @@ export const mutations = {
   ) => {
     const parsedPayload = lmsRouteShipmentsUpdateSchema.parse(payload);
     const updatedRouteShipment = await db
-      .updateTable("lmsRouteShipments")
+      .updateTable('lmsRouteShipments')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsRouteShipmentNode(updatedRouteShipment);
   },
   deleteLmsRouteShipment: async (id: string) => {
-    await db.deleteFrom("lmsRouteShipments").where("id", "=", id).execute();
+    await db.deleteFrom('lmsRouteShipments').where('id', '=', id).execute();
 
-    return { success: true, message: "Route shipment deleted successfully." };
+    return { success: true, message: 'Route shipment deleted successfully.' };
   },
 };
 

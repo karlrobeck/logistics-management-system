@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
+} from '../base.js';
 
 // LMS Shipping Service Max Dimensions Schema
 export const lmsShippingServiceMaxDimensionsSchema = baseEntitySchema.extend({
@@ -15,13 +15,12 @@ export const lmsShippingServiceMaxDimensionsSchema = baseEntitySchema.extend({
 });
 
 export const lmsShippingServiceMaxDimensionsInsertSchema =
-  optionalBaseEntitySchema
-    .extend({
-      height: numericSchema.nullable().optional(),
-      length: numericSchema.nullable().optional(),
-      shippingServiceId: idSchema,
-      width: numericSchema.nullable().optional(),
-    });
+  optionalBaseEntitySchema.extend({
+    height: numericSchema.nullable().optional(),
+    length: numericSchema.nullable().optional(),
+    shippingServiceId: idSchema,
+    width: numericSchema.nullable().optional(),
+  });
 
 export const lmsShippingServiceMaxDimensionsUpdateSchema =
   lmsShippingServiceMaxDimensionsInsertSchema.partial();

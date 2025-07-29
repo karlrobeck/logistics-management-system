@@ -1,51 +1,51 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { CrmOpportunityStage } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { CrmOpportunityStage } from "../../types.js";
+} from '../base.js';
 
 // CRM Opportunities Schema
 export const crmOpportunitiesSchema = baseEntitySchema.extend({
-  amount: numericSchema.default("0"),
+  amount: numericSchema.default('0'),
   closeDate: timestampSchema.nullable().optional(),
   companyId: idSchema.nullable().optional(),
-  name: z.string().min(1, "Opportunity name is required"),
+  name: z.string().min(1, 'Opportunity name is required'),
   primaryContactId: idSchema.nullable().optional(),
-  probability: numericSchema.default("0"),
+  probability: numericSchema.default('0'),
   stage: z.enum(CrmOpportunityStage),
 });
 
 export const crmOpportunitiesInsertSchema = optionalBaseEntitySchema.extend({
-  amount: numericSchema.optional().default("0"),
+  amount: numericSchema.optional().default('0'),
   closeDate: timestampSchema.nullable().optional(),
   companyId: idSchema.nullable().optional(),
-  name: z.string().min(1, "Opportunity name is required"),
+  name: z.string().min(1, 'Opportunity name is required'),
   primaryContactId: idSchema.nullable().optional(),
-  probability: numericSchema.optional().default("0"),
+  probability: numericSchema.optional().default('0'),
   stage: z.enum(CrmOpportunityStage),
 });
 
-export const crmOpportunitiesUpdateSchema = crmOpportunitiesInsertSchema
-  .partial();
+export const crmOpportunitiesUpdateSchema =
+  crmOpportunitiesInsertSchema.partial();
 
 // CRM Opportunity Products Schema
 export const crmOpportunityProductsSchema = baseEntitySchema.extend({
   opportunityId: idSchema,
   productId: idSchema,
-  quantity: numericSchema.default("1"),
+  quantity: numericSchema.default('1'),
   totalPrice: numericSchema.nullable().optional(),
   unitPrice: numericSchema,
 });
 
-export const crmOpportunityProductsInsertSchema = optionalBaseEntitySchema
-  .extend({
+export const crmOpportunityProductsInsertSchema =
+  optionalBaseEntitySchema.extend({
     opportunityId: idSchema,
     productId: idSchema,
-    quantity: numericSchema.optional().default("1"),
+    quantity: numericSchema.optional().default('1'),
     totalPrice: numericSchema.nullable().optional(),
     unitPrice: numericSchema,
   });

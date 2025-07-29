@@ -1,9 +1,9 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
+} from '../base.js';
 
 // ORG Department User Permissions Schema
 export const orgDepartmentUserPermissionsSchema = baseEntitySchema.extend({
@@ -11,8 +11,8 @@ export const orgDepartmentUserPermissionsSchema = baseEntitySchema.extend({
   userId: idSchema,
 });
 
-export const orgDepartmentUserPermissionsInsertSchema = optionalBaseEntitySchema
-  .extend({
+export const orgDepartmentUserPermissionsInsertSchema =
+  optionalBaseEntitySchema.extend({
     permissionId: idSchema,
     userId: idSchema,
   });

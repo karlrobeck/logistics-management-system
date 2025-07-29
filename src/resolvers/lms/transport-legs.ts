@@ -1,21 +1,21 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { OrgDriverNode } from "../org/drivers";
-import { OrgVehicleNode } from "../org/vehicles";
-import { LmsAddressNode } from "./addresses";
-import { LmsShipmentNode } from "./shipments";
-import { LmsTransportationProviderNode } from "./transportation-providers";
-import { LmsWarehouseNode } from "./warehouses";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   LmsTransportLegsInsert,
-  lmsTransportLegsInsertSchema,
   LmsTransportLegsUpdate,
+  lmsTransportLegsInsertSchema,
   lmsTransportLegsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { OrgDriverNode } from '../org/drivers';
+import { OrgVehicleNode } from '../org/vehicles';
+import { LmsAddressNode } from './addresses';
+import { LmsShipmentNode } from './shipments';
+import { LmsTransportationProviderNode } from './transportation-providers';
+import { LmsWarehouseNode } from './warehouses';
 
 export class LmsTransportLegNode {
-  constructor(private model: Selectable<DB["lmsTransportLegs"]>) {}
+  constructor(private model: Selectable<DB['lmsTransportLegs']>) {}
 
   id() {
     return this.model.id;
@@ -67,9 +67,9 @@ export class LmsTransportLegNode {
 
   async shipment() {
     const shipment = await db
-      .selectFrom("lmsShipments")
+      .selectFrom('lmsShipments')
       .selectAll()
-      .where("id", "=", this.model.shipmentId)
+      .where('id', '=', this.model.shipmentId)
       .executeTakeFirst();
 
     return shipment ? new LmsShipmentNode(shipment) : null;
@@ -79,9 +79,9 @@ export class LmsTransportLegNode {
     if (!this.model.originAddressId) return null;
 
     const address = await db
-      .selectFrom("lmsAddresses")
+      .selectFrom('lmsAddresses')
       .selectAll()
-      .where("id", "=", this.model.originAddressId)
+      .where('id', '=', this.model.originAddressId)
       .executeTakeFirst();
 
     return address ? new LmsAddressNode(address) : null;
@@ -91,9 +91,9 @@ export class LmsTransportLegNode {
     if (!this.model.destinationAddressId) return null;
 
     const address = await db
-      .selectFrom("lmsAddresses")
+      .selectFrom('lmsAddresses')
       .selectAll()
-      .where("id", "=", this.model.destinationAddressId)
+      .where('id', '=', this.model.destinationAddressId)
       .executeTakeFirst();
 
     return address ? new LmsAddressNode(address) : null;
@@ -103,9 +103,9 @@ export class LmsTransportLegNode {
     if (!this.model.originWarehouseId) return null;
 
     const warehouse = await db
-      .selectFrom("lmsWarehouses")
+      .selectFrom('lmsWarehouses')
       .selectAll()
-      .where("id", "=", this.model.originWarehouseId)
+      .where('id', '=', this.model.originWarehouseId)
       .executeTakeFirst();
 
     return warehouse ? new LmsWarehouseNode(warehouse) : null;
@@ -115,9 +115,9 @@ export class LmsTransportLegNode {
     if (!this.model.destinationWarehouseId) return null;
 
     const warehouse = await db
-      .selectFrom("lmsWarehouses")
+      .selectFrom('lmsWarehouses')
       .selectAll()
-      .where("id", "=", this.model.destinationWarehouseId)
+      .where('id', '=', this.model.destinationWarehouseId)
       .executeTakeFirst();
 
     return warehouse ? new LmsWarehouseNode(warehouse) : null;
@@ -127,9 +127,9 @@ export class LmsTransportLegNode {
     if (!this.model.providerId) return null;
 
     const provider = await db
-      .selectFrom("lmsTransportationProviders")
+      .selectFrom('lmsTransportationProviders')
       .selectAll()
-      .where("id", "=", this.model.providerId)
+      .where('id', '=', this.model.providerId)
       .executeTakeFirst();
 
     return provider ? new LmsTransportationProviderNode(provider) : null;
@@ -139,9 +139,9 @@ export class LmsTransportLegNode {
     if (!this.model.driverId) return null;
 
     const driver = await db
-      .selectFrom("orgDrivers")
+      .selectFrom('orgDrivers')
       .selectAll()
-      .where("id", "=", this.model.driverId)
+      .where('id', '=', this.model.driverId)
       .executeTakeFirst();
 
     return driver ? new OrgDriverNode(driver) : null;
@@ -151,9 +151,9 @@ export class LmsTransportLegNode {
     if (!this.model.vehicleId) return null;
 
     const vehicle = await db
-      .selectFrom("orgVehicles")
+      .selectFrom('orgVehicles')
       .selectAll()
-      .where("id", "=", this.model.vehicleId)
+      .where('id', '=', this.model.vehicleId)
       .executeTakeFirst();
 
     return vehicle ? new OrgVehicleNode(vehicle) : null;
@@ -171,7 +171,7 @@ export class LmsTransportLegNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const transportLegs = await db
-      .selectFrom("lmsTransportLegs")
+      .selectFrom('lmsTransportLegs')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -181,46 +181,46 @@ export const queries = {
   },
   view: async (id: string) => {
     const transportLeg = await db
-      .selectFrom("lmsTransportLegs")
+      .selectFrom('lmsTransportLegs')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new LmsTransportLegNode(transportLeg);
   },
   listByShipment: async (shipmentId: string) => {
     const transportLegs = await db
-      .selectFrom("lmsTransportLegs")
+      .selectFrom('lmsTransportLegs')
       .selectAll()
-      .where("shipmentId", "=", shipmentId)
-      .orderBy("legSequence", "asc")
+      .where('shipmentId', '=', shipmentId)
+      .orderBy('legSequence', 'asc')
       .execute();
 
     return transportLegs.map((leg) => new LmsTransportLegNode(leg));
   },
   listByStatus: async (status: string) => {
     const transportLegs = await db
-      .selectFrom("lmsTransportLegs")
+      .selectFrom('lmsTransportLegs')
       .selectAll()
-      .where("status", "=", status as any)
+      .where('status', '=', status as any)
       .execute();
 
     return transportLegs.map((leg) => new LmsTransportLegNode(leg));
   },
   listByProvider: async (providerId: string) => {
     const transportLegs = await db
-      .selectFrom("lmsTransportLegs")
+      .selectFrom('lmsTransportLegs')
       .selectAll()
-      .where("providerId", "=", providerId)
+      .where('providerId', '=', providerId)
       .execute();
 
     return transportLegs.map((leg) => new LmsTransportLegNode(leg));
   },
   listByDriver: async (driverId: string) => {
     const transportLegs = await db
-      .selectFrom("lmsTransportLegs")
+      .selectFrom('lmsTransportLegs')
       .selectAll()
-      .where("driverId", "=", driverId)
+      .where('driverId', '=', driverId)
       .execute();
 
     return transportLegs.map((leg) => new LmsTransportLegNode(leg));
@@ -228,12 +228,10 @@ export const queries = {
 };
 
 export const mutations = {
-  createLmsTransportLeg: async (
-    payload: LmsTransportLegsInsert,
-  ) => {
+  createLmsTransportLeg: async (payload: LmsTransportLegsInsert) => {
     const parsedPayload = lmsTransportLegsInsertSchema.parse(payload);
     const newTransportLeg = await db
-      .insertInto("lmsTransportLegs")
+      .insertInto('lmsTransportLegs')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -246,18 +244,18 @@ export const mutations = {
   ) => {
     const parsedPayload = lmsTransportLegsUpdateSchema.parse(payload);
     const updatedTransportLeg = await db
-      .updateTable("lmsTransportLegs")
+      .updateTable('lmsTransportLegs')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsTransportLegNode(updatedTransportLeg);
   },
   deleteLmsTransportLeg: async (id: string) => {
-    await db.deleteFrom("lmsTransportLegs").where("id", "=", id).execute();
+    await db.deleteFrom('lmsTransportLegs').where('id', '=', id).execute();
 
-    return { success: true, message: "Transport leg deleted successfully." };
+    return { success: true, message: 'Transport leg deleted successfully.' };
   },
 };
 

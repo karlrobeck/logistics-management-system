@@ -1,17 +1,17 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { CrmCompanyNode } from "./companies";
-import { CrmContactNode } from "./contacts";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   CrmOpportunitiesInsert,
-  crmOpportunitiesInsertSchema,
   CrmOpportunitiesUpdate,
+  crmOpportunitiesInsertSchema,
   crmOpportunitiesUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { CrmCompanyNode } from './companies';
+import { CrmContactNode } from './contacts';
 
 export class CrmOpportunityNode {
-  constructor(private model: Selectable<DB["crmOpportunities"]>) {}
+  constructor(private model: Selectable<DB['crmOpportunities']>) {}
 
   id() {
     return this.model.id;
@@ -41,9 +41,9 @@ export class CrmOpportunityNode {
     if (!this.model.primaryContactId) return null;
 
     const contact = await db
-      .selectFrom("crmContacts")
+      .selectFrom('crmContacts')
       .selectAll()
-      .where("id", "=", this.model.primaryContactId)
+      .where('id', '=', this.model.primaryContactId)
       .executeTakeFirst();
 
     return contact ? new CrmContactNode(contact) : null;
@@ -53,9 +53,9 @@ export class CrmOpportunityNode {
     if (!this.model.companyId) return null;
 
     const company = await db
-      .selectFrom("crmCompanies")
+      .selectFrom('crmCompanies')
       .selectAll()
-      .where("id", "=", this.model.companyId)
+      .where('id', '=', this.model.companyId)
       .executeTakeFirst();
 
     return company ? new CrmCompanyNode(company) : null;
@@ -73,7 +73,7 @@ export class CrmOpportunityNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const opportunities = await db
-      .selectFrom("crmOpportunities")
+      .selectFrom('crmOpportunities')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -85,9 +85,9 @@ export const queries = {
   },
   view: async (id: string) => {
     const opportunity = await db
-      .selectFrom("crmOpportunities")
+      .selectFrom('crmOpportunities')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new CrmOpportunityNode(opportunity);
@@ -99,32 +99,29 @@ export const mutations = {
     const parsedPayload = crmOpportunitiesInsertSchema.parse(payload);
 
     const newOpportunity = await db
-      .insertInto("crmOpportunities")
+      .insertInto('crmOpportunities')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmOpportunityNode(newOpportunity);
   },
-  updateCrmOpportunity: async (
-    id: string,
-    payload: CrmOpportunitiesUpdate,
-  ) => {
+  updateCrmOpportunity: async (id: string, payload: CrmOpportunitiesUpdate) => {
     const parsedPayload = crmOpportunitiesUpdateSchema.parse(payload);
 
     const updatedOpportunity = await db
-      .updateTable("crmOpportunities")
+      .updateTable('crmOpportunities')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmOpportunityNode(updatedOpportunity);
   },
   deleteCrmOpportunity: async (id: string) => {
-    await db.deleteFrom("crmOpportunities").where("id", "=", id).execute();
+    await db.deleteFrom('crmOpportunities').where('id', '=', id).execute();
 
-    return { success: true, message: "Opportunity deleted successfully." };
+    return { success: true, message: 'Opportunity deleted successfully.' };
   },
 };
 

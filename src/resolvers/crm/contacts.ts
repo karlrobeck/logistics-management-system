@@ -1,17 +1,17 @@
-import { ComparisonOperatorExpression, Selectable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { LmsAddressNode } from "../lms/addresses";
-import { CrmCompanyNode } from "./companies";
+import { ComparisonOperatorExpression, Selectable } from 'kysely';
+import { db } from '../../db';
 import {
   CrmContactsInsert,
-  crmContactsInsertSchema,
   CrmContactsUpdate,
+  crmContactsInsertSchema,
   crmContactsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { LmsAddressNode } from '../lms/addresses';
+import { CrmCompanyNode } from './companies';
 
 export class CrmContactNode {
-  constructor(private model: Selectable<DB["crmContacts"]>) {}
+  constructor(private model: Selectable<DB['crmContacts']>) {}
 
   id() {
     return this.model.id;
@@ -53,9 +53,9 @@ export class CrmContactNode {
     if (!this.model.addressId) return null;
 
     const address = await db
-      .selectFrom("lmsAddresses")
+      .selectFrom('lmsAddresses')
       .selectAll()
-      .where("id", "=", this.model.addressId)
+      .where('id', '=', this.model.addressId)
       .executeTakeFirst();
 
     return address ? new LmsAddressNode(address) : null;
@@ -65,9 +65,9 @@ export class CrmContactNode {
     if (!this.model.companyId) return null;
 
     const company = await db
-      .selectFrom("crmCompanies")
+      .selectFrom('crmCompanies')
       .selectAll()
-      .where("id", "=", this.model.companyId)
+      .where('id', '=', this.model.companyId)
       .executeTakeFirst();
 
     return company ? new CrmCompanyNode(company) : null;
@@ -86,15 +86,15 @@ export const queries = {
   list: async (
     page: number,
     limit: number,
-    sort?: { key: keyof DB["crmContacts"]; order: "asc" | "desc" }[],
+    sort?: { key: keyof DB['crmContacts']; order: 'asc' | 'desc' }[],
     filter?: {
-      key: keyof DB["crmContacts"];
+      key: keyof DB['crmContacts'];
       operator: ComparisonOperatorExpression;
       value: string;
     }[],
   ) => {
     let query = db
-      .selectFrom("crmContacts")
+      .selectFrom('crmContacts')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit);
@@ -117,9 +117,9 @@ export const queries = {
   },
   view: async (id: string) => {
     const contact = await db
-      .selectFrom("crmContacts")
+      .selectFrom('crmContacts')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new CrmContactNode(contact);
@@ -131,32 +131,29 @@ export const mutations = {
     const parsedPayload = crmContactsInsertSchema.parse(payload);
 
     const newContact = await db
-      .insertInto("crmContacts")
+      .insertInto('crmContacts')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmContactNode(newContact);
   },
-  updateCrmContact: async (
-    id: string,
-    payload: CrmContactsUpdate,
-  ) => {
+  updateCrmContact: async (id: string, payload: CrmContactsUpdate) => {
     const parsedPayload = crmContactsUpdateSchema.parse(payload);
 
     const updatedContact = await db
-      .updateTable("crmContacts")
+      .updateTable('crmContacts')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new CrmContactNode(updatedContact);
   },
   deleteCrmContact: async (id: string) => {
-    await db.deleteFrom("crmContacts").where("id", "=", id).execute();
+    await db.deleteFrom('crmContacts').where('id', '=', id).execute();
 
-    return { success: true, message: "Contact deleted successfully." };
+    return { success: true, message: 'Contact deleted successfully.' };
   },
 };
 

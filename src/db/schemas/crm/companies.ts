@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   baseEntitySchema,
   emailSchema,
@@ -6,7 +6,7 @@ import {
   optionalBaseEntitySchema,
   phoneSchema,
   urlSchema,
-} from "../base.js";
+} from '../base.js';
 
 // CRM Companies Schema
 export const crmCompaniesSchema = baseEntitySchema.extend({
@@ -14,7 +14,7 @@ export const crmCompaniesSchema = baseEntitySchema.extend({
   description: z.string().nullable().optional(),
   email: emailSchema.nullable().optional(),
   industry: z.string().nullable().optional(),
-  name: z.string().min(1, "Company name is required"),
+  name: z.string().min(1, 'Company name is required'),
   phoneNumber: phoneSchema.nullable().optional(),
   website: urlSchema.nullable().optional(),
 });
@@ -24,7 +24,7 @@ export const crmCompaniesInsertSchema = optionalBaseEntitySchema.extend({
   description: z.string().nullable().optional(),
   email: emailSchema.nullable().optional(),
   industry: z.string().nullable().optional(),
-  name: z.string().min(1, "Company name is required"),
+  name: z.string().min(1, 'Company name is required'),
   phoneNumber: phoneSchema.nullable().optional(),
   website: urlSchema.nullable().optional(),
 });

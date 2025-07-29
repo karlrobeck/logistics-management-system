@@ -1,24 +1,28 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./styles/globals.css";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './styles/globals.css';
+import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { ThemeProvider } from '@/components/theme-provider';
 
-import { routeTree } from "./routeTree.gen";
+import { routeTree } from './routeTree.gen';
 
 const router = createRouter({ routeTree });
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
   }
 }
 
-const rootEl = document.getElementById("root");
+const rootEl = document.getElementById('root');
+
 if (rootEl) {
   const root = ReactDOM.createRoot(rootEl);
   root.render(
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <ThemeProvider defaultTheme="dark" storageKey="lms-ui-theme">
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </React.StrictMode>,
   );
 }

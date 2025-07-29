@@ -1,17 +1,17 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
-import { CrmOpportunityNode } from "./opportunities";
-import { CrmProductNode } from "./products";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   CrmOpportunityProductsInsert,
-  crmOpportunityProductsInsertSchema,
   CrmOpportunityProductsUpdate,
+  crmOpportunityProductsInsertSchema,
   crmOpportunityProductsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
+import { CrmOpportunityNode } from './opportunities';
+import { CrmProductNode } from './products';
 
 export class CrmOpportunityProductNode {
-  constructor(private model: Selectable<DB["crmOpportunityProducts"]>) {}
+  constructor(private model: Selectable<DB['crmOpportunityProducts']>) {}
 
   id() {
     return this.model.id;
@@ -31,9 +31,9 @@ export class CrmOpportunityProductNode {
 
   async opportunity() {
     const opportunity = await db
-      .selectFrom("crmOpportunities")
+      .selectFrom('crmOpportunities')
       .selectAll()
-      .where("id", "=", this.model.opportunityId)
+      .where('id', '=', this.model.opportunityId)
       .executeTakeFirst();
 
     return opportunity ? new CrmOpportunityNode(opportunity) : null;
@@ -41,9 +41,9 @@ export class CrmOpportunityProductNode {
 
   async product() {
     const product = await db
-      .selectFrom("crmProducts")
+      .selectFrom('crmProducts')
       .selectAll()
-      .where("id", "=", this.model.productId)
+      .where('id', '=', this.model.productId)
       .executeTakeFirst();
 
     return product ? new CrmProductNode(product) : null;
@@ -61,7 +61,7 @@ export class CrmOpportunityProductNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const opportunityProducts = await db
-      .selectFrom("crmOpportunityProducts")
+      .selectFrom('crmOpportunityProducts')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -73,18 +73,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const opportunityProduct = await db
-      .selectFrom("crmOpportunityProducts")
+      .selectFrom('crmOpportunityProducts')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new CrmOpportunityProductNode(opportunityProduct);
   },
   listByOpportunity: async (opportunityId: string) => {
     const opportunityProducts = await db
-      .selectFrom("crmOpportunityProducts")
+      .selectFrom('crmOpportunityProducts')
       .selectAll()
-      .where("opportunityId", "=", opportunityId)
+      .where('opportunityId', '=', opportunityId)
       .execute();
 
     return opportunityProducts.map(
@@ -100,7 +100,7 @@ export const mutations = {
     const parsedPayload = crmOpportunityProductsInsertSchema.parse(payload);
 
     const newOpportunityProduct = await db
-      .insertInto("crmOpportunityProducts")
+      .insertInto('crmOpportunityProducts')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -114,9 +114,9 @@ export const mutations = {
     const parsedPayload = crmOpportunityProductsUpdateSchema.parse(payload);
 
     const updatedOpportunityProduct = await db
-      .updateTable("crmOpportunityProducts")
+      .updateTable('crmOpportunityProducts')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -124,13 +124,13 @@ export const mutations = {
   },
   deleteCrmOpportunityProduct: async (id: string) => {
     await db
-      .deleteFrom("crmOpportunityProducts")
-      .where("id", "=", id)
+      .deleteFrom('crmOpportunityProducts')
+      .where('id', '=', id)
       .execute();
 
     return {
       success: true,
-      message: "Opportunity product deleted successfully.",
+      message: 'Opportunity product deleted successfully.',
     };
   },
 };

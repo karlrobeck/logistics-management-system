@@ -1,4 +1,5 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { CrmContactStatus } from '../../types.js';
 import {
   baseEntitySchema,
   emailSchema,
@@ -6,8 +7,7 @@ import {
   optionalBaseEntitySchema,
   phoneSchema,
   timestampSchema,
-} from "../base.js";
-import { CrmContactStatus } from "../../types.js";
+} from '../base.js';
 
 // CRM Contacts Schema
 export const crmContactsSchema = baseEntitySchema.extend({
@@ -15,9 +15,9 @@ export const crmContactsSchema = baseEntitySchema.extend({
   birthDate: timestampSchema.nullable().optional(),
   companyId: idSchema.nullable().optional(),
   email: emailSchema,
-  firstName: z.string().min(1, "First name is required"),
+  firstName: z.string().min(1, 'First name is required'),
   jobTitle: z.string().nullable().optional(),
-  lastName: z.string().min(1, "Last name is required"),
+  lastName: z.string().min(1, 'Last name is required'),
   leadSource: z.string().nullable().optional(),
   phoneNumber: phoneSchema.nullable().optional(),
   status: z.enum(CrmContactStatus),
@@ -28,9 +28,9 @@ export const crmContactsInsertSchema = optionalBaseEntitySchema.extend({
   birthDate: timestampSchema.nullable().optional(),
   companyId: idSchema.nullable().optional(),
   email: emailSchema,
-  firstName: z.string().min(1, "First name is required"),
+  firstName: z.string().min(1, 'First name is required'),
   jobTitle: z.string().nullable().optional(),
-  lastName: z.string().min(1, "Last name is required"),
+  lastName: z.string().min(1, 'Last name is required'),
   leadSource: z.string().nullable().optional(),
   phoneNumber: phoneSchema.nullable().optional(),
   status: z.enum(CrmContactStatus),

@@ -1,20 +1,20 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { CrmLeadStatus } from '../../types.js';
 import {
   baseEntitySchema,
   emailSchema,
   idSchema,
   optionalBaseEntitySchema,
   phoneSchema,
-} from "../base.js";
-import { CrmLeadStatus } from "../../types.js";
+} from '../base.js';
 
 // CRM Leads Schema
 export const crmLeadsSchema = baseEntitySchema.extend({
   companyName: z.string().nullable().optional(),
   convertedToContactId: idSchema.nullable().optional(),
   email: emailSchema,
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
   leadScore: z.number().min(0).max(100).default(0),
   leadSource: z.string().nullable().optional(),
   leadStatus: z.enum(CrmLeadStatus),
@@ -25,8 +25,8 @@ export const crmLeadsInsertSchema = optionalBaseEntitySchema.extend({
   companyName: z.string().nullable().optional(),
   convertedToContactId: idSchema.nullable().optional(),
   email: emailSchema,
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
   leadScore: z.number().min(0).max(100).optional().default(0),
   leadSource: z.string().nullable().optional(),
   leadStatus: z.enum(CrmLeadStatus),

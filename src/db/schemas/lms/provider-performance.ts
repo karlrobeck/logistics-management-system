@@ -1,12 +1,12 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsPerformanceMetricType } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { LmsPerformanceMetricType } from "../../types.js";
+} from '../base.js';
 
 // LMS Provider Performance Schema
 export const lmsProviderPerformanceSchema = baseEntitySchema.extend({
@@ -19,8 +19,8 @@ export const lmsProviderPerformanceSchema = baseEntitySchema.extend({
   transportLegId: idSchema.nullable().optional(),
 });
 
-export const lmsProviderPerformanceInsertSchema = optionalBaseEntitySchema
-  .extend({
+export const lmsProviderPerformanceInsertSchema =
+  optionalBaseEntitySchema.extend({
     measurementDate: timestampSchema,
     metricType: z.enum(LmsPerformanceMetricType),
     metricValue: numericSchema.nullable().optional(),

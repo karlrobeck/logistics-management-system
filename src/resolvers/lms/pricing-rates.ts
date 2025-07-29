@@ -1,15 +1,15 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   LmsPricingRatesInsert,
-  lmsPricingRatesInsertSchema,
   LmsPricingRatesUpdate,
+  lmsPricingRatesInsertSchema,
   lmsPricingRatesUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
 
 class LmsPricingRateNode {
-  constructor(private model: Selectable<DB["lmsPricingRates"]>) {}
+  constructor(private model: Selectable<DB['lmsPricingRates']>) {}
 
   id() {
     return this.model.id;
@@ -67,7 +67,7 @@ class LmsPricingRateNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const pricingRates = await db
-      .selectFrom("lmsPricingRates")
+      .selectFrom('lmsPricingRates')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -77,28 +77,28 @@ export const queries = {
   },
   view: async (id: string) => {
     const pricingRate = await db
-      .selectFrom("lmsPricingRates")
+      .selectFrom('lmsPricingRates')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new LmsPricingRateNode(pricingRate);
   },
   listByService: async (serviceId: string) => {
     const pricingRates = await db
-      .selectFrom("lmsPricingRates")
+      .selectFrom('lmsPricingRates')
       .selectAll()
-      .where("serviceId", "=", serviceId)
+      .where('serviceId', '=', serviceId)
       .execute();
 
     return pricingRates.map((rate) => new LmsPricingRateNode(rate));
   },
   listByRoute: async (originZoneId: string, destinationZoneId: string) => {
     const pricingRates = await db
-      .selectFrom("lmsPricingRates")
+      .selectFrom('lmsPricingRates')
       .selectAll()
-      .where("originZoneId", "=", originZoneId)
-      .where("destinationZoneId", "=", destinationZoneId)
+      .where('originZoneId', '=', originZoneId)
+      .where('destinationZoneId', '=', destinationZoneId)
       .execute();
 
     return pricingRates.map((rate) => new LmsPricingRateNode(rate));
@@ -106,14 +106,14 @@ export const queries = {
   listActive: async () => {
     const currentDate = new Date();
     const pricingRates = await db
-      .selectFrom("lmsPricingRates")
+      .selectFrom('lmsPricingRates')
       .selectAll()
-      .where("effectiveDate", "<=", currentDate)
+      .where('effectiveDate', '<=', currentDate)
       .where((eb) =>
         eb.or([
-          eb("expiryDate", "is", null),
-          eb("expiryDate", ">", currentDate),
-        ])
+          eb('expiryDate', 'is', null),
+          eb('expiryDate', '>', currentDate),
+        ]),
       )
       .execute();
 
@@ -125,31 +125,28 @@ export const mutations = {
   createLmsPricingRate: async (payload: LmsPricingRatesInsert) => {
     const parsedPayload = lmsPricingRatesInsertSchema.parse(payload);
     const newPricingRate = await db
-      .insertInto("lmsPricingRates")
+      .insertInto('lmsPricingRates')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsPricingRateNode(newPricingRate);
   },
-  updateLmsPricingRate: async (
-    id: string,
-    payload: LmsPricingRatesUpdate,
-  ) => {
+  updateLmsPricingRate: async (id: string, payload: LmsPricingRatesUpdate) => {
     const parsedPayload = lmsPricingRatesUpdateSchema.parse(payload);
     const updatedPricingRate = await db
-      .updateTable("lmsPricingRates")
+      .updateTable('lmsPricingRates')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
     return new LmsPricingRateNode(updatedPricingRate);
   },
   deleteLmsPricingRate: async (id: string) => {
-    await db.deleteFrom("lmsPricingRates").where("id", "=", id).execute();
+    await db.deleteFrom('lmsPricingRates').where('id', '=', id).execute();
 
-    return { success: true, message: "Pricing rate deleted successfully." };
+    return { success: true, message: 'Pricing rate deleted successfully.' };
   },
 };
 

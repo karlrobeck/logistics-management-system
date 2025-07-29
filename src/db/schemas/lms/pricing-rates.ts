@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
+} from '../base.js';
 
 // LMS Pricing Rates Schema
 export const lmsPricingRatesSchema = baseEntitySchema.extend({
@@ -34,8 +34,8 @@ export const lmsPricingRatesInsertSchema = optionalBaseEntitySchema.extend({
   weightMin: numericSchema,
 });
 
-export const lmsPricingRatesUpdateSchema = lmsPricingRatesInsertSchema
-  .partial();
+export const lmsPricingRatesUpdateSchema =
+  lmsPricingRatesInsertSchema.partial();
 
 export type LmsPricingRates = z.infer<typeof lmsPricingRatesSchema>;
 export type LmsPricingRatesInsert = z.infer<typeof lmsPricingRatesInsertSchema>;

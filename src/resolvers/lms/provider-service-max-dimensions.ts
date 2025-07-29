@@ -1,16 +1,16 @@
-import { Insertable, Selectable, Updateable } from "kysely";
-import { db } from "../../db";
-import { DB } from "../../db/types";
+import { Insertable, Selectable, Updateable } from 'kysely';
+import { db } from '../../db';
 import {
   LmsProviderServiceMaxDimensionsInsert,
-  lmsProviderServiceMaxDimensionsInsertSchema,
   LmsProviderServiceMaxDimensionsUpdate,
+  lmsProviderServiceMaxDimensionsInsertSchema,
   lmsProviderServiceMaxDimensionsUpdateSchema,
-} from "../../db/schemas";
+} from '../../db/schemas';
+import { DB } from '../../db/types';
 
 class LmsProviderServiceMaxDimensionNode {
   constructor(
-    private model: Selectable<DB["lmsProviderServiceMaxDimensions"]>,
+    private model: Selectable<DB['lmsProviderServiceMaxDimensions']>,
   ) {}
 
   id() {
@@ -41,7 +41,7 @@ class LmsProviderServiceMaxDimensionNode {
 export const queries = {
   list: async (page: number, limit: number) => {
     const dimensions = await db
-      .selectFrom("lmsProviderServiceMaxDimensions")
+      .selectFrom('lmsProviderServiceMaxDimensions')
       .selectAll()
       .offset((page - 1) * limit)
       .limit(limit)
@@ -53,18 +53,18 @@ export const queries = {
   },
   view: async (id: string) => {
     const dimension = await db
-      .selectFrom("lmsProviderServiceMaxDimensions")
+      .selectFrom('lmsProviderServiceMaxDimensions')
       .selectAll()
-      .where("id", "=", id)
+      .where('id', '=', id)
       .executeTakeFirstOrThrow();
 
     return new LmsProviderServiceMaxDimensionNode(dimension);
   },
   listByProviderService: async (providerServiceId: string) => {
     const dimensions = await db
-      .selectFrom("lmsProviderServiceMaxDimensions")
+      .selectFrom('lmsProviderServiceMaxDimensions')
       .selectAll()
-      .where("providerServiceId", "=", providerServiceId)
+      .where('providerServiceId', '=', providerServiceId)
       .execute();
 
     return dimensions.map(
@@ -73,9 +73,9 @@ export const queries = {
   },
   findByProviderService: async (providerServiceId: string) => {
     const dimension = await db
-      .selectFrom("lmsProviderServiceMaxDimensions")
+      .selectFrom('lmsProviderServiceMaxDimensions')
       .selectAll()
-      .where("providerServiceId", "=", providerServiceId)
+      .where('providerServiceId', '=', providerServiceId)
       .executeTakeFirst();
 
     return dimension ? new LmsProviderServiceMaxDimensionNode(dimension) : null;
@@ -86,11 +86,10 @@ export const mutations = {
   createLmsProviderServiceMaxDimension: async (
     payload: LmsProviderServiceMaxDimensionsInsert,
   ) => {
-    const parsedPayload = lmsProviderServiceMaxDimensionsInsertSchema.parse(
-      payload,
-    );
+    const parsedPayload =
+      lmsProviderServiceMaxDimensionsInsertSchema.parse(payload);
     const newDimension = await db
-      .insertInto("lmsProviderServiceMaxDimensions")
+      .insertInto('lmsProviderServiceMaxDimensions')
       .values(parsedPayload)
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -101,13 +100,12 @@ export const mutations = {
     id: string,
     payload: LmsProviderServiceMaxDimensionsUpdate,
   ) => {
-    const parsedPayload = lmsProviderServiceMaxDimensionsUpdateSchema.parse(
-      payload,
-    );
+    const parsedPayload =
+      lmsProviderServiceMaxDimensionsUpdateSchema.parse(payload);
     const updatedDimension = await db
-      .updateTable("lmsProviderServiceMaxDimensions")
+      .updateTable('lmsProviderServiceMaxDimensions')
       .set(parsedPayload)
-      .where("id", "=", id)
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
 
@@ -115,13 +113,13 @@ export const mutations = {
   },
   deleteLmsProviderServiceMaxDimension: async (id: string) => {
     await db
-      .deleteFrom("lmsProviderServiceMaxDimensions")
-      .where("id", "=", id)
+      .deleteFrom('lmsProviderServiceMaxDimensions')
+      .where('id', '=', id)
       .execute();
 
     return {
       success: true,
-      message: "Provider service max dimension deleted successfully.",
+      message: 'Provider service max dimension deleted successfully.',
     };
   },
 };

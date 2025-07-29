@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsServiceType } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
-import { LmsServiceType } from "../../types.js";
+} from '../base.js';
 
 // LMS Shipping Services Schema
 export const lmsShippingServicesSchema = baseEntitySchema.extend({
@@ -14,7 +14,7 @@ export const lmsShippingServicesSchema = baseEntitySchema.extend({
   description: z.string().nullable().optional(),
   isActive: z.boolean().default(true),
   maxWeight: numericSchema.nullable().optional(),
-  name: z.string().min(1, "Service name is required"),
+  name: z.string().min(1, 'Service name is required'),
   serviceType: z.enum(LmsServiceType),
 });
 
@@ -24,12 +24,12 @@ export const lmsShippingServicesInsertSchema = optionalBaseEntitySchema.extend({
   description: z.string().nullable().optional(),
   isActive: z.boolean().optional().default(true),
   maxWeight: numericSchema.nullable().optional(),
-  name: z.string().min(1, "Service name is required"),
+  name: z.string().min(1, 'Service name is required'),
   serviceType: z.enum(LmsServiceType),
 });
 
-export const lmsShippingServicesUpdateSchema = lmsShippingServicesInsertSchema
-  .partial();
+export const lmsShippingServicesUpdateSchema =
+  lmsShippingServicesInsertSchema.partial();
 
 export type LmsShippingServices = z.infer<typeof lmsShippingServicesSchema>;
 export type LmsShippingServicesInsert = z.infer<

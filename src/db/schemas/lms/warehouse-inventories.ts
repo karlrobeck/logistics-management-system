@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsWarehouseInventoryStatus } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { LmsWarehouseInventoryStatus } from "../../types.js";
+} from '../base.js';
 
 // LMS Warehouse Inventories Schema
 export const lmsWarehouseInventoriesSchema = baseEntitySchema.extend({
@@ -18,8 +18,8 @@ export const lmsWarehouseInventoriesSchema = baseEntitySchema.extend({
   warehouseId: idSchema,
 });
 
-export const lmsWarehouseInventoriesInsertSchema = optionalBaseEntitySchema
-  .extend({
+export const lmsWarehouseInventoriesInsertSchema =
+  optionalBaseEntitySchema.extend({
     arrivedAt: timestampSchema.nullable().optional(),
     departedAt: timestampSchema.nullable().optional(),
     locationCode: z.string().nullable().optional(),

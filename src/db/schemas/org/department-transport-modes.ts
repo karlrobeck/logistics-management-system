@@ -1,20 +1,20 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
+} from '../base.js';
 
 // ORG Department Transport Modes Schema
 export const orgDepartmentTransportModesSchema = baseEntitySchema.extend({
   departmentId: idSchema,
-  transportMode: z.string().min(1, "Transport mode is required"),
+  transportMode: z.string().min(1, 'Transport mode is required'),
 });
 
-export const orgDepartmentTransportModesInsertSchema = optionalBaseEntitySchema
-  .extend({
+export const orgDepartmentTransportModesInsertSchema =
+  optionalBaseEntitySchema.extend({
     departmentId: idSchema,
-    transportMode: z.string().min(1, "Transport mode is required"),
+    transportMode: z.string().min(1, 'Transport mode is required'),
   });
 
 export const orgDepartmentTransportModesUpdateSchema =

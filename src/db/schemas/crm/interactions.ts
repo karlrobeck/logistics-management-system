@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { CrmInteractionType } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { CrmInteractionType } from "../../types.js";
+} from '../base.js';
 
 // CRM Interactions Schema
 export const crmInteractionsSchema = baseEntitySchema.extend({
@@ -26,8 +26,8 @@ export const crmInteractionsInsertSchema = optionalBaseEntitySchema.extend({
   type: z.enum(CrmInteractionType),
 });
 
-export const crmInteractionsUpdateSchema = crmInteractionsInsertSchema
-  .partial();
+export const crmInteractionsUpdateSchema =
+  crmInteractionsInsertSchema.partial();
 
 export type CrmInteractions = z.infer<typeof crmInteractionsSchema>;
 export type CrmInteractionsInsert = z.infer<typeof crmInteractionsInsertSchema>;

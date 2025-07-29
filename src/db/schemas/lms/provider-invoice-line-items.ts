@@ -1,14 +1,14 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   baseEntitySchema,
   idSchema,
   numericSchema,
   optionalBaseEntitySchema,
-} from "../base.js";
+} from '../base.js';
 
 // LMS Provider Invoice Line Items Schema
 export const lmsProviderInvoiceLineItemsSchema = baseEntitySchema.extend({
-  description: z.string().min(1, "Description is required"),
+  description: z.string().min(1, 'Description is required'),
   lineTotal: numericSchema.nullable().optional(),
   providerInvoiceId: idSchema,
   quantity: z.number().int().positive().default(1),
@@ -16,9 +16,9 @@ export const lmsProviderInvoiceLineItemsSchema = baseEntitySchema.extend({
   unitPrice: numericSchema,
 });
 
-export const lmsProviderInvoiceLineItemsInsertSchema = optionalBaseEntitySchema
-  .extend({
-    description: z.string().min(1, "Description is required"),
+export const lmsProviderInvoiceLineItemsInsertSchema =
+  optionalBaseEntitySchema.extend({
+    description: z.string().min(1, 'Description is required'),
     lineTotal: numericSchema.nullable().optional(),
     providerInvoiceId: idSchema,
     quantity: z.number().int().positive().optional().default(1),

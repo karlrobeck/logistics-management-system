@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsRouteStatus } from '../../types.js';
 import {
   baseEntitySchema,
   idSchema,
   optionalBaseEntitySchema,
   timestampSchema,
-} from "../base.js";
-import { LmsRouteStatus } from "../../types.js";
+} from '../base.js';
 
 // LMS Routes Schema
 export const lmsRoutesSchema = baseEntitySchema.extend({
@@ -15,7 +15,7 @@ export const lmsRoutesSchema = baseEntitySchema.extend({
   estimatedArrival: timestampSchema.nullable().optional(),
   estimatedDeparture: timestampSchema.nullable().optional(),
   routeDate: timestampSchema,
-  routeName: z.string().min(1, "Route name is required"),
+  routeName: z.string().min(1, 'Route name is required'),
   status: z.enum(LmsRouteStatus),
   vehicleId: idSchema.nullable().optional(),
 });
@@ -27,7 +27,7 @@ export const lmsRoutesInsertSchema = optionalBaseEntitySchema.extend({
   estimatedArrival: timestampSchema.nullable().optional(),
   estimatedDeparture: timestampSchema.nullable().optional(),
   routeDate: timestampSchema,
-  routeName: z.string().min(1, "Route name is required"),
+  routeName: z.string().min(1, 'Route name is required'),
   status: z.enum(LmsRouteStatus),
   vehicleId: idSchema.nullable().optional(),
 });

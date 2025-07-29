@@ -1,4 +1,5 @@
-import { z } from "zod";
+import { z } from 'zod';
+import { LmsProviderType } from '../../types.js';
 import {
   baseEntitySchema,
   emailSchema,
@@ -7,15 +8,14 @@ import {
   optionalBaseEntitySchema,
   phoneSchema,
   timestampSchema,
-} from "../base.js";
-import { LmsProviderType } from "../../types.js";
+} from '../base.js';
 
 // LMS Transportation Providers Schema
 export const lmsTransportationProvidersSchema = baseEntitySchema.extend({
   addressId: idSchema.nullable().optional(),
   apiEndpoint: z.string().url().nullable().optional(),
   apiKey: z.string().nullable().optional(),
-  companyName: z.string().min(1, "Company name is required"),
+  companyName: z.string().min(1, 'Company name is required'),
   contactPerson: z.string().nullable().optional(),
   contractEndDate: timestampSchema.nullable().optional(),
   contractStartDate: timestampSchema.nullable().optional(),
@@ -29,12 +29,12 @@ export const lmsTransportationProvidersSchema = baseEntitySchema.extend({
   providerType: z.enum(LmsProviderType),
 });
 
-export const lmsTransportationProvidersInsertSchema = optionalBaseEntitySchema
-  .extend({
+export const lmsTransportationProvidersInsertSchema =
+  optionalBaseEntitySchema.extend({
     addressId: idSchema.nullable().optional(),
     apiEndpoint: z.string().url().nullable().optional(),
     apiKey: z.string().nullable().optional(),
-    companyName: z.string().min(1, "Company name is required"),
+    companyName: z.string().min(1, 'Company name is required'),
     contactPerson: z.string().nullable().optional(),
     contractEndDate: timestampSchema.nullable().optional(),
     contractStartDate: timestampSchema.nullable().optional(),
