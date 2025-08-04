@@ -1,6 +1,7 @@
 import { getContext } from '@getcronit/pylon';
 import { sign } from 'hono/jwt';
 import { Insertable, Selectable, Updateable } from 'kysely';
+import { AuthUsersInsert, authUsersInsertSchema } from '@/db/schemas';
 import { db } from '../db';
 import { DB } from '../db/types';
 import { requireAuth } from '../utils';
@@ -84,10 +85,12 @@ export const mutations = {
     };
   },
 
-  register: async (payload: Insertable<DB['authUsers']>) => {
+  register: async (payload: AuthUsersInsert) => {
     if (import.meta.env.PROD) {
       throw new Error('User registration is not allowed in production');
     }
+
+    const parsedPayload = authUsersInsertSchema.parse(payload);
 
     const ctx = getContext();
 
@@ -97,7 +100,7 @@ export const mutations = {
 
     const newUser = await db
       .insertInto('authUsers')
-      .values(payload)
+      .values(parsedPayload)
       .returningAll()
       .executeTakeFirst();
 

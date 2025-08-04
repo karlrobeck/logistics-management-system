@@ -15,7 +15,6 @@ export const authUsersSchema = baseEntitySchema.extend({
 
 export const authUsersInsertSchema = optionalBaseEntitySchema.extend({
   email: emailSchema,
-  emailVerified: z.boolean().optional().default(false),
   name: z.string().min(1, 'Name is required'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });

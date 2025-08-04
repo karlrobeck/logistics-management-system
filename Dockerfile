@@ -8,12 +8,11 @@ RUN apk add --no-cache \
 
 RUN cargo install sqlx-cli --no-default-features --features rustls,postgres
 
-
-FROM oven/bun:canary-alpine as base
+FROM oven/bun:canary-alpine as bun
 
 WORKDIR /app
 
-FROM base AS install
+FROM bun AS install
 
 COPY package.json bun.lock /app/
 
@@ -24,7 +23,8 @@ COPY . .
 RUN bun run build
 
 # copy production dependencies and source code into final image
-FROM base AS release
+FROM bun AS release
+
 COPY --from=install /app/dist /app/dist
 COPY --from=rust /usr/local/cargo/bin/sqlx /usr/local/bin/sqlx
 

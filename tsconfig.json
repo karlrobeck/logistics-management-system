@@ -10,5 +10,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["pylon.d.ts","src/**/*"]
+  "include": ["pylon.d.ts", "src/**/*"]
 }

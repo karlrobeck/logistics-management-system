@@ -1,165 +1,149 @@
-import * as LabelPrimitive from '@radix-ui/react-label';
-import { Slot } from '@radix-ui/react-slot';
-import * as React from 'react';
-import {
-  Controller,
-  type ControllerProps,
-  type FieldPath,
-  type FieldValues,
-  FormProvider,
-  useFormContext,
-  useFormState,
-} from 'react-hook-form';
-import { Label } from '@/components/ui/label';
+import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
+import { Eye, EyeClosed } from 'lucide-react';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Button } from './button';
+import { Input } from './input';
+import { Label } from './label';
+import { MultiSelect } from './multi-select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './select';
 
-const Form = FormProvider;
+export const { fieldContext, formContext, useFieldContext, useFormContext } =
+  createFormHookContexts();
 
-type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = {
-  name: TName;
-};
-
-const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue,
-);
-
-const FormField = <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
-  ...props
-}: ControllerProps<TFieldValues, TName>) => {
-  return (
-    <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
-    </FormFieldContext.Provider>
-  );
-};
-
-const useFormField = () => {
-  const fieldContext = React.useContext(FormFieldContext);
-  const itemContext = React.useContext(FormItemContext);
-  const { getFieldState } = useFormContext();
-  const formState = useFormState({ name: fieldContext.name });
-  const fieldState = getFieldState(fieldContext.name, formState);
-
-  if (!fieldContext) {
-    throw new Error('useFormField should be used within <FormField>');
-  }
-
-  const { id } = itemContext;
-
-  return {
-    id,
-    name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
-    ...fieldState,
-  };
-};
-
-type FormItemContextValue = {
-  id: string;
-};
-
-const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue,
-);
-
-function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
-  const id = React.useId();
-
-  return (
-    <FormItemContext.Provider value={{ id }}>
-      <div
-        data-slot="form-item"
-        className={cn('grid gap-2', className)}
-        {...props}
-      />
-    </FormItemContext.Provider>
-  );
-}
-
-function FormLabel({
+export const TextField = ({
   className,
+  label,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root>) {
-  const { error, formItemId } = useFormField();
+}: React.ComponentProps<'input'> & {
+  label?: string;
+}) => {
+  const field = useFieldContext<string>();
+  const [inputType, setInputType] = useState<string | undefined>(props.type);
 
   return (
-    <Label
-      data-slot="form-label"
-      data-error={!!error}
-      className={cn('data-[error=true]:text-destructive', className)}
-      htmlFor={formItemId}
-      {...props}
-    />
+    <div className={cn('grid gap-2.5', className)}>
+      {label && (
+        <Label
+          className={cn(
+            field.state.meta.errorMap.onSubmit && 'text-destructive',
+          )}
+          htmlFor={props.id}
+        >
+          {label}
+        </Label>
+      )}
+      <div className="flex gap-2.5">
+        <Input
+          aria-invalid={!!field.state.meta.errorMap.onSubmit}
+          value={field.state.value}
+          onChange={(e) => field.handleChange(e.target.value)}
+          id={props.id}
+          {...props}
+          type={inputType}
+        />
+        {props.type === 'password' && (
+          <Button
+            onClick={() => {
+              if (inputType === 'password') {
+                setInputType('text');
+              } else {
+                setInputType('password');
+              }
+            }}
+            type="button"
+            variant={'outline'}
+            size={'icon'}
+          >
+            {inputType === 'password' ? <Eye /> : <EyeClosed />}
+          </Button>
+        )}
+      </div>
+      {field.state.meta.errorMap.onSubmit && (
+        <Label className="text-destructive">
+          {field.state.meta.errorMap.onSubmit.message}
+        </Label>
+      )}
+    </div>
   );
-}
-
-function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
-  const { error, formItemId, formDescriptionId, formMessageId } =
-    useFormField();
-
-  return (
-    <Slot
-      data-slot="form-control"
-      id={formItemId}
-      aria-describedby={
-        !error
-          ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
-      }
-      aria-invalid={!!error}
-      {...props}
-    />
-  );
-}
-
-function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
-  const { formDescriptionId } = useFormField();
-
-  return (
-    <p
-      data-slot="form-description"
-      id={formDescriptionId}
-      className={cn('text-muted-foreground text-sm', className)}
-      {...props}
-    />
-  );
-}
-
-function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
-  const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message ?? '') : props.children;
-
-  if (!body) {
-    return null;
-  }
-
-  return (
-    <p
-      data-slot="form-message"
-      id={formMessageId}
-      className={cn('text-destructive text-sm', className)}
-      {...props}
-    >
-      {body}
-    </p>
-  );
-}
-
-export {
-  useFormField,
-  Form,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-  FormField,
 };
+
+export const SelectField = ({
+  className,
+  label,
+  multiple,
+  options,
+  placeholder,
+  ...props
+}: React.ComponentProps<'input'> & {
+  label?: string;
+  multiple?: boolean;
+  options: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+}) => {
+  const field = useFieldContext<string | string[]>();
+
+  return (
+    <div className={cn('grid gap-2.5', className)}>
+      {label && <Label htmlFor={props.id}>{label}</Label>}
+      {multiple ? (
+        <MultiSelect
+          aria-invalid={!!field.state.meta.errorMap.onSubmit}
+          placeholder={placeholder}
+          onValueChange={field.handleChange}
+          defaultValue={field.state.value as string[]}
+          options={options}
+        />
+      ) : (
+        <Select
+          onValueChange={field.handleChange}
+          value={field.state.value as string}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={placeholder} />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option) => (
+              <SelectItem value={option.value}>
+                {option.icon && <option.icon />} {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+      {field.state.meta.errorMap.onSubmit && (
+        <Label className="text-destructive">
+          {field.state.meta.errorMap.onSubmit.message}
+        </Label>
+      )}
+    </div>
+  );
+};
+
+export const SubmitButton = ({ ...props }: React.ComponentProps<'button'>) => {
+  const form = useFormContext();
+
+  return (
+    <form.Subscribe selector={(state) => state.isSubmitting}>
+      {(isSubmitting) => (
+        <Button disabled={isSubmitting} type="submit" {...props} />
+      )}
+    </form.Subscribe>
+  );
+};
+
+export const { useAppForm, withForm } = createFormHook({
+  fieldContext,
+  formContext,
+  fieldComponents: { TextField, SelectField },
+  formComponents: { SubmitButton },
+});
