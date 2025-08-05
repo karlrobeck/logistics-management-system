@@ -1,7 +1,11 @@
 import { getContext } from '@getcronit/pylon';
 import { sign } from 'hono/jwt';
 import { Insertable, Selectable, Updateable } from 'kysely';
-import { AuthUsersInsert, authUsersInsertSchema } from '@/db/schemas';
+import {
+  AuthUsersInsert,
+  authUsersInsertSchema,
+  authUsersSchema,
+} from '@/db/schemas';
 import { db } from '../db';
 import { DB } from '../db/types';
 import { requireAuth } from '../utils';
@@ -62,6 +66,10 @@ export const mutations = {
   login: async (email: string, password: string) => {
     const ctx = getContext();
 
+    const parsedPayload = authUsersSchema
+      .pick({ email: true, password: true })
+      .parse({ email, password });
+
     if (!ctx.env.AUTH_KEY) {
       throw new Error('AUTH_KEY environment variable is not set');
     }
@@ -69,8 +77,8 @@ export const mutations = {
     const authUser = await db
       .selectFrom('authUsers')
       .selectAll()
-      .where('email', '=', email)
-      .where('password', '=', password)
+      .where('email', '=', parsedPayload.email)
+      .where('password', '=', parsedPayload.password)
       .executeTakeFirst();
 
     if (!authUser) {

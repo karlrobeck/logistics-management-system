@@ -16,14 +16,15 @@ import {
 } from './schema.generated';
 
 const queryFetcher: QueryFetcher = async function (
-  { query, variables, operationName },
+  { query, variables, operationName, extensions },
   fetchOptions,
 ) {
   // Modify "http://localhost:3000/graphql" if needed
-  const response = await fetch('http://localhost:3000/graphql', {
+  const response = await fetch('/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${extensions?.authToken}`,
     },
     body: JSON.stringify({
       query,

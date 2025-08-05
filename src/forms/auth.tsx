@@ -7,10 +7,10 @@ const LoginForm = withForm({
     return (
       <>
         <form.AppField name="email">
-          {(field) => <field.TextField label="email" type="email" />}
+          {(field) => <field.TextField label="Email" type="email" />}
         </form.AppField>
         <form.AppField name="password">
-          {(field) => <field.TextField label="password" type="password" />}
+          {(field) => <field.TextField label="Password" type="password" />}
         </form.AppField>
       </>
     );
@@ -35,3 +35,5 @@ const RegisterForm = withForm({
     );
   },
 });
+
+export { LoginForm, RegisterForm };

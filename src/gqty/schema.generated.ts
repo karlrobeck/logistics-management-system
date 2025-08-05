@@ -50,22 +50,6 @@ export enum ASC_DESCInput {
   desc = 'desc',
 }
 
-export enum CREATED_EMAIL_ID_UPDATED_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput {
-  addressId = 'addressId',
-  birthDate = 'birthDate',
-  companyId = 'companyId',
-  created = 'created',
-  email = 'email',
-  firstName = 'firstName',
-  id = 'id',
-  jobTitle = 'jobTitle',
-  lastName = 'lastName',
-  leadSource = 'leadSource',
-  phoneNumber = 'phoneNumber',
-  status = 'status',
-  updated = 'updated',
-}
-
 export enum CrmCampaignContactsStatus {
   clicked = 'clicked',
   opened = 'opened',
@@ -158,9 +142,25 @@ export enum CrmOpportunityStage {
 }
 
 export interface FilterInput {
-  key: CREATED_EMAIL_ID_UPDATED_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput;
+  key: ID_CREATED_UPDATED_EMAIL_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput;
   operator: Scalars['String']['input'];
   value: Scalars['String']['input'];
+}
+
+export enum ID_CREATED_UPDATED_EMAIL_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput {
+  addressId = 'addressId',
+  birthDate = 'birthDate',
+  companyId = 'companyId',
+  created = 'created',
+  email = 'email',
+  firstName = 'firstName',
+  id = 'id',
+  jobTitle = 'jobTitle',
+  lastName = 'lastName',
+  leadSource = 'leadSource',
+  phoneNumber = 'phoneNumber',
+  status = 'status',
+  updated = 'updated',
 }
 
 export enum LmsAddressType {
@@ -1484,18 +1484,17 @@ export interface PayloadInput_85 {
   updated?: InputMaybe<Scalars['DateTimeISO']['input']>;
 }
 
-export interface PayloadInput_86AndPayloadInput_87 {
-  created?: InputMaybe<Scalars['String']['input']>;
+export interface PayloadInput_86 {
+  created?: InputMaybe<Scalars['DateTimeISO']['input']>;
   email: Scalars['String']['input'];
-  emailVerified?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
-  updated?: InputMaybe<Scalars['String']['input']>;
+  updated?: InputMaybe<Scalars['DateTimeISO']['input']>;
 }
 
 export interface SortInput {
-  key: CREATED_EMAIL_ID_UPDATED_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput;
+  key: ID_CREATED_UPDATED_EMAIL_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput;
   order: ASC_DESCInput;
 }
 
@@ -1503,7 +1502,6 @@ export const scalarsEnumsHash: ScalarsEnumsHash = {
   ASC_DESCInput: true,
   Any: true,
   Boolean: true,
-  CREATED_EMAIL_ID_UPDATED_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput: true,
   CrmCampaignContactsStatus: true,
   CrmCampaignStatus: true,
   CrmCasePriority: true,
@@ -1518,6 +1516,7 @@ export const scalarsEnumsHash: ScalarsEnumsHash = {
   CrmOpportunityStage: true,
   DateTimeISO: true,
   File: true,
+  ID_CREATED_UPDATED_EMAIL_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput: true,
   JSON: true,
   JSONObject: true,
   LmsAddressType: true,
@@ -2121,7 +2120,7 @@ export const generatedSchema = {
   FilterInput: {
     key: {
       __type:
-        'CREATED_EMAIL_ID_UPDATED_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput!',
+        'ID_CREATED_UPDATED_EMAIL_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput!',
     },
     operator: { __type: 'String!' },
     value: { __type: 'String!' },
@@ -3728,14 +3727,13 @@ export const generatedSchema = {
     status: { __type: 'CrmContactStatus' },
     updated: { __type: 'DateTimeISO' },
   },
-  PayloadInput_86AndPayloadInput_87: {
-    created: { __type: 'String' },
+  PayloadInput_86: {
+    created: { __type: 'DateTimeISO' },
     email: { __type: 'String!' },
-    emailVerified: { __type: 'Boolean' },
     id: { __type: 'String' },
     name: { __type: 'String!' },
     password: { __type: 'String!' },
-    updated: { __type: 'String' },
+    updated: { __type: 'DateTimeISO' },
   },
   PayloadInput_9: {
     countryCode: { __type: 'String' },
@@ -4052,7 +4050,7 @@ export const generatedSchema = {
   SortInput: {
     key: {
       __type:
-        'CREATED_EMAIL_ID_UPDATED_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput!',
+        'ID_CREATED_UPDATED_EMAIL_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput!',
     },
     order: { __type: 'ASC_DESCInput!' },
   },
@@ -4524,10 +4522,7 @@ export const generatedSchema = {
       __type: 'Login!',
       __args: { email: 'String!', password: 'String!' },
     },
-    register: {
-      __type: 'Register!',
-      __args: { payload: 'PayloadInput_86AndPayloadInput_87!' },
-    },
+    register: { __type: 'Register!', __args: { payload: 'PayloadInput_86!' } },
     updateCrmCampaign: {
       __type: 'CrmCampaignNode!',
       __args: { id: 'String!', payload: 'PayloadInput_81!' },
@@ -6522,7 +6517,7 @@ export interface Mutation {
     email: ScalarsEnums['String'];
     password: ScalarsEnums['String'];
   }) => Login;
-  register: (args: { payload: PayloadInput_86AndPayloadInput_87 }) => Register;
+  register: (args: { payload: PayloadInput_86 }) => Register;
   updateCrmCampaign: (args: {
     id: ScalarsEnums['String'];
     payload: PayloadInput_81;
@@ -6721,7 +6716,6 @@ export type ScalarsEnums = {
     : never;
 } & {
   ASC_DESCInput: ASC_DESCInput;
-  CREATED_EMAIL_ID_UPDATED_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput: CREATED_EMAIL_ID_UPDATED_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput;
   CrmCampaignContactsStatus: CrmCampaignContactsStatus;
   CrmCampaignStatus: CrmCampaignStatus;
   CrmCasePriority: CrmCasePriority;
@@ -6734,6 +6728,7 @@ export type ScalarsEnums = {
   CrmNotificationDeliveryStatus: CrmNotificationDeliveryStatus;
   CrmNotificationType: CrmNotificationType;
   CrmOpportunityStage: CrmOpportunityStage;
+  ID_CREATED_UPDATED_EMAIL_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput: ID_CREATED_UPDATED_EMAIL_ADDRESSID_BIRTHDATE_COMPANYID_FIRSTNAME_JOBTITLE_LASTNAME_LEADSOURCE_PHONENUMBER_STATUSInput;
   LmsAddressType: LmsAddressType;
   LmsDeliveryStatus: LmsDeliveryStatus;
   LmsLegStatus: LmsLegStatus;
