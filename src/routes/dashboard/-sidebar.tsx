@@ -1,35 +1,12 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarRail,
-  useSidebar,
-} from "@/components/ui/sidebar";
+import type {
+  RegisteredRouter,
+  ValidateLinkOptions,
+} from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import {
   Archive,
   BadgeDollarSign,
+  BookOpenCheck,
   BriefcaseBusiness,
   Building2,
   Car,
@@ -59,13 +36,37 @@ import {
   UserPen,
   Users,
   Warehouse,
-} from "lucide-react";
-import React from "react";
-import { Link, useLocation } from "@tanstack/react-router";
-import type {
-  RegisteredRouter,
-  ValidateLinkOptions,
-} from "@tanstack/react-router";
+} from 'lucide-react';
+import React from 'react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarRail,
+  useSidebar,
+} from '@/components/ui/sidebar';
 
 export type Navigation = {
   modules: {
@@ -89,299 +90,305 @@ export type Navigation = {
 const NAVIGATION: Navigation = {
   modules: [
     {
-      name: "Customer Relation Management",
-      description: "Manage customers, leads, and sales",
+      name: 'Customer Relation Management',
+      description: 'Manage customers, leads, and sales',
       logo: UserPen,
-      link: "/dashboard/crm",
+      link: '/dashboard/crm',
       navigation: [
         {
-          name: "Campaigns",
-          icon: Presentation,
-          link: "/dashboard/crm/campaigns",
+          name: 'Campaign Management',
+          icon: BookOpenCheck,
+          children: [
+            {
+              name: 'Campaigns',
+              icon: Presentation,
+              link: '/dashboard/crm/campaigns',
+            },
+            {
+              name: 'Contacts',
+              icon: Users,
+              link: '/dashboard/crm/campaigns/contacts',
+            },
+          ],
         },
         {
-          name: "Cases",
+          name: 'Cases',
           icon: BriefcaseBusiness,
-          link: "/dashboard/crm/cases",
+          link: '/dashboard/crm/cases',
         },
         {
-          name: "Companies",
+          name: 'Companies',
           icon: Building2,
-          link: "/dashboard/crm/companies",
+          link: '/dashboard/crm/companies',
         },
         {
-          name: "Contacts",
+          name: 'Contacts',
           icon: Handshake,
-          link: "/dashboard/crm/contacts",
+          link: '/dashboard/crm/contacts',
         },
         {
-          name: "Interactions",
+          name: 'Interactions',
           icon: Signature,
-          link: "/dashboard/crm/interactions",
+          link: '/dashboard/crm/interactions',
         },
         {
-          name: "Invoices",
+          name: 'Invoice Management',
           icon: ReceiptText,
           children: [
             {
-              name: "Invoices",
+              name: 'Invoices',
               icon: ReceiptText,
-              link: "/dashboard/crm/invoices",
+              link: '/dashboard/crm/invoices',
             },
             {
-              name: "Invoice Line Items",
+              name: 'Invoice Line Items',
               icon: ClipboardCheck,
-              link: "/dashboard/crm/invoice-line-items",
+              link: '/dashboard/crm/invoice-line-items',
             },
           ],
         },
         {
-          name: "Leads",
+          name: 'Leads',
           icon: Spotlight,
-          link: "/dashboard/crm/leads",
+          link: '/dashboard/crm/leads',
         },
         {
-          name: "Notifications",
+          name: 'Notifications',
           icon: ChartBar,
-          link: "/dashboard/crm/notifications",
+          link: '/dashboard/crm/notifications',
         },
         {
-          name: "Opportunities",
+          name: 'Opportunity Management',
           icon: Hand,
           children: [
             {
-              name: "Opportunities",
+              name: 'Opportunities',
               icon: Hand,
-              link: "/dashboard/crm/opportunities",
+              link: '/dashboard/crm/opportunities',
             },
             {
-              name: "Opportunity Products",
+              name: 'Opportunity Products',
               icon: ShoppingCart,
-              link: "/dashboard/crm/opportunity-products",
+              link: '/dashboard/crm/opportunity-products',
             },
           ],
         },
         {
-          name: "Products",
+          name: 'Products',
           icon: SquareChartGantt,
-          link: "/dashboard/crm/products",
-        },
-        {
-          name: "Campaign Contacts",
-          icon: Users,
-          link: "/dashboard/crm/campaign-contacts",
+          link: '/dashboard/crm/products',
         },
       ],
     },
     {
-      name: "Logistics Management System",
-      description: "Manage shipments, routes, and warehouses",
+      name: 'Logistics Management System',
+      description: 'Manage shipments, routes, and warehouses',
       logo: TruckIcon,
-      link: "/dashboard/lms",
+      link: '/dashboard/lms',
       navigation: [
         {
-          name: "Core Operations",
+          name: 'Core Operations',
           icon: Package,
           children: [
             {
-              name: "Addresses",
+              name: 'Addresses',
               icon: MapPin,
-              link: "/dashboard/lms/addresses",
+              link: '/dashboard/lms/addresses',
             },
             {
-              name: "Shipments",
+              name: 'Shipments',
               icon: Package,
-              link: "/dashboard/lms/shipments",
+              link: '/dashboard/lms/shipments',
             },
             {
-              name: "Packages",
+              name: 'Packages',
               icon: Package2,
-              link: "/dashboard/lms/packages",
+              link: '/dashboard/lms/packages',
             },
             {
-              name: "Tracking Events",
+              name: 'Tracking Events',
               icon: Route,
-              link: "/dashboard/lms/tracking-events",
+              link: '/dashboard/lms/tracking-events',
             },
           ],
         },
         {
-          name: "Routes & Transport",
+          name: 'Routes & Transport',
           icon: Route,
           children: [
             {
-              name: "Routes",
+              name: 'Routes',
               icon: Route,
-              link: "/dashboard/lms/routes",
+              link: '/dashboard/lms/routes',
             },
             {
-              name: "Route Shipments",
+              name: 'Route Shipments',
               icon: Truck,
-              link: "/dashboard/lms/route-shipments",
+              link: '/dashboard/lms/route-shipments',
             },
             {
-              name: "Transport Legs",
+              name: 'Transport Legs',
               icon: Route,
-              link: "/dashboard/lms/transport-legs",
+              link: '/dashboard/lms/transport-legs',
             },
             {
-              name: "Transportation Providers",
+              name: 'Transportation Providers',
               icon: Car,
-              link: "/dashboard/lms/transportation-providers",
+              link: '/dashboard/lms/transportation-providers',
             },
           ],
         },
         {
-          name: "Warehouses",
+          name: 'Warehouses',
           icon: Warehouse,
           children: [
             {
-              name: "Warehouses",
+              name: 'Warehouses',
               icon: Warehouse,
-              link: "/dashboard/lms/warehouses",
+              link: '/dashboard/lms/warehouses',
             },
             {
-              name: "Warehouse Inventories",
+              name: 'Warehouse Inventories',
               icon: Archive,
-              link: "/dashboard/lms/warehouse-inventories",
+              link: '/dashboard/lms/warehouse-inventories',
             },
           ],
         },
         {
-          name: "Shipping Services",
+          name: 'Shipping Services',
           icon: Factory,
           children: [
             {
-              name: "Shipping Services",
+              name: 'Shipping Services',
               icon: Factory,
-              link: "/dashboard/lms/shipping-services",
+              link: '/dashboard/lms/shipping-services',
             },
             {
-              name: "Service Max Dimensions",
+              name: 'Service Max Dimensions',
               icon: Layers,
-              link: "/dashboard/lms/shipping-service-max-dimensions",
+              link: '/dashboard/lms/shipping-service-max-dimensions',
             },
           ],
         },
         {
-          name: "Pricing",
+          name: 'Pricing',
           icon: Coins,
           children: [
             {
-              name: "Pricing Rates",
+              name: 'Pricing Rates',
               icon: Coins,
-              link: "/dashboard/lms/pricing-rates",
+              link: '/dashboard/lms/pricing-rates',
             },
             {
-              name: "Pricing Zones",
+              name: 'Pricing Zones',
               icon: PieChart,
-              link: "/dashboard/lms/pricing-zones",
+              link: '/dashboard/lms/pricing-zones',
             },
             {
-              name: "Zone Countries",
+              name: 'Zone Countries',
               icon: MapPin,
-              link: "/dashboard/lms/pricing-zone-countries",
+              link: '/dashboard/lms/pricing-zone-countries',
             },
           ],
         },
         {
-          name: "Provider Management",
+          name: 'Provider Management',
           icon: BadgeDollarSign,
           children: [
             {
-              name: "Provider Invoices",
+              name: 'Provider Invoices',
               icon: ReceiptText,
-              link: "/dashboard/lms/provider-invoices",
+              link: '/dashboard/lms/provider-invoices',
             },
             {
-              name: "Invoice Line Items",
+              name: 'Invoice Line Items',
               icon: ClipboardCheck,
-              link: "/dashboard/lms/provider-invoice-line-items",
+              link: '/dashboard/lms/provider-invoice-line-items',
             },
             {
-              name: "Provider Performance",
+              name: 'Provider Performance',
               icon: ChartBar,
-              link: "/dashboard/lms/provider-performance",
+              link: '/dashboard/lms/provider-performance',
             },
             {
-              name: "Provider Rates",
+              name: 'Provider Rates',
               icon: BadgeDollarSign,
-              link: "/dashboard/lms/provider-rates",
+              link: '/dashboard/lms/provider-rates',
             },
             {
-              name: "Provider Services",
+              name: 'Provider Services',
               icon: Factory,
-              link: "/dashboard/lms/provider-services",
+              link: '/dashboard/lms/provider-services',
             },
             {
-              name: "Service Destinations",
+              name: 'Service Destinations',
               icon: MapPin,
-              link: "/dashboard/lms/provider-service-destination-countries",
+              link: '/dashboard/lms/provider-service-destination-countries',
             },
             {
-              name: "Service Max Dimensions",
+              name: 'Service Max Dimensions',
               icon: Layers,
-              link: "/dashboard/lms/provider-service-max-dimensions",
+              link: '/dashboard/lms/provider-service-max-dimensions',
             },
             {
-              name: "Service Origins",
+              name: 'Service Origins',
               icon: MapPin,
-              link: "/dashboard/lms/provider-service-origin-countries",
+              link: '/dashboard/lms/provider-service-origin-countries',
             },
           ],
         },
       ],
     },
     {
-      name: "Organization Management",
-      description: "Manage departments, users, and permissions",
+      name: 'Organization Management',
+      description: 'Manage departments, users, and permissions',
       logo: Building2,
-      link: "/dashboard/org",
+      link: '/dashboard/org',
       navigation: [
         {
-          name: "Departments",
+          name: 'Departments',
           icon: Building2,
           children: [
             {
-              name: "Departments",
+              name: 'Departments',
               icon: Building2,
-              link: "/dashboard/org/departments",
+              link: '/dashboard/org/departments',
             },
             {
-              name: "Department Permissions",
+              name: 'Department Permissions',
               icon: Shield,
-              link: "/dashboard/org/department-permissions",
+              link: '/dashboard/org/department-permissions',
             },
             {
-              name: "Transport Modes",
+              name: 'Transport Modes',
               icon: Car,
-              link: "/dashboard/org/department-transport-modes",
+              link: '/dashboard/org/department-transport-modes',
             },
             {
-              name: "Department Users",
+              name: 'Department Users',
               icon: Users,
-              link: "/dashboard/org/department-users",
+              link: '/dashboard/org/department-users',
             },
             {
-              name: "User Permissions",
+              name: 'User Permissions',
               icon: Users,
-              link: "/dashboard/org/department-user-permissions",
+              link: '/dashboard/org/department-user-permissions',
             },
           ],
         },
         {
-          name: "Fleet Management",
+          name: 'Fleet Management',
           icon: Truck,
           children: [
             {
-              name: "Drivers",
+              name: 'Drivers',
               icon: Car,
-              link: "/dashboard/org/drivers",
+              link: '/dashboard/org/drivers',
             },
             {
-              name: "Vehicles",
+              name: 'Vehicles',
               icon: Truck,
-              link: "/dashboard/org/vehicles",
+              link: '/dashboard/org/vehicles',
             },
           ],
         },
@@ -390,19 +397,17 @@ const NAVIGATION: Navigation = {
   ],
 };
 
-const ModuleSwitcher = (
-  { modules }: Navigation,
-) => {
+const ModuleSwitcher = ({ modules }: Navigation) => {
   const { isMobile } = useSidebar();
   const location = useLocation();
 
   // Determine the current module based on the route
   const getCurrentModule = () => {
-    const pathSegments = location.pathname.split("/");
-    if (pathSegments.length >= 3 && pathSegments[1] === "dashboard") {
+    const pathSegments = location.pathname.split('/');
+    if (pathSegments.length >= 3 && pathSegments[1] === 'dashboard') {
       const moduleKey = pathSegments[2]; // crm, lms, or org
       return modules.find((module) =>
-        module.link.includes(`/dashboard/${moduleKey}`)
+        module.link.includes(`/dashboard/${moduleKey}`),
       );
     }
     // Default to first module (CRM) if no match
@@ -436,7 +441,7 @@ const ModuleSwitcher = (
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             align="start"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-muted-foreground text-xs">
@@ -468,11 +473,11 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
 
   // Determine the current module based on the route
   const getCurrentModule = () => {
-    const pathSegments = location.pathname.split("/");
-    if (pathSegments.length >= 3 && pathSegments[1] === "dashboard") {
+    const pathSegments = location.pathname.split('/');
+    if (pathSegments.length >= 3 && pathSegments[1] === 'dashboard') {
       const moduleKey = pathSegments[2]; // crm, lms, or org
       return NAVIGATION.modules.find((module) =>
-        module.link.includes(`/dashboard/${moduleKey}`)
+        module.link.includes(`/dashboard/${moduleKey}`),
       );
     }
     // Default to first module (CRM) if no match
@@ -486,7 +491,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
       <SidebarHeader>
         <ModuleSwitcher modules={NAVIGATION.modules} />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="no-scrollbar">
         {currentModule && (
           <SidebarGroup>
             <SidebarGroupLabel>{currentModule.name}</SidebarGroupLabel>
