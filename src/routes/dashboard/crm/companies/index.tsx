@@ -1,9 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import z from 'zod';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { createFileRoute } from "@tanstack/react-router";
 import {
   ColumnDef,
   TableBody,
@@ -14,81 +9,86 @@ import {
   TableHeaderGroup,
   TableProvider,
   TableRow,
-} from '@/components/ui/kibo-ui/table';
-import { useQuery } from '@/gqty';
-import type { CrmCompanyNode } from '@/gqty/schema.generated';
+} from "@/components/ui/kibo-ui/table";
+import { useQuery } from "@/gqty";
+import type { CrmCompanyNode } from "@/gqty/schema.generated";
+import { Badge } from "@/components/ui/badge";
+import { zodValidator } from "@tanstack/zod-adapter";
+import z from "zod";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const columns: ColumnDef<CrmCompanyNode>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: "name",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Company Name" />
     ),
-    cell: ({ row }) => <>{row.getValue('name')}</>,
+    cell: ({ row }) => <>{row.getValue("name")}</>,
   },
   {
-    accessorKey: 'industry',
+    accessorKey: "industry",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Industry" />
+      <TableColumnHeader
+        column={column}
+        title="Industry"
+      />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('industry') || 'N/A'}</Badge>
+      <Badge variant={"outline"}>{row.getValue("industry") || "N/A"}</Badge>
     ),
   },
   {
-    accessorKey: 'email',
+    accessorKey: "email",
     header: ({ column }) => <TableColumnHeader column={column} title="Email" />,
-    cell: ({ row }) => <>{row.getValue('email') || 'N/A'}</>,
+    cell: ({ row }) => <>{row.getValue("email") || "N/A"}</>,
   },
-
   {
-    accessorKey: 'phoneNumber',
+    accessorKey: "phoneNumber",
     header: ({ column }) => <TableColumnHeader column={column} title="Phone" />,
-    cell: ({ row }) => <>{row.getValue('phoneNumber') || 'N/A'}</>,
+    cell: ({ row }) => <>{row.getValue("phoneNumber") || "N/A"}</>,
   },
   {
-    accessorKey: 'website',
+    accessorKey: "website",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Website" />
     ),
     cell: ({ row }) => (
       <>
-        {row.getValue('website') ? (
-          <a
-            href={row.getValue('website') as string}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            {row.getValue('website')}
-          </a>
-        ) : (
-          'N/A'
-        )}
+        {row.getValue("website")
+          ? (
+            <a
+              href={row.getValue("website") as string}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              {row.getValue("website")}
+            </a>
+          )
+          : "N/A"}
       </>
     ),
   },
   {
-    accessorKey: 'description',
+    accessorKey: "description",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Description" />
     ),
     cell: ({ row }) => (
       <div className="max-w-xs truncate">
-        {row.getValue('description') || 'N/A'}
+        {row.getValue("description") || "N/A"}
       </div>
     ),
   },
 ];
 
-export const Route = createFileRoute('/dashboard/crm/companies/')({
+export const Route = createFileRoute("/dashboard/crm/companies/")({
   component: RouteComponent,
-  validateSearch: zodValidator(
-    z.object({
-      page: z.number().nonnegative().min(1).catch(1),
-      limit: z.number().nonnegative().min(10).catch(10),
-    }),
-  ),
+  validateSearch: zodValidator(z.object({
+    page: z.number().nonnegative().min(1).catch(1),
+    limit: z.number().nonnegative().min(10).catch(10),
+  })),
 });
 
 function RouteComponent() {
@@ -107,25 +107,26 @@ function RouteComponent() {
       <section className="flex gap-2.5 justify-end col-span-full">
         <Button
           disabled={searchQuery.page === 1}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })}
         >
           <ChevronLeft />
         </Button>
         <Button
           disabled={data.length === 0}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })}
         >
           <ChevronRight />
         </Button>
       </section>
       <section className="col-span-full">
-        <TableProvider columns={columns} data={data}>
+        <TableProvider
+          columns={columns}
+          data={data}
+        >
           <TableHeader>
             {({ headerGroup }) => (
               <TableHeaderGroup headerGroup={headerGroup} key={headerGroup.id}>

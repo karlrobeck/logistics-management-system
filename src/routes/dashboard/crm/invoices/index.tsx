@@ -1,10 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import z from 'zod';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { createFileRoute } from "@tanstack/react-router";
 import {
   ColumnDef,
   TableBody,
@@ -15,96 +9,119 @@ import {
   TableHeaderGroup,
   TableProvider,
   TableRow,
-} from '@/components/ui/kibo-ui/table';
-import { useQuery } from '@/gqty';
-import type { CrmInvoiceNode } from '@/gqty/schema.generated';
+} from "@/components/ui/kibo-ui/table";
+import { useQuery } from "@/gqty";
+import type { CrmInvoiceNode } from "@/gqty/schema.generated";
+import { Badge } from "@/components/ui/badge";
+import { zodValidator } from "@tanstack/zod-adapter";
+import z from "zod";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const columns: ColumnDef<CrmInvoiceNode>[] = [
   {
-    accessorKey: 'invoiceNumber',
+    accessorKey: "invoiceNumber",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Invoice #" />
     ),
-    cell: ({ row }) => <>{row.getValue('invoiceNumber')}</>,
+    cell: ({ row }) => <>{row.getValue("invoiceNumber")}</>,
   },
   {
-    accessorKey: 'status',
+    accessorKey: "status",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Status" />
+      <TableColumnHeader
+        column={column}
+        title="Status"
+      />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('status')}</Badge>
+      <Badge variant={"outline"}>{row.getValue("status")}</Badge>
     ),
   },
+
   {
-    accessorKey: 'totalAmount',
+    accessorKey: "totalAmount",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Total Amount" />
+      <TableColumnHeader
+        column={column}
+        title="Total Amount"
+      />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
-        {row.original.currency} {Number(row.getValue('totalAmount')).toFixed(2)}
+      <Badge variant={"outline"}>
+        {row.original.currency} {Number(row.getValue("totalAmount")).toFixed(2)}
       </Badge>
     ),
   },
   {
-    accessorKey: 'subtotal',
+    accessorKey: "subtotal",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Subtotal" />
+      <TableColumnHeader
+        column={column}
+        title="Subtotal"
+      />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
-        {row.original.currency} {Number(row.getValue('subtotal')).toFixed(2)}
+      <Badge variant={"outline"}>
+        {row.original.currency} {Number(row.getValue("subtotal")).toFixed(2)}
       </Badge>
     ),
   },
   {
-    accessorKey: 'taxAmount',
+    accessorKey: "taxAmount",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Tax Amount" />
+      <TableColumnHeader
+        column={column}
+        title="Tax Amount"
+      />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
-        {row.original.currency} {Number(row.getValue('taxAmount')).toFixed(2)}
+      <Badge variant={"outline"}>
+        {row.original.currency} {Number(row.getValue("taxAmount")).toFixed(2)}
       </Badge>
     ),
   },
   {
-    accessorKey: 'invoiceDate',
+    accessorKey: "invoiceDate",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Invoice Date" />
+      <TableColumnHeader
+        column={column}
+        title="Invoice Date"
+      />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
+      <Badge variant={"outline"}>
         {row.original.invoiceDate
-          ? format(new Date(row.original.invoiceDate), 'P')
-          : 'N/A'}
+          ? format(new Date(row.original.invoiceDate), "P")
+          : "N/A"}
       </Badge>
     ),
   },
   {
-    accessorKey: 'dueDate',
+    accessorKey: "dueDate",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Due Date" />
+      <TableColumnHeader
+        column={column}
+        title="Due Date"
+      />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
+      <Badge variant={"outline"}>
         {row.original.dueDate
-          ? format(new Date(row.original.dueDate), 'P')
-          : 'N/A'}
+          ? format(new Date(row.original.dueDate), "P")
+          : "N/A"}
       </Badge>
     ),
   },
 ];
 
-export const Route = createFileRoute('/dashboard/crm/invoices/')({
+export const Route = createFileRoute("/dashboard/crm/invoices/")({
   component: RouteComponent,
-  validateSearch: zodValidator(
-    z.object({
-      page: z.number().nonnegative().min(1).catch(1),
-      limit: z.number().nonnegative().min(10).catch(10),
-    }),
-  ),
+  validateSearch: zodValidator(z.object({
+    page: z.number().nonnegative().min(1).catch(1),
+    limit: z.number().nonnegative().min(10).catch(10),
+  })),
 });
 
 function RouteComponent() {
@@ -123,25 +140,26 @@ function RouteComponent() {
       <section className="flex gap-2.5 justify-end col-span-full">
         <Button
           disabled={searchQuery.page === 1}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })}
         >
           <ChevronLeft />
         </Button>
         <Button
           disabled={data.length === 0}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })}
         >
           <ChevronRight />
         </Button>
       </section>
       <section className="col-span-full">
-        <TableProvider columns={columns} data={data}>
+        <TableProvider
+          columns={columns}
+          data={data}
+        >
           <TableHeader>
             {({ headerGroup }) => (
               <TableHeaderGroup headerGroup={headerGroup} key={headerGroup.id}>
