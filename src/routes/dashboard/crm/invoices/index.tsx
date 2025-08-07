@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ColumnDef,
   TableBody,
@@ -17,7 +17,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import z from "zod";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 
 const columns: ColumnDef<CrmInvoiceNode>[] = [
   {
@@ -26,6 +26,42 @@ const columns: ColumnDef<CrmInvoiceNode>[] = [
       <TableColumnHeader column={column} title="Invoice #" />
     ),
     cell: ({ row }) => <>{row.getValue("invoiceNumber")}</>,
+  },
+  {
+    accessorKey: "contact",
+    header: ({ column }) => (
+      <TableColumnHeader column={column} title="Contact" />
+    ),
+    cell: ({ row }) => (
+      row.original.contact
+        ? (
+          <Badge asChild variant={"secondary"}>
+            <Link to="/dashboard/crm/contacts" search={{ page: 1, limit: 10 }}>
+              <ExternalLink />
+              {row.original.contact?.firstName} {row.original.contact?.lastName}
+            </Link>
+          </Badge>
+        )
+        : "N/A"
+    ),
+  },
+  {
+    accessorKey: "company",
+    header: ({ column }) => (
+      <TableColumnHeader column={column} title="Company" />
+    ),
+    cell: ({ row }) => (
+      row.original.company
+        ? (
+          <Badge asChild variant={"secondary"}>
+            <Link to="/dashboard/crm/companies" search={{ page: 1, limit: 10 }}>
+              <ExternalLink />
+              {row.original.company?.name}
+            </Link>
+          </Badge>
+        )
+        : "N/A"
+    ),
   },
   {
     accessorKey: "status",

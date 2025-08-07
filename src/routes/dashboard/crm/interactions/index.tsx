@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import z from 'zod';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { format } from "date-fns";
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import z from "zod";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   ColumnDef,
   TableBody,
@@ -15,52 +15,90 @@ import {
   TableHeaderGroup,
   TableProvider,
   TableRow,
-} from '@/components/ui/kibo-ui/table';
-import { useQuery } from '@/gqty';
-import type { CrmInteractionNode } from '@/gqty/schema.generated';
+} from "@/components/ui/kibo-ui/table";
+import { useQuery } from "@/gqty";
+import type { CrmInteractionNode } from "@/gqty/schema.generated";
 
 const columns: ColumnDef<CrmInteractionNode>[] = [
   {
-    accessorKey: 'type',
+    accessorKey: "type",
     header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
+    cell: ({ row }) => <Badge variant={"outline"}>{row.getValue("type")}
+    </Badge>,
+  },
+  {
+    accessorKey: "contact",
+    header: ({ column }) => (
+      <TableColumnHeader column={column} title="Contact" />
+    ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('type')}</Badge>
+      row.original.contact
+        ? (
+          <Badge asChild variant={"secondary"}>
+            <Link to="/dashboard/crm/contacts" search={{ page: 1, limit: 10 }}>
+              <ExternalLink />
+              {row.original.contact?.firstName} {row.original.contact?.lastName}
+            </Link>
+          </Badge>
+        )
+        : "N/A"
     ),
   },
   {
-    accessorKey: 'subject',
+    accessorKey: "opportunity",
+    header: ({ column }) => (
+      <TableColumnHeader column={column} title="Opportunity" />
+    ),
+    cell: ({ row }) => (
+      row.original.opportunity
+        ? (
+          <Badge asChild variant={"secondary"}>
+            <Link
+              to="/dashboard/crm/opportunities"
+              search={{ page: 1, limit: 10 }}
+            >
+              <ExternalLink />
+              {row.original.opportunity?.name}
+            </Link>
+          </Badge>
+        )
+        : "N/A"
+    ),
+  },
+  {
+    accessorKey: "subject",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Subject" />
     ),
-    cell: ({ row }) => <>{row.getValue('subject') || 'N/A'}</>,
+    cell: ({ row }) => <>{row.getValue("subject") || "N/A"}</>,
   },
   {
-    accessorKey: 'description',
+    accessorKey: "description",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Description" />
     ),
     cell: ({ row }) => (
       <div className="max-w-xs truncate">
-        {row.getValue('description') || 'N/A'}
+        {row.getValue("description") || "N/A"}
       </div>
     ),
   },
   {
-    accessorKey: 'interactionDate',
+    accessorKey: "interactionDate",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Interaction Date" />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
+      <Badge variant={"outline"}>
         {row.original.interactionDate
-          ? format(new Date(row.original.interactionDate), 'P')
-          : 'N/A'}
+          ? format(new Date(row.original.interactionDate), "P")
+          : "N/A"}
       </Badge>
     ),
   },
 ];
 
-export const Route = createFileRoute('/dashboard/crm/interactions/')({
+export const Route = createFileRoute("/dashboard/crm/interactions/")({
   component: RouteComponent,
   validateSearch: zodValidator(
     z.object({
@@ -86,19 +124,17 @@ function RouteComponent() {
       <section className="flex gap-2.5 justify-end col-span-full">
         <Button
           disabled={searchQuery.page === 1}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })}
         >
           <ChevronLeft />
         </Button>
         <Button
           disabled={data.length === 0}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })}
         >
           <ChevronRight />
         </Button>

@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import z from 'zod';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { format } from "date-fns";
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import z from "zod";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   ColumnDef,
   TableBody,
@@ -15,75 +15,114 @@ import {
   TableHeaderGroup,
   TableProvider,
   TableRow,
-} from '@/components/ui/kibo-ui/table';
-import { useQuery } from '@/gqty';
-import type { CrmNotificationNode } from '@/gqty/schema.generated';
+} from "@/components/ui/kibo-ui/table";
+import { useQuery } from "@/gqty";
+import type { CrmNotificationNode } from "@/gqty/schema.generated";
 
 const columns: ColumnDef<CrmNotificationNode>[] = [
   {
-    accessorKey: 'notificationType',
+    accessorKey: "notificationType",
     header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('notificationType')}</Badge>
+      <Badge variant={"outline"}>{row.getValue("notificationType")}</Badge>
     ),
   },
   {
-    accessorKey: 'channel',
+    accessorKey: "contact",
+    header: ({ column }) => (
+      <TableColumnHeader column={column} title="Contact" />
+    ),
+    cell: ({ row }) => (
+      row.original.contact
+        ? (
+          <Badge asChild variant={"secondary"}>
+            <Link to="/dashboard/crm/contacts" search={{ page: 1, limit: 10 }}>
+              <ExternalLink />
+              {row.original.contact?.firstName} {row.original.contact?.lastName}
+            </Link>
+          </Badge>
+        )
+        : "N/A"
+    ),
+  },
+  // {
+  //   accessorKey: "shipment",
+  //   header: ({ column }) => (
+  //     <TableColumnHeader column={column} title="Shipment" />
+  //   ),
+  //   cell: ({ row }) => (
+  //     row.original.shipment
+  //       ? (
+  //         <Badge asChild variant={"secondary"}>
+  //           <Link to="/dashboard/lms/shipments" search={{ page: 1, limit: 10 }}>
+  //             <ExternalLink />
+  //             {row.original.shipment?.trackingNumber || "Shipment"}
+  //           </Link>
+  //         </Badge>
+  //       )
+  //       : "N/A"
+  //   ),
+  // },
+  {
+    accessorKey: "channel",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Channel" />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('channel')}</Badge>
+      <Badge variant={"outline"}>{row.getValue("channel")}</Badge>
     ),
   },
   {
-    accessorKey: 'recipient',
+    accessorKey: "recipient",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Recipient" />
     ),
-    cell: ({ row }) => <>{row.getValue('recipient')}</>,
+    cell: ({ row }) => <>{row.getValue("recipient")}</>,
   },
   {
-    accessorKey: 'subject',
+    accessorKey: "subject",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Subject" />
     ),
-    cell: ({ row }) => <>{row.getValue('subject')}</>,
+    cell: ({ row }) => <>{row.getValue("subject")}</>,
   },
   {
-    accessorKey: 'message',
+    accessorKey: "message",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Message" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-xs truncate">{row.getValue('message')}</div>
+      <div className="max-w-xs truncate">{row.getValue("message")}</div>
     ),
   },
   {
-    accessorKey: 'deliveryStatus',
+    accessorKey: "deliveryStatus",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Status" />
+      <TableColumnHeader
+        column={column}
+        title="Status"
+      />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('deliveryStatus')}</Badge>
+      <Badge variant={"outline"}>{row.getValue("deliveryStatus")}</Badge>
     ),
   },
   {
-    accessorKey: 'sentAt',
+    accessorKey: "sentAt",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Sent At" />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
+      <Badge variant={"outline"}>
         {row.original.sentAt
-          ? format(new Date(row.original.sentAt), 'PPp')
-          : 'Not sent'}
+          ? format(new Date(row.original.sentAt), "PPp")
+          : "Not sent"}
       </Badge>
     ),
   },
 ];
 
-export const Route = createFileRoute('/dashboard/crm/notifications/')({
+export const Route = createFileRoute("/dashboard/crm/notifications/")({
   component: RouteComponent,
   validateSearch: zodValidator(
     z.object({
@@ -109,19 +148,17 @@ function RouteComponent() {
       <section className="flex gap-2.5 justify-end col-span-full">
         <Button
           disabled={searchQuery.page === 1}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })}
         >
           <ChevronLeft />
         </Button>
         <Button
           disabled={data.length === 0}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })}
         >
           <ChevronRight />
         </Button>

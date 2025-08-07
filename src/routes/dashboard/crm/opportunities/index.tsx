@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import z from 'zod';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { format } from "date-fns";
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import z from "zod";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   ColumnDef,
   TableBody,
@@ -15,61 +15,99 @@ import {
   TableHeaderGroup,
   TableProvider,
   TableRow,
-} from '@/components/ui/kibo-ui/table';
-import { useQuery } from '@/gqty';
-import type { CrmOpportunityNode } from '@/gqty/schema.generated';
+} from "@/components/ui/kibo-ui/table";
+import { useQuery } from "@/gqty";
+import type { CrmOpportunityNode } from "@/gqty/schema.generated";
 
 const columns: ColumnDef<CrmOpportunityNode>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: "name",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Opportunity Name" />
     ),
-    cell: ({ row }) => <>{row.getValue('name')}</>,
+    cell: ({ row }) => <>{row.getValue("name")}</>,
   },
   {
-    accessorKey: 'amount',
+    accessorKey: "primaryContact",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Amount" />
+      <TableColumnHeader column={column} title="Primary Contact" />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
-        ${Number(row.getValue('amount')).toLocaleString()}
+      row.original.primaryContact
+        ? (
+          <Badge asChild variant={"secondary"}>
+            <Link to="/dashboard/crm/contacts" search={{ page: 1, limit: 10 }}>
+              <ExternalLink />
+              {row.original.primaryContact?.firstName}{" "}
+              {row.original.primaryContact?.lastName}
+            </Link>
+          </Badge>
+        )
+        : "N/A"
+    ),
+  },
+  {
+    accessorKey: "company",
+    header: ({ column }) => (
+      <TableColumnHeader column={column} title="Company" />
+    ),
+    cell: ({ row }) => (
+      row.original.company
+        ? (
+          <Badge asChild variant={"secondary"}>
+            <Link to="/dashboard/crm/companies" search={{ page: 1, limit: 10 }}>
+              <ExternalLink />
+              {row.original.company?.name}
+            </Link>
+          </Badge>
+        )
+        : "N/A"
+    ),
+  },
+  {
+    accessorKey: "amount",
+    header: ({ column }) => <TableColumnHeader
+      column={column}
+      title="Amount"
+    />,
+    cell: ({ row }) => (
+      <Badge variant={"outline"}>
+        ${Number(row.getValue("amount")).toLocaleString()}
       </Badge>
     ),
   },
   {
-    accessorKey: 'stage',
+    accessorKey: "stage",
     header: ({ column }) => <TableColumnHeader column={column} title="Stage" />,
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('stage')}</Badge>
+      <Badge variant={"outline"}>{row.getValue("stage")}</Badge>
     ),
   },
   {
-    accessorKey: 'probability',
+    accessorKey: "probability",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Probability" />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('probability')}%</Badge>
+      <Badge variant={"outline"}>{row.getValue("probability")}%</Badge>
     ),
   },
   {
-    accessorKey: 'closeDate',
+    accessorKey: "closeDate",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Close Date" />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>
+      <Badge variant={"outline"}>
         {row.original.closeDate
-          ? format(new Date(row.original.closeDate), 'P')
-          : 'N/A'}
+          ? format(new Date(row.original.closeDate), "P")
+          : "N/A"}
       </Badge>
     ),
   },
 ];
 
-export const Route = createFileRoute('/dashboard/crm/opportunities/')({
+export const Route = createFileRoute("/dashboard/crm/opportunities/")({
   component: RouteComponent,
   validateSearch: zodValidator(
     z.object({
@@ -95,19 +133,17 @@ function RouteComponent() {
       <section className="flex gap-2.5 justify-end col-span-full">
         <Button
           disabled={searchQuery.page === 1}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })}
         >
           <ChevronLeft />
         </Button>
         <Button
           disabled={data.length === 0}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })}
         >
           <ChevronRight />
         </Button>

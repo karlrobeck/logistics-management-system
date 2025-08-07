@@ -1,9 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { zodValidator } from '@tanstack/zod-adapter';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import z from 'zod';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import z from "zod";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   ColumnDef,
   TableBody,
@@ -14,70 +14,91 @@ import {
   TableHeaderGroup,
   TableProvider,
   TableRow,
-} from '@/components/ui/kibo-ui/table';
-import { useQuery } from '@/gqty';
-import type { CrmLeadNode } from '@/gqty/schema.generated';
+} from "@/components/ui/kibo-ui/table";
+import { useQuery } from "@/gqty";
+import type { CrmLeadNode } from "@/gqty/schema.generated";
 
 const columns: ColumnDef<CrmLeadNode>[] = [
   {
-    accessorKey: 'firstName',
+    accessorKey: "firstName",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="First Name" />
     ),
-    cell: ({ row }) => <>{row.getValue('firstName')}</>,
+    cell: ({ row }) => <>{row.getValue("firstName")}</>,
   },
   {
-    accessorKey: 'lastName',
+    accessorKey: "lastName",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Last Name" />
     ),
-    cell: ({ row }) => <>{row.getValue('lastName')}</>,
+    cell: ({ row }) => <>{row.getValue("lastName")}</>,
   },
   {
-    accessorKey: 'email',
+    accessorKey: "email",
     header: ({ column }) => <TableColumnHeader column={column} title="Email" />,
-    cell: ({ row }) => <>{row.getValue('email')}</>,
+    cell: ({ row }) => <>{row.getValue("email")}</>,
   },
   {
-    accessorKey: 'phoneNumber',
+    accessorKey: "convertedToContact",
+    header: ({ column }) => (
+      <TableColumnHeader column={column} title="Converted To Contact" />
+    ),
+    cell: ({ row }) => (
+      row.original.convertedToContact
+        ? (
+          <Badge asChild variant={"secondary"}>
+            <Link to="/dashboard/crm/contacts" search={{ page: 1, limit: 10 }}>
+              <ExternalLink />
+              {row.original.convertedToContact?.firstName}{" "}
+              {row.original.convertedToContact?.lastName}
+            </Link>
+          </Badge>
+        )
+        : "Not Converted"
+    ),
+  },
+  {
+    accessorKey: "phoneNumber",
     header: ({ column }) => <TableColumnHeader column={column} title="Phone" />,
-    cell: ({ row }) => <>{row.getValue('phoneNumber') || 'N/A'}</>,
+    cell: ({ row }) => <>{row.getValue("phoneNumber") || "N/A"}</>,
   },
   {
-    accessorKey: 'companyName',
+    accessorKey: "companyName",
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Company" />
     ),
-    cell: ({ row }) => <>{row.getValue('companyName') || 'N/A'}</>,
+    cell: ({ row }) => <>{row.getValue("companyName") || "N/A"}</>,
   },
   {
-    accessorKey: 'leadStatus',
-    header: ({ column }) => (
-      <TableColumnHeader column={column} title="Status" />
-    ),
+    accessorKey: "leadStatus",
+    header: ({ column }) => <TableColumnHeader
+      column={column}
+      title="Status"
+    />,
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('leadStatus')}</Badge>
+      <Badge variant={"outline"}>{row.getValue("leadStatus")}</Badge>
     ),
   },
   {
-    accessorKey: 'leadScore',
+    accessorKey: "leadScore",
     header: ({ column }) => <TableColumnHeader column={column} title="Score" />,
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('leadScore')}</Badge>
+      <Badge variant={"outline"}>{row.getValue("leadScore")}</Badge>
     ),
   },
   {
-    accessorKey: 'leadSource',
-    header: ({ column }) => (
-      <TableColumnHeader column={column} title="Source" />
-    ),
+    accessorKey: "leadSource",
+    header: ({ column }) => <TableColumnHeader
+      column={column}
+      title="Source"
+    />,
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('leadSource') || 'N/A'}</Badge>
+      <Badge variant={"outline"}>{row.getValue("leadSource") || "N/A"}</Badge>
     ),
   },
 ];
 
-export const Route = createFileRoute('/dashboard/crm/leads/')({
+export const Route = createFileRoute("/dashboard/crm/leads/")({
   component: RouteComponent,
   validateSearch: zodValidator(
     z.object({
@@ -103,19 +124,17 @@ function RouteComponent() {
       <section className="flex gap-2.5 justify-end col-span-full">
         <Button
           disabled={searchQuery.page === 1}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page - 1 }) })}
         >
           <ChevronLeft />
         </Button>
         <Button
           disabled={data.length === 0}
-          variant={'outline'}
+          variant={"outline"}
           onClick={() =>
-            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })
-          }
+            navigate({ search: (prev) => ({ ...prev, page: prev.page + 1 }) })}
         >
           <ChevronRight />
         </Button>
