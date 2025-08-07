@@ -1,7 +1,6 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { zodValidator } from '@tanstack/zod-adapter';
-import { format } from 'date-fns';
-import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import z from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,9 +16,9 @@ import {
   TableRow,
 } from '@/components/ui/kibo-ui/table';
 import { useQuery } from '@/gqty';
-import type { CrmContactNode } from '@/gqty/schema.generated';
+import type { CrmLeadNode } from '@/gqty/schema.generated';
 
-const columns: ColumnDef<CrmContactNode>[] = [
+const columns: ColumnDef<CrmLeadNode>[] = [
   {
     accessorKey: 'firstName',
     header: ({ column }) => (
@@ -40,65 +39,45 @@ const columns: ColumnDef<CrmContactNode>[] = [
     cell: ({ row }) => <>{row.getValue('email')}</>,
   },
   {
-    accessorKey: 'company',
-    header: ({ column }) => (
-      <TableColumnHeader column={column} title="Company" />
-    ),
-    cell: ({ row }) => (
-      <Badge variant={'secondary'} asChild>
-        <Link to="/dashboard/crm/companies" search={{ page: 1, limit: 10 }}>
-          <ExternalLink />
-          {row.original.company?.name || 'N/A'}
-        </Link>
-      </Badge>
-    ),
-  },
-  {
     accessorKey: 'phoneNumber',
     header: ({ column }) => <TableColumnHeader column={column} title="Phone" />,
     cell: ({ row }) => <>{row.getValue('phoneNumber') || 'N/A'}</>,
   },
   {
-    accessorKey: 'jobTitle',
+    accessorKey: 'companyName',
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Job Title" />
+      <TableColumnHeader column={column} title="Company" />
     ),
-    cell: ({ row }) => <>{row.getValue('jobTitle') || 'N/A'}</>,
+    cell: ({ row }) => <>{row.getValue('companyName') || 'N/A'}</>,
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'leadStatus',
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => (
-      <Badge variant={'outline'}>{row.getValue('status')}</Badge>
+      <Badge variant={'outline'}>{row.getValue('leadStatus')}</Badge>
+    ),
+  },
+  {
+    accessorKey: 'leadScore',
+    header: ({ column }) => <TableColumnHeader column={column} title="Score" />,
+    cell: ({ row }) => (
+      <Badge variant={'outline'}>{row.getValue('leadScore')}</Badge>
     ),
   },
   {
     accessorKey: 'leadSource',
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Lead Source" />
+      <TableColumnHeader column={column} title="Source" />
     ),
     cell: ({ row }) => (
       <Badge variant={'outline'}>{row.getValue('leadSource') || 'N/A'}</Badge>
     ),
   },
-  {
-    accessorKey: 'birthDate',
-    header: ({ column }) => (
-      <TableColumnHeader column={column} title="Birth Date" />
-    ),
-    cell: ({ row }) => (
-      <Badge variant={'outline'}>
-        {row.original.birthDate
-          ? format(new Date(row.original.birthDate), 'P')
-          : 'N/A'}
-      </Badge>
-    ),
-  },
 ];
 
-export const Route = createFileRoute('/dashboard/crm/contacts/')({
+export const Route = createFileRoute('/dashboard/crm/leads/')({
   component: RouteComponent,
   validateSearch: zodValidator(
     z.object({
@@ -114,7 +93,7 @@ function RouteComponent() {
 
   const query = useQuery();
 
-  const data = query.crm.contacts.list({
+  const data = query.crm.leads.list({
     page: searchQuery.page,
     limit: searchQuery.limit,
   });

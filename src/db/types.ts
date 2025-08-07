@@ -29,9 +29,9 @@ export enum CrmCasePriority {
 
 export enum CrmCaseStatus {
   CLOSED = 'closed',
-  IN_PROGRESS = 'in-progress',
+  IN_PROGRESS = 'in_progress',
   OPEN = 'open',
-  PENDING_CUSTOMER = 'pending-customer',
+  PENDING_CUSTOMER = 'pending_customer',
 }
 
 export enum CrmContactStatus {
@@ -89,8 +89,8 @@ export enum CrmNotificationType {
 }
 
 export enum CrmOpportunityStage {
-  CLOSED_LOST = 'closed-lost',
-  CLOSED_WON = 'closed-won',
+  CLOSED_LOST = 'closed_lost',
+  CLOSED_WON = 'closed_won',
   PROPOSAL = 'proposal',
   PROSPECTING = 'prospecting',
   QUALIFICATION = 'qualification',

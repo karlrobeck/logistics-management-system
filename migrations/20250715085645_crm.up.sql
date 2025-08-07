@@ -117,8 +117,8 @@ create type public.crm_opportunity_stage as enum(
   'prospecting',
   'qualification',
   'proposal',
-  'closed-won',
-  'closed-lost'
+  'closed_won',
+  'closed_lost'
 );
 
 comment on type public.crm_opportunity_stage is 'Sales opportunity progression stages';
@@ -255,8 +255,8 @@ comment on column public.crm_campaign_contacts.interaction_date is 'When the las
 
 create type public.crm_case_status as enum(
   'open',
-  'in-progress',
-  'pending-customer',
+  'in_progress',
+  'pending_customer',
   'closed'
 );
 
