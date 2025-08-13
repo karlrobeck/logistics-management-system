@@ -27,14 +27,13 @@ const NewCampaignForm = () => {
 
   const form = useAppForm({
     defaultValues: {} as CreateCrmCampaignInput,
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value }) =>
       toast.promise(createCampaign({ args: value }), {
         success: "Campaign Created Succesfully",
         finally: () => {
           navigate({ search: (prev) => ({ ...prev, newCampaign: undefined }) });
         },
-      });
-    },
+      }),
   });
 
   return (
