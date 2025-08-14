@@ -3,5 +3,5 @@ drop table lms.addresses;
 
 drop type lms.address_type;
 
-drop schema lms;
+drop schema lms cascade;
 

@@ -19,7 +19,7 @@ create table crm.invoices(
   due_date date not null,
   subtotal decimal(10, 2) not null check (subtotal >= 0),
   tax_amount decimal(10, 2) not null default 0.00 check (tax_amount >= 0),
-  total_amount decimal(10, 2) not null check (total_amount >= 0),
+  total_amount decimal(10, 2) not null check (total_amount >= 0) generated always as ((subtotal + tax_amount)) stored,
   currency varchar(3) not null default 'PHP',
   status crm.invoice_status not null,
   payment_terms varchar(100),
