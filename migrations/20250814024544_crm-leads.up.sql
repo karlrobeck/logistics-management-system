@@ -6,6 +6,9 @@ create type crm.lead_status as enum(
   'unqualified'
 );
 
+-- Type documentation
+comment on type crm.lead_status is 'Lead pipeline status indicating qualification and contact progress.';
+
 create table crm.leads(
   id uuid not null primary key default gen_random_uuid(),
   first_name varchar(100) not null,
@@ -20,4 +23,31 @@ create table crm.leads(
   created timestamp with time zone not null default now(),
   updated timestamp with time zone not null default now()
 );
+
+-- Table and column documentation
+comment on table crm.leads is 'Pre-contact prospects that may convert into contacts.';
+
+comment on column crm.leads.id is 'Primary key: UUID for the lead.';
+
+comment on column crm.leads.first_name is 'Lead first name.';
+
+comment on column crm.leads.last_name is 'Lead last name.';
+
+comment on column crm.leads.email is 'Unique email address of the lead.';
+
+comment on column crm.leads.phone_number is 'Phone number of the lead.';
+
+comment on column crm.leads.company_name is 'Company name associated with the lead (free text).';
+
+comment on column crm.leads.lead_source is 'Where this lead originated (e.g., referral, web, event).';
+
+comment on column crm.leads.lead_status is 'Lead pipeline status.';
+
+comment on column crm.leads.lead_score is 'Numeric score indicating likelihood to convert.';
+
+comment on column crm.leads.converted_to_contact_id is 'FK to crm.contacts(id) when this lead has been converted.';
+
+comment on column crm.leads.created is 'Row creation timestamp (UTC).';
+
+comment on column crm.leads.updated is 'Row last-updated timestamp (UTC).';
 

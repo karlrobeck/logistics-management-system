@@ -10,3 +10,22 @@ create table auth.sessions(
   updated_at timestamptz not null default now()
 );
 
+-- Table and column documentation
+comment on table auth.sessions is 'Login sessions for users; used for token/session validation.';
+
+comment on column auth.sessions.id is 'Primary key: UUID for the session record.';
+
+comment on column auth.sessions.user_id is 'FK to auth.users(id) indicating the session owner.';
+
+comment on column auth.sessions.token is 'Opaque, unique session token.';
+
+comment on column auth.sessions.expires_at is 'When the session becomes invalid and will no longer be accepted.';
+
+comment on column auth.sessions.ip_address is 'Last seen IP address for the session (if available).';
+
+comment on column auth.sessions.user_agent is 'User agent string from the client (if available).';
+
+comment on column auth.sessions.created_at is 'Row creation timestamp (UTC).';
+
+comment on column auth.sessions.updated_at is 'Row last-updated timestamp (UTC).';
+

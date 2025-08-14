@@ -6,12 +6,18 @@ create type crm.case_status as enum(
   'closed'
 );
 
+-- Type documentation
+comment on type crm.case_status is 'Lifecycle status for customer support cases.';
+
 create type crm.case_priority as enum(
   'low',
   'medium',
   'high',
   'critical'
 );
+
+-- Type documentation
+comment on type crm.case_priority is 'Priority level for customer support cases.';
 
 create table crm.cases(
   id uuid not null primary key default gen_random_uuid(),
@@ -24,4 +30,25 @@ create table crm.cases(
   created timestamp with time zone not null default now(),
   updated timestamp with time zone not null default now()
 );
+
+-- Table and column documentation
+comment on table crm.cases is 'Customer support tickets/cases.';
+
+comment on column crm.cases.id is 'Primary key: UUID for the case.';
+
+comment on column crm.cases.subject is 'Case subject/title.';
+
+comment on column crm.cases.description is 'Detailed description of the case.';
+
+comment on column crm.cases.status is 'Current status of the case.';
+
+comment on column crm.cases.priority is 'Priority level.';
+
+comment on column crm.cases.contact_id is 'FK to crm.contacts(id) who opened/owns the case.';
+
+comment on column crm.cases.closed_at is 'When the case was closed (if applicable).';
+
+comment on column crm.cases.created is 'Row creation timestamp (UTC).';
+
+comment on column crm.cases.updated is 'Row last-updated timestamp (UTC).';
 
