@@ -4,4 +4,38 @@ version = "0.1.0"
 edition = "2024"
 authors = ["karl robeck alferez <karlalferezfx@gmail.com>"]
 
+[workspace]
+members = ["services/*"]
+
+[workspace.dependencies]
+async-graphql = { version = "7.0.17", features = [
+  "dataloader",
+  "uuid",
+  "chrono",
+] }
+axum = { version = "0.8.4", features = ["macros"] }
+sqlx = { version = "0.8.6", features = [
+  "runtime-tokio-native-tls",
+  "postgres",
+  "migrate",
+  "json",
+  "uuid",
+  "chrono",
+] }
+tokio = { version = "1.47.1", features = ["full"] }
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
+rstest = "0.26.1"
+validator = { version = "0.20.0", features = ["derive"] }
+chrono = { version = "0.4.41", features = ["serde"] }
+uuid = { version = "1.18.0", features = ["serde", "v4"] }
+serde = { version = "1.0.219", features = ["derive"] }
+sea-query = { version = "0.32.7", features = [
+  "backend-postgres",
+  "thread-safe",
+  "uuid",
+  "chrono",
+] }
+
+
 [dependencies]

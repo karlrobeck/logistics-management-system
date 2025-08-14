@@ -1,14 +1,8 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod accounts;
+pub mod session;
+pub mod users;
+pub mod verification;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub struct Query;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub struct Mutation;
