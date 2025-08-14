@@ -54,3 +54,17 @@ create index idx_crm_interactions_opportunity_id on crm.interactions(opportunity
 
 create index idx_crm_interactions_created_at on crm.interactions(created_at);
 
+-- Triggers for crm.interactions
+create trigger interactions_set_updated_at
+  before update on crm.interactions for each row
+  execute function crm.tg_set_updated_at();
+
+create trigger interactions_require_link
+  before insert or update on crm.interactions for each row
+  execute function crm.tg_interactions_require_link();
+
+-- Comments on crm.interactions triggers
+comment on trigger interactions_set_updated_at on crm.interactions is 'Keeps interactions.updated_at current on updates.';
+
+comment on trigger interactions_require_link on crm.interactions is 'Enforces presence of at least one link (contact or opportunity) and same-company when both provided.';
+

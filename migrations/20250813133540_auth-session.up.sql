@@ -29,10 +29,19 @@ comment on column auth.sessions.created_at is 'Row creation timestamp (UTC).';
 
 comment on column auth.sessions.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Triggers for auth.sessions
+create trigger sessions_set_updated_at
+  before update on auth.sessions for each row
+  execute function auth.tg_set_updated_at();
 
 -- Indexes for auth.sessions
 create index idx_auth_sessions_user_id on auth.sessions(user_id);
+
 -- token is already unique; unique index is created implicitly by the constraint
 create index idx_auth_sessions_expires_at on auth.sessions(expires_at);
+
 create index idx_auth_sessions_created_at on auth.sessions(created_at);
+
+-- Comments on auth.sessions triggers
+comment on trigger sessions_set_updated_at on auth.sessions is 'Keeps sessions.updated_at in sync on updates.';
 

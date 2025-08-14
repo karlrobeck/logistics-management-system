@@ -84,6 +84,26 @@ comment on column org.team_resouces.created_at is 'Row creation timestamp (UTC).
 
 comment on column org.team_resouces.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Triggers for org.roles
+create trigger roles_set_updated_at
+  before update on org.roles for each row
+  execute function org.tg_set_updated_at();
+
+-- Triggers for org.team_roles (validate role and team belong to same org)
+create trigger team_roles_same_org
+  before insert or update on org.team_roles for each row
+  execute function org.tg_team_roles_same_org();
+
+-- Triggers for org.role_actions
+create trigger role_actions_set_updated_at
+  before update on org.role_actions for each row
+  execute function org.tg_set_updated_at();
+
+-- Triggers for org.team_resouces
+create trigger team_resouces_set_updated_at
+  before update on org.team_resouces for each row
+  execute function org.tg_set_updated_at();
+
 -- Indexes for org.roles
 create index idx_org_roles_org_id on org.roles(org_id);
 
@@ -107,4 +127,13 @@ create unique index uq_org_role_actions_role_action on org.role_actions(role_id,
 
 -- Indexes for org.team_resouces
 create index idx_org_team_resouces_created_at on org.team_resouces(created_at);
+
+-- Comments on org ABAC triggers
+comment on trigger roles_set_updated_at on org.roles is 'Keeps roles.updated_at current on updates.';
+
+comment on trigger team_roles_same_org on org.team_roles is 'Validates team_roles pair belongs to the same org.';
+
+comment on trigger role_actions_set_updated_at on org.role_actions is 'Keeps role_actions.updated_at current on updates.';
+
+comment on trigger team_resouces_set_updated_at on org.team_resouces is 'Keeps team_resouces.updated_at current on updates.';
 

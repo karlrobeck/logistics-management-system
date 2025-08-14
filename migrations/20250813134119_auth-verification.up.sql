@@ -23,10 +23,18 @@ comment on column auth.verification.created_at is 'Row creation timestamp (UTC).
 
 comment on column auth.verification.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Triggers for auth.verification
+create trigger verification_set_updated_at
+  before update on auth.verification for each row
+  execute function auth.tg_set_updated_at();
+
 -- Indexes for auth.verification
 create index idx_auth_verification_identifier on auth.verification(identifier);
 
 create index idx_auth_verification_value on auth.verification(value);
 
 create index idx_auth_verification_expires_at on auth.verification(expires_at);
+
+-- Comments on auth.verification triggers
+comment on trigger verification_set_updated_at on auth.verification is 'Keeps verification.updated_at in sync on updates.';
 

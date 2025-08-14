@@ -55,8 +55,8 @@ comment on type crm.campaign_contacts_status is 'Status of a contact with respec
 
 create table crm.campaign_contacts(
   id uuid not null primary key default gen_random_uuid(),
-  campaign_id uuid not null references crm.campaigns(id),
-  contact_id uuid not null references crm.contacts(id),
+  campaign_id uuid not null references crm.campaigns(id) on delete cascade,
+  contact_id uuid not null references crm.contacts(id) on delete cascade,
   status crm.campaign_contacts_status not null,
   interaction_date timestamp with time zone,
   created_at timestamp with time zone not null default now(),
@@ -99,4 +99,21 @@ create index idx_crm_campaign_contacts_status on crm.campaign_contacts(status);
 create index idx_crm_campaign_contacts_interaction_date on crm.campaign_contacts(interaction_date);
 
 create index idx_crm_campaign_contacts_created_at on crm.campaign_contacts(created_at);
+
+-- Triggers for crm.campaigns
+create trigger campaigns_set_updated_at
+  before update on crm.campaigns for each row
+  execute function crm.tg_set_updated_at();
+
+create trigger campaigns_trim_name
+  before insert or update on crm.campaigns for each row
+  execute function crm.tg_trim_name();
+
+-- Enforce uniqueness on campaign-contact join
+create unique index uq_crm_campaign_contacts_unique on crm.campaign_contacts(campaign_id, contact_id);
+
+-- Comments on crm.campaigns triggers
+comment on trigger campaigns_set_updated_at on crm.campaigns is 'Keeps campaigns.updated_at current on updates.';
+
+comment on trigger campaigns_trim_name on crm.campaigns is 'Trims whitespace around campaign.name on insert/update.';
 

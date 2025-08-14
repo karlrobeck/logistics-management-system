@@ -62,3 +62,23 @@ create index idx_crm_leads_created_at on crm.leads(created_at);
 
 create index idx_crm_leads_converted_to_contact_id on crm.leads(converted_to_contact_id);
 
+-- Triggers for crm.leads
+create trigger leads_set_updated_at
+  before update on crm.leads for each row
+  execute function crm.tg_set_updated_at();
+
+create trigger leads_normalize_email
+  before insert or update on crm.leads for each row
+  execute function crm.tg_normalize_email();
+
+create trigger leads_trim_names
+  before insert or update on crm.leads for each row
+  execute function crm.tg_trim_contact_names();
+
+-- Comments on crm.leads triggers
+comment on trigger leads_set_updated_at on crm.leads is 'Keeps leads.updated_at current on updates.';
+
+comment on trigger leads_normalize_email on crm.leads is 'Normalizes email for leads on insert/update to avoid case/space dupes.';
+
+comment on trigger leads_trim_names on crm.leads is 'Trims whitespace around first_name and last_name on insert/update.';
+

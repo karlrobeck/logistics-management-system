@@ -28,8 +28,8 @@ comment on column crm.products.updated_at is 'Row last-updated timestamp (UTC).'
 
 create table crm.opportunity_products(
   id uuid not null primary key default gen_random_uuid(),
-  opportunity_id uuid not null references crm.opportunities(id),
-  product_id uuid not null references crm.products(id),
+  opportunity_id uuid not null references crm.opportunities(id) on delete cascade,
+  product_id uuid not null references crm.products(id) on delete cascade,
   quantity decimal(10, 2) not null default 1,
   unit_price decimal(10, 2) not null,
   total_price decimal(10, 2) generated always as (quantity * unit_price) stored,
@@ -71,4 +71,26 @@ create index idx_crm_opportunity_products_created_at on crm.opportunity_products
 create index idx_crm_opportunity_products_total_price on crm.opportunity_products(total_price);
 
 create unique index uq_crm_opportunity_products_unique_line on crm.opportunity_products(opportunity_id, product_id);
+
+-- Triggers for crm.products
+create trigger products_set_updated_at
+  before update on crm.products for each row
+  execute function crm.tg_set_updated_at();
+
+create trigger products_trim_fields
+  before insert or update on crm.products for each row
+  execute function crm.tg_trim_product_fields();
+
+-- Triggers for crm.opportunity_products
+create trigger opportunity_products_set_updated_at
+  before update on crm.opportunity_products for each row
+  execute function crm.tg_set_updated_at();
+
+
+-- Comments on crm.products triggers
+comment on trigger products_set_updated_at on crm.products is 'Keeps products.updated_at current on updates.';
+comment on trigger products_trim_fields on crm.products is 'Trims whitespace around product.name and product.sku on insert/update.';
+
+-- Comments on crm.opportunity_products triggers
+comment on trigger opportunity_products_set_updated_at on crm.opportunity_products is 'Keeps opportunity_products.updated_at current on updates.';
 

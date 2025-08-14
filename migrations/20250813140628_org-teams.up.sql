@@ -44,6 +44,20 @@ comment on column org.team_members.created_at is 'Row creation timestamp (UTC).'
 
 comment on column org.team_members.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Triggers for org.teams
+create trigger teams_set_updated_at
+  before update on org.teams for each row
+  execute function org.tg_set_updated_at();
+
+create trigger teams_trim_name
+  before insert or update on org.teams for each row
+  execute function org.tg_trim_name();
+
+-- Triggers for org.team_members
+create trigger team_members_set_updated_at
+  before update on org.team_members for each row
+  execute function org.tg_set_updated_at();
+
 -- Indexes for org.teams
 create index idx_org_teams_org_id on org.teams(org_id);
 
@@ -59,4 +73,12 @@ create index idx_org_team_members_user_id on org.team_members(user_id);
 create index idx_org_team_members_created_at on org.team_members(created_at);
 
 create unique index uq_org_team_members_team_user on org.team_members(team_id, user_id);
+
+-- Comments on org.teams triggers
+comment on trigger teams_set_updated_at on org.teams is 'Keeps teams.updated_at current on updates.';
+
+comment on trigger teams_trim_name on org.teams is 'Trims whitespace around team.name on insert/update.';
+
+-- Comments on org.team_members triggers
+comment on trigger team_members_set_updated_at on org.team_members is 'Keeps team_members.updated_at current on updates.';
 

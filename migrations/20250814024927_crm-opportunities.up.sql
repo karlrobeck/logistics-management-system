@@ -61,3 +61,17 @@ create index idx_crm_opportunities_probability on crm.opportunities(probability)
 
 create index idx_crm_opportunities_created_at on crm.opportunities(created_at);
 
+-- Triggers for crm.opportunities
+create trigger opportunities_set_updated_at
+  before update on crm.opportunities for each row
+  execute function crm.tg_set_updated_at();
+
+create trigger opportunities_contact_company_match
+  before insert or update on crm.opportunities for each row
+  execute function crm.tg_opportunity_contact_company_match();
+
+-- Comments on crm.opportunities triggers
+comment on trigger opportunities_set_updated_at on crm.opportunities is 'Keeps opportunities.updated_at current on updates.';
+
+comment on trigger opportunities_contact_company_match on crm.opportunities is 'Validates that primary_contact''s company matches opportunity.company_id when provided.';
+

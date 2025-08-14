@@ -61,3 +61,23 @@ create index idx_crm_contacts_lead_source on crm.contacts(lead_source);
 
 create index idx_crm_contacts_created_at on crm.contacts(created_at);
 
+-- Triggers for crm.contacts
+create trigger contacts_set_updated_at
+  before update on crm.contacts for each row
+  execute function crm.tg_set_updated_at();
+
+create trigger contacts_normalize_email
+  before insert or update on crm.contacts for each row
+  execute function crm.tg_normalize_email();
+
+create trigger contacts_trim_names
+  before insert or update on crm.contacts for each row
+  execute function crm.tg_trim_contact_names();
+
+-- Comments on crm.contacts triggers
+comment on trigger contacts_set_updated_at on crm.contacts is 'Keeps contacts.updated_at current on updates.';
+
+comment on trigger contacts_normalize_email on crm.contacts is 'Normalizes email for contacts on insert/update to avoid case/space dupes.';
+
+comment on trigger contacts_trim_names on crm.contacts is 'Trims whitespace around first_name and last_name on insert/update.';
+

@@ -44,6 +44,16 @@ comment on column auth.accounts.created_at is 'Row creation timestamp (UTC).';
 
 comment on column auth.accounts.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Triggers for auth.accounts
+create trigger accounts_set_updated_at
+  before update on auth.accounts for each row
+  execute function auth.tg_set_updated_at();
+
+-- Enforce uniqueness at DB level for (provider_id, account_id)
+drop index if exists idx_auth_accounts_provider_account;
+
+create unique index uq_auth_accounts_provider_account on auth.accounts(provider_id, account_id);
+
 -- Indexes for auth.accounts
 create index idx_auth_accounts_user_id on auth.accounts(user_id);
 
@@ -52,4 +62,7 @@ create index idx_auth_accounts_provider_account on auth.accounts(provider_id, ac
 create index idx_auth_accounts_access_token_expires_at on auth.accounts(access_token_expires_at);
 
 create index idx_auth_accounts_refresh_token_expires_at on auth.accounts(refresh_token_expires_at);
+
+-- Comments on auth.accounts triggers
+comment on trigger accounts_set_updated_at on auth.accounts is 'Keeps accounts.updated_at in sync on updates.';
 

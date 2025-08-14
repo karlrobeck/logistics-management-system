@@ -25,7 +25,7 @@ create table crm.cases(
   description text not null,
   status crm.case_status not null,
   priority crm.case_priority not null,
-  contact_id uuid references crm.contacts(id),
+  contact_id uuid references crm.contacts(id) on delete cascade,
   closed_at timestamp with time zone,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now()
@@ -62,4 +62,13 @@ create index idx_crm_cases_priority on crm.cases(priority);
 create index idx_crm_cases_closed_at on crm.cases(closed_at);
 
 create index idx_crm_cases_created_at on crm.cases(created_at);
+
+-- Triggers for crm.cases
+create trigger cases_set_updated_at
+  before update on crm.cases for each row
+  execute function crm.tg_set_updated_at();
+
+
+-- Comments on crm.cases triggers
+comment on trigger cases_set_updated_at on crm.cases is 'Keeps cases.updated_at current on updates.';
 
