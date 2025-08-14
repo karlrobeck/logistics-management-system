@@ -84,3 +84,27 @@ comment on column org.team_resouces.created_at is 'Row creation timestamp (UTC).
 
 comment on column org.team_resouces.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Indexes for org.roles
+create index idx_org_roles_org_id on org.roles(org_id);
+
+create index idx_org_roles_name on org.roles(name);
+
+create index idx_org_roles_created_at on org.roles(created_at);
+
+-- Indexes for org.team_roles
+create index idx_org_team_roles_role_id on org.team_roles(role_id);
+
+create index idx_org_team_roles_team_id on org.team_roles(team_id);
+
+create unique index uq_org_team_roles_role_team on org.team_roles(role_id, team_id);
+
+-- Indexes for org.role_actions
+create index idx_org_role_actions_role_id on org.role_actions(role_id);
+
+create index idx_org_role_actions_action on org.role_actions(action);
+
+create unique index uq_org_role_actions_role_action on org.role_actions(role_id, action);
+
+-- Indexes for org.team_resouces
+create index idx_org_team_resouces_created_at on org.team_resouces(created_at);
+

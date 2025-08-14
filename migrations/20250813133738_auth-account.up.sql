@@ -44,3 +44,12 @@ comment on column auth.accounts.created_at is 'Row creation timestamp (UTC).';
 
 comment on column auth.accounts.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Indexes for auth.accounts
+create index idx_auth_accounts_user_id on auth.accounts(user_id);
+
+create index idx_auth_accounts_provider_account on auth.accounts(provider_id, account_id);
+
+create index idx_auth_accounts_access_token_expires_at on auth.accounts(access_token_expires_at);
+
+create index idx_auth_accounts_refresh_token_expires_at on auth.accounts(refresh_token_expires_at);
+

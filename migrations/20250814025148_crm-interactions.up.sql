@@ -18,8 +18,8 @@ create table crm.interactions(
   interaction_date timestamp with time zone not null,
   contact_id uuid references crm.contacts(id),
   opportunity_id uuid references crm.opportunities(id),
-  created timestamp with time zone not null default now(),
-  updated timestamp with time zone not null default now()
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
 );
 
 -- Table and column documentation
@@ -39,7 +39,18 @@ comment on column crm.interactions.contact_id is 'FK to crm.contacts(id) if link
 
 comment on column crm.interactions.opportunity_id is 'FK to crm.opportunities(id) if linked to an opportunity.';
 
-comment on column crm.interactions.created is 'Row creation timestamp (UTC).';
+comment on column crm.interactions.created_at is 'Row creation timestamp (UTC).';
 
-comment on column crm.interactions.updated is 'Row last-updated timestamp (UTC).';
+comment on column crm.interactions.updated_at is 'Row last-updated timestamp (UTC).';
+
+-- Indexes for crm.interactions
+create index idx_crm_interactions_type on crm.interactions(type);
+
+create index idx_crm_interactions_interaction_date on crm.interactions(interaction_date);
+
+create index idx_crm_interactions_contact_id on crm.interactions(contact_id);
+
+create index idx_crm_interactions_opportunity_id on crm.interactions(opportunity_id);
+
+create index idx_crm_interactions_created_at on crm.interactions(created_at);
 

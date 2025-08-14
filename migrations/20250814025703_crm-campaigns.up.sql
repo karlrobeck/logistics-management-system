@@ -17,8 +17,8 @@ create table crm.campaigns(
   end_date date,
   budget decimal(10, 2) default 0.00,
   status crm.campaign_status not null,
-  created timestamp with time zone not null default now(),
-  updated timestamp with time zone not null default now()
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
 );
 
 -- Table and column documentation
@@ -38,9 +38,9 @@ comment on column crm.campaigns.budget is 'Budget allocated to the campaign.';
 
 comment on column crm.campaigns.status is 'Current campaign status.';
 
-comment on column crm.campaigns.created is 'Row creation timestamp (UTC).';
+comment on column crm.campaigns.created_at is 'Row creation timestamp (UTC).';
 
-comment on column crm.campaigns.updated is 'Row last-updated timestamp (UTC).';
+comment on column crm.campaigns.updated_at is 'Row last-updated timestamp (UTC).';
 
 create type crm.campaign_contacts_status as enum(
   'sent',
@@ -59,8 +59,8 @@ create table crm.campaign_contacts(
   contact_id uuid not null references crm.contacts(id),
   status crm.campaign_contacts_status not null,
   interaction_date timestamp with time zone,
-  created timestamp with time zone not null default now(),
-  updated timestamp with time zone not null default now()
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
 );
 
 -- Table and column documentation
@@ -76,7 +76,27 @@ comment on column crm.campaign_contacts.status is 'Engagement status for this co
 
 comment on column crm.campaign_contacts.interaction_date is 'Timestamp of the last engagement event.';
 
-comment on column crm.campaign_contacts.created is 'Row creation timestamp (UTC).';
+comment on column crm.campaign_contacts.created_at is 'Row creation timestamp (UTC).';
 
-comment on column crm.campaign_contacts.updated is 'Row last-updated timestamp (UTC).';
+comment on column crm.campaign_contacts.updated_at is 'Row last-updated timestamp (UTC).';
+
+-- Indexes for crm.campaigns
+create index idx_crm_campaigns_status on crm.campaigns(status);
+
+create index idx_crm_campaigns_start_date on crm.campaigns(start_date);
+
+create index idx_crm_campaigns_end_date on crm.campaigns(end_date);
+
+create index idx_crm_campaigns_created_at on crm.campaigns(created_at);
+
+-- Indexes for crm.campaign_contacts
+create index idx_crm_campaign_contacts_campaign_id on crm.campaign_contacts(campaign_id);
+
+create index idx_crm_campaign_contacts_contact_id on crm.campaign_contacts(contact_id);
+
+create index idx_crm_campaign_contacts_status on crm.campaign_contacts(status);
+
+create index idx_crm_campaign_contacts_interaction_date on crm.campaign_contacts(interaction_date);
+
+create index idx_crm_campaign_contacts_created_at on crm.campaign_contacts(created_at);
 

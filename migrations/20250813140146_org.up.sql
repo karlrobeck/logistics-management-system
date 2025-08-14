@@ -24,3 +24,10 @@ comment on column org.organization.created_at is 'Row creation timestamp (UTC).'
 
 comment on column org.organization.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Indexes for org.organization
+create index idx_org_organization_owner_id on org.organization(owner_id);
+
+create index idx_org_organization_name on org.organization(name);
+
+create index idx_org_organization_created_at on org.organization(created_at);
+

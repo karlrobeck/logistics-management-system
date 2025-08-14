@@ -20,8 +20,8 @@ create table crm.contacts(
   status crm.contact_status not null default 'lead',
   birth_date date,
   company_id uuid references crm.companies(id),
-  created timestamp with time zone not null default now(),
-  updated timestamp with time zone not null default now()
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
 );
 
 -- Table and column documentation
@@ -47,7 +47,17 @@ comment on column crm.contacts.birth_date is 'Birth date of the contact (optiona
 
 comment on column crm.contacts.company_id is 'FK to crm.companies(id) if the contact is associated with a company.';
 
-comment on column crm.contacts.created is 'Row creation timestamp (UTC).';
+comment on column crm.contacts.created_at is 'Row creation timestamp (UTC).';
 
-comment on column crm.contacts.updated is 'Row last-updated timestamp (UTC).';
+comment on column crm.contacts.updated_at is 'Row last-updated timestamp (UTC).';
+
+-- Indexes for crm.contacts
+create index idx_crm_contacts_company_id on crm.contacts(company_id);
+
+-- email is unique; unique index already exists
+create index idx_crm_contacts_status on crm.contacts(status);
+
+create index idx_crm_contacts_lead_source on crm.contacts(lead_source);
+
+create index idx_crm_contacts_created_at on crm.contacts(created_at);
 

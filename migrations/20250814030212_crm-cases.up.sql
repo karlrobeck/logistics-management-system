@@ -27,8 +27,8 @@ create table crm.cases(
   priority crm.case_priority not null,
   contact_id uuid references crm.contacts(id),
   closed_at timestamp with time zone,
-  created timestamp with time zone not null default now(),
-  updated timestamp with time zone not null default now()
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
 );
 
 -- Table and column documentation
@@ -48,7 +48,18 @@ comment on column crm.cases.contact_id is 'FK to crm.contacts(id) who opened/own
 
 comment on column crm.cases.closed_at is 'When the case was closed (if applicable).';
 
-comment on column crm.cases.created is 'Row creation timestamp (UTC).';
+comment on column crm.cases.created_at is 'Row creation timestamp (UTC).';
 
-comment on column crm.cases.updated is 'Row last-updated timestamp (UTC).';
+comment on column crm.cases.updated_at is 'Row last-updated timestamp (UTC).';
+
+-- Indexes for crm.cases
+create index idx_crm_cases_contact_id on crm.cases(contact_id);
+
+create index idx_crm_cases_status on crm.cases(status);
+
+create index idx_crm_cases_priority on crm.cases(priority);
+
+create index idx_crm_cases_closed_at on crm.cases(closed_at);
+
+create index idx_crm_cases_created_at on crm.cases(created_at);
 

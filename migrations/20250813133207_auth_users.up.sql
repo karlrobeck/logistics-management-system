@@ -30,3 +30,8 @@ comment on column auth.users.created_at is 'Row creation timestamp (UTC).';
 
 comment on column auth.users.updated_at is 'Row last-updated timestamp (UTC).';
 
+
+-- Indexes for auth.users
+create index idx_auth_users_email_verified on auth.users(email_verified);
+create index idx_auth_users_created_at on auth.users(created_at);
+

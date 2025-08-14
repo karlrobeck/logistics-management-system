@@ -23,3 +23,10 @@ comment on column auth.verification.created_at is 'Row creation timestamp (UTC).
 
 comment on column auth.verification.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Indexes for auth.verification
+create index idx_auth_verification_identifier on auth.verification(identifier);
+
+create index idx_auth_verification_value on auth.verification(value);
+
+create index idx_auth_verification_expires_at on auth.verification(expires_at);
+

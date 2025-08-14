@@ -20,8 +20,8 @@ create table crm.leads(
   lead_status crm.lead_status not null default 'new',
   lead_score integer not null default 0,
   converted_to_contact_id uuid references crm.contacts(id),
-  created timestamp with time zone not null default now(),
-  updated timestamp with time zone not null default now()
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
 );
 
 -- Table and column documentation
@@ -47,7 +47,18 @@ comment on column crm.leads.lead_score is 'Numeric score indicating likelihood t
 
 comment on column crm.leads.converted_to_contact_id is 'FK to crm.contacts(id) when this lead has been converted.';
 
-comment on column crm.leads.created is 'Row creation timestamp (UTC).';
+comment on column crm.leads.created_at is 'Row creation timestamp (UTC).';
 
-comment on column crm.leads.updated is 'Row last-updated timestamp (UTC).';
+comment on column crm.leads.updated_at is 'Row last-updated timestamp (UTC).';
+
+-- Indexes for crm.leads
+create index idx_crm_leads_lead_status on crm.leads(lead_status);
+
+create index idx_crm_leads_lead_source on crm.leads(lead_source);
+
+create index idx_crm_leads_lead_score on crm.leads(lead_score);
+
+create index idx_crm_leads_created_at on crm.leads(created_at);
+
+create index idx_crm_leads_converted_to_contact_id on crm.leads(converted_to_contact_id);
 

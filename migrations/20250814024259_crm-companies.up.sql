@@ -36,3 +36,10 @@ comment on column crm.companies.created_at is 'Row creation timestamp (UTC).';
 
 comment on column crm.companies.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Indexes for crm.companies
+create index idx_crm_companies_email on crm.companies(email);
+
+create index idx_crm_companies_industry on crm.companies(industry);
+
+create index idx_crm_companies_created_at on crm.companies(created_at);
+

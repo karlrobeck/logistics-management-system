@@ -44,3 +44,19 @@ comment on column org.team_members.created_at is 'Row creation timestamp (UTC).'
 
 comment on column org.team_members.updated_at is 'Row last-updated timestamp (UTC).';
 
+-- Indexes for org.teams
+create index idx_org_teams_org_id on org.teams(org_id);
+
+create index idx_org_teams_name on org.teams(name);
+
+create index idx_org_teams_created_at on org.teams(created_at);
+
+-- Indexes for org.team_members
+create index idx_org_team_members_team_id on org.team_members(team_id);
+
+create index idx_org_team_members_user_id on org.team_members(user_id);
+
+create index idx_org_team_members_created_at on org.team_members(created_at);
+
+create unique index uq_org_team_members_team_user on org.team_members(team_id, user_id);
+

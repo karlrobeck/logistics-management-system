@@ -19,8 +19,8 @@ create table crm.opportunities(
   amount decimal(10, 2) not null default 0.00,
   close_date date,
   probability decimal(5, 2) not null default 0.00,
-  created timestamp with time zone not null default now(),
-  updated timestamp with time zone not null default now()
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
 );
 
 -- Table and column documentation
@@ -42,7 +42,22 @@ comment on column crm.opportunities.close_date is 'Planned/actual close date.';
 
 comment on column crm.opportunities.probability is 'Win probability percentage (0-100).';
 
-comment on column crm.opportunities.created is 'Row creation timestamp (UTC).';
+comment on column crm.opportunities.created_at is 'Row creation timestamp (UTC).';
 
-comment on column crm.opportunities.updated is 'Row last-updated timestamp (UTC).';
+comment on column crm.opportunities.updated_at is 'Row last-updated timestamp (UTC).';
+
+-- Indexes for crm.opportunities
+create index idx_crm_opportunities_company_id on crm.opportunities(company_id);
+
+create index idx_crm_opportunities_primary_contact_id on crm.opportunities(primary_contact_id);
+
+create index idx_crm_opportunities_stage on crm.opportunities(stage);
+
+create index idx_crm_opportunities_close_date on crm.opportunities(close_date);
+
+create index idx_crm_opportunities_amount on crm.opportunities(amount);
+
+create index idx_crm_opportunities_probability on crm.opportunities(probability);
+
+create index idx_crm_opportunities_created_at on crm.opportunities(created_at);
 
