@@ -244,7 +244,7 @@ pub fn apply_loaders(
 // node query
 
 pub struct UsersNode {
-    id: Uuid,
+    pub id: Uuid,
 }
 
 #[Object]
@@ -316,6 +316,7 @@ impl UsersNode {
 }
 
 // graphql query
+#[derive(Debug, Default)]
 pub struct UsersQuery;
 
 #[Object]
@@ -349,6 +350,7 @@ impl UsersQuery {
 
 // graphql mutation
 
+#[derive(Debug, Default)]
 pub struct UsersMutation;
 
 #[Object]
