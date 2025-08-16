@@ -192,6 +192,7 @@ dependencies = [
  "rstest",
  "sea-query",
  "serde",
+ "serde_json",
  "sqlx",
  "tokio",
  "uuid",
