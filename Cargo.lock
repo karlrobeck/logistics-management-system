@@ -1267,6 +1267,19 @@ dependencies = [
 [[package]]
 name = "org"
 version = "0.1.0"
+dependencies = [
+ "async-graphql",
+ "auth",
+ "chrono",
+ "rstest",
+ "sea-query",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "uuid",
+ "validator",
+]
 
 [[package]]
 name = "parking"

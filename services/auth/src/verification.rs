@@ -279,6 +279,7 @@ impl VerificationNode {
 }
 
 // graphql query
+#[derive(Debug, Default)]
 pub struct VerificationQuery;
 
 #[Object]
@@ -312,6 +313,7 @@ impl VerificationQuery {
 }
 
 // graphql mutation
+#[derive(Default)]
 pub struct VerificationMutation;
 
 #[Object]

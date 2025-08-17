@@ -364,6 +364,7 @@ impl SessionsNode {
 }
 
 // graphql query
+#[derive(Debug, Default)]
 pub struct SessionsQuery;
 
 #[Object]
@@ -397,7 +398,7 @@ impl SessionsQuery {
 }
 
 // graphql mutation
-
+#[derive(Default)]
 pub struct SessionsMutation;
 
 #[Object]

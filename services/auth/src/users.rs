@@ -3,11 +3,10 @@ use async_graphql::{
     dataloader::{DataLoader, Loader},
 };
 use chrono::{DateTime, Utc};
-use sea_query::{Alias, ConditionalStatement, Expr, Iden, PostgresQueryBuilder, Query};
+use sea_query::{Alias, Expr, Iden, PostgresQueryBuilder, Query};
 use serde::Deserialize;
-use sqlx::{PgConnection, PgPool, Postgres, pool::PoolConnection};
+use sqlx::PgPool;
 use std::sync::Arc;
-use tokio::sync::Mutex;
 use uuid::Uuid;
 
 #[derive(Iden)]
