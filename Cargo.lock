@@ -359,6 +359,20 @@ checksum = "19d374276b40fb8bbdee95aef7c7fa6b5316ec764510eb64b8dd0e2ed0d7e7f5"
 [[package]]
 name = "crm"
 version = "0.1.0"
+dependencies = [
+ "async-graphql",
+ "auth",
+ "chrono",
+ "org",
+ "rstest",
+ "sea-query",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "uuid",
+ "validator",
+]
 
 [[package]]
 name = "crossbeam-queue"
