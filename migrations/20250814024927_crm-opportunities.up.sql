@@ -1,0 +1,77 @@
+-- Add up migration script here
+create type crm.opportunity_stage as enum(
+  'prospecting',
+  'qualification',
+  'proposal',
+  'closed-won',
+  'closed-lost'
+);
+
+-- Type documentation
+comment on type crm.opportunity_stage is 'Sales opportunity pipeline stage.';
+
+create table crm.opportunities(
+  id uuid not null primary key default gen_random_uuid(),
+  name varchar(255) not null,
+  company_id uuid references crm.companies(id),
+  primary_contact_id uuid references crm.contacts(id),
+  stage crm.opportunity_stage not null,
+  amount decimal(10, 2) not null default 0.00,
+  close_date date,
+  probability decimal(5, 2) not null default 0.00,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
+);
+
+-- Table and column documentation
+comment on table crm.opportunities is 'Sales opportunities linked to companies/contacts.';
+
+comment on column crm.opportunities.id is 'Primary key: UUID for the opportunity.';
+
+comment on column crm.opportunities.name is 'Short name/label for the opportunity.';
+
+comment on column crm.opportunities.company_id is 'FK to crm.companies(id) representing the account.';
+
+comment on column crm.opportunities.primary_contact_id is 'FK to crm.contacts(id) for the primary contact.';
+
+comment on column crm.opportunities.stage is 'Sales pipeline stage.';
+
+comment on column crm.opportunities.amount is 'Expected revenue amount for the opportunity.';
+
+comment on column crm.opportunities.close_date is 'Planned/actual close date.';
+
+comment on column crm.opportunities.probability is 'Win probability percentage (0-100).';
+
+comment on column crm.opportunities.created_at is 'Row creation timestamp (UTC).';
+
+comment on column crm.opportunities.updated_at is 'Row last-updated timestamp (UTC).';
+
+-- Indexes for crm.opportunities
+create index idx_crm_opportunities_company_id on crm.opportunities(company_id);
+
+create index idx_crm_opportunities_primary_contact_id on crm.opportunities(primary_contact_id);
+
+create index idx_crm_opportunities_stage on crm.opportunities(stage);
+
+create index idx_crm_opportunities_close_date on crm.opportunities(close_date);
+
+create index idx_crm_opportunities_amount on crm.opportunities(amount);
+
+create index idx_crm_opportunities_probability on crm.opportunities(probability);
+
+create index idx_crm_opportunities_created_at on crm.opportunities(created_at);
+
+-- Triggers for crm.opportunities
+create trigger opportunities_set_updated_at
+  before update on crm.opportunities for each row
+  execute function crm.tg_set_updated_at();
+
+create trigger opportunities_contact_company_match
+  before insert or update on crm.opportunities for each row
+  execute function crm.tg_opportunity_contact_company_match();
+
+-- Comments on crm.opportunities triggers
+comment on trigger opportunities_set_updated_at on crm.opportunities is 'Keeps opportunities.updated_at current on updates.';
+
+comment on trigger opportunities_contact_company_match on crm.opportunities is 'Validates that primary_contact''s company matches opportunity.company_id when provided.';
+

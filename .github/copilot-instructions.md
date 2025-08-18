@@ -1,57 +1,98 @@
+````instructions
 # GitHub Copilot Instructions
 
 ## Project Overview
-This is a logistics management system with integrated CRM functionality, built with a modern full-stack TypeScript architecture using Pylon (GraphQL), React with TanStack Router, and PostgreSQL with Kysely ORM.
+This is a logistics management system with integrated CRM functionality, currently undergoing a hybrid architecture migration. The system combines TypeScript frontend with Pylon GraphQL backend and Rust microservices for domain logic.
 
-## Architecture & Core Concepts
+## Hybrid Architecture (Active Migration)
 
-### Modular Domain Structure
-The system is organized into 4 distinct business domains:
-- **auth**: User authentication and authorization
-- **org**: Organization and user management 
-- **crm**: Customer relationship management (contacts, companies, campaigns, opportunities, invoices)
-- **lms**: Logistics management system (shipments, routes, warehouses, providers, pricing)
+### Current State: TypeScript + Rust Microservices
+The project is transitioning from pure TypeScript to a hybrid architecture:
+- **Frontend**: React with TanStack Router, TypeScript, Shadcn/UI
+- **API Layer**: Pylon (TypeScript GraphQL gateway)
+- **Domain Services**: Rust microservices in `services/` (async-graphql)
+- **Database**: PostgreSQL with comprehensive Row Level Security (RLS)
 
-Each domain follows the same pattern:
+### Domain Structure
+Four business domains with dual TypeScript/Rust implementations:
+- **auth**: User authentication, sessions, accounts, verification
+- **org**: Organizations, teams, roles, ABAC permissions
+- **crm**: Companies, contacts, leads, opportunities, campaigns, invoices
+- **lms**: Shipments, routes, warehouses, transport providers, pricing
+
+### Service Architecture Patterns
 ```
-src/
-├── db/schemas/{domain}/     # Zod schemas for validation
-├── resolvers/{domain}/      # GraphQL resolvers grouped by entity
-└── migrations/             # Domain-specific SQL migrations
+services/{domain}/           # Rust microservice
+├── Cargo.toml              # Workspace member with shared dependencies
+├── src/
+│   ├── lib.rs              # Domain Query/Mutation exports
+│   └── {entity}.rs         # Entity resolvers with async-graphql
+src/resolvers/{domain}/      # TypeScript GraphQL gateway
+migrations/                  # SQLx migrations with RLS policies
 ```
 
 ### Development Workflow
 
-**Start development environment:**
+**Start full development stack:**
 ```bash
-bun run dev  # Starts both backend (port 3000) and frontend (port 3001)
+docker compose -f dev.compose.yaml up -d  # PostgreSQL, MinIO, MailHog
+bun run dev  # Backend (port 3000) + frontend (port 3001)
 ```
 
-**Backend only (Pylon GraphQL server):**
+**Database operations:**
 ```bash
-bun run dev:backend  # Auto-generates GraphQL client types
+sqlx migrate run            # Apply pending migrations
+bun run generate-types      # Regenerate Kysely types from schema
 ```
 
-**Database management:**
+**Rust services development:**
 ```bash
-bun run generate-types  # Regenerate Kysely types from database schema
+cargo check --workspace     # Type check all services
+cargo test --workspace      # Run Rust tests
 ```
 
-**Code quality:**
-```bash
-bun run format && bun run check  # Biome formatting and linting
+### Key Architecture Patterns
+
+**Rust Domain Services:**
+Each Rust service exports Query/Mutation structs for async-graphql:
+```rust
+// services/auth/src/lib.rs
+pub mod users;
+pub mod session;
+
+pub struct Query;
+pub struct Mutation;
 ```
 
-### Key Patterns
+**TypeScript GraphQL Gateway:**
+Pylon aggregates domain resolvers in `src/index.ts`:
+```typescript
+export const graphql = {
+  Query: {
+    auth: authResolver.queries,
+    crm: crmResolver.queries,
+    // ...
+  },
+  Mutation: {
+    ...authResolver.mutations,
+    ...crmResolver.mutations,
+    // ...
+  },
+};
+```
 
-**GraphQL Resolver Structure:**
-Each entity resolver exports `queries` and `mutations` objects that get merged in domain index files, then combined in `src/index.ts`. Resolvers use Node classes for type-safe field resolution:
+**Database Layer with RLS:**
+- Comprehensive Row Level Security policies for multi-tenant access
+- Schema-based organization: `auth.*`, `org.*`, `crm.*`, `lms.*`
+- SQLx migrations with both up/down scripts
+- Kysely type generation for TypeScript compatibility
 
+**Entity Resolution Pattern:**
+Both TypeScript and Rust follow the Node pattern for GraphQL:
 ```typescript
 export class CrmContactNode {
   constructor(private model: Selectable<DB['crmContacts']>) {}
   
-  // Field resolvers with lazy loading
   async company() {
     return this.model.companyId 
       ? new CrmCompanyNode(await findCompanyById(this.model.companyId))
@@ -60,53 +101,91 @@ export class CrmContactNode {
 }
 ```
 
-**Database Layer:**
-- Kysely ORM with camelCase plugin for PostgreSQL
-- Type-safe queries generated from migrations
-- Zod schemas in `db/schemas/` for validation
-- Migrations follow naming: `YYYYMMDDHHMMSS_{domain}.{up|down}.sql`
+### Database Security & Multi-tenancy
 
-**Frontend Architecture:**
+**Organization-based access control:**
+Every entity has `org_id` with RLS policies using helper functions:
+```sql
+-- Example policy pattern
+create policy table_org_access on schema.table
+  for select to public
+  using (org_id in (select org_id from org.current_user_organizations()));
+```
+
+**Permission-based mutations:**
+```sql
+create policy table_update on schema.table
+  for update to public
+  using (org.current_user_has_permission(org_id, 'update'::org.permission_actions));
+```
+
+### Frontend Architecture (Unchanged)
 - TanStack Router for file-based routing in `src/routes/`
 - Auto-generated route tree in `routeTree.gen.ts`
 - GQty for GraphQL client with auto-generated types
 - Shadcn/UI components with Tailwind CSS
 - Theme provider with dark mode support
 
-**Build System:**
-- Rsbuild with dual environments: `web` (frontend) and `bun` (backend)
-- Frontend serves from `src/client.tsx`, backend from `src/server.ts`
-- Production builds to `dist/server/` with static assets in `web/` subdirectory
+### Build System & Deployment
+- **Development**: Dual Rsbuild environments (`web`/`bun`) + Rust workspace
+- **Frontend**: `src/client.tsx` → `dist/server/web/`
+- **Backend**: `src/server.ts` → `dist/server/`
+- **Production**: Docker with Rust + Bun runtime, includes SQLx CLI
 
-### Development Services
+### Migration Strategy Understanding
+This codebase is actively migrating from TypeScript to Rust:
+1. **Current**: TypeScript resolvers call Kysely → PostgreSQL
+2. **Target**: Rust services with async-graphql → PostgreSQL via SQLx
+3. **Gateway**: Pylon aggregates both during transition
 
-**Local services via docker-compose:**
+**When adding features:**
+- New entities: Implement in Rust services first
+- Existing entities: May have dual implementations
+- Database: Always use SQLx migrations, never ORM migrations
+
+### Development Environment
+**Required services (via docker-compose):**
 ```bash
 docker compose -f dev.compose.yaml up -d
 ```
-- PostgreSQL: localhost:5432 (postgres/postgres)
-- MinIO object storage: localhost:9000 (minio/minio-password)
-- MailHog email testing: localhost:8025
+- **PostgreSQL**: localhost:5432 (postgres/postgres) - Primary database
+- **MinIO**: localhost:9000 (minio/minio-password) - Object storage
+- **MailHog**: localhost:8025 - Email testing UI (SMTP: 1025)
 
-### Critical Files to Understand
+### Critical Files & Conventions
 
-- `src/index.ts`: GraphQL schema composition and domain resolver aggregation
-- `src/resolvers/{domain}/index.ts`: Domain query/mutation exports
-- `src/db/schemas/index.ts`: Centralized schema exports for validation
-- `rsbuild.config.ts`: Dual-environment build configuration
+**Workspace root:**
+- `Cargo.toml`: Rust workspace with shared async-graphql dependencies
 - `package.json`: Complex dev script with concurrent backend/frontend
+- `rsbuild.config.ts`: Dual-environment build with migration copy
+- `migrations/`: SQLx migrations with comprehensive RLS policies
 
-### Common Tasks
+**Database patterns:**
+- All tables have UUID primary keys with `gen_random_uuid()`
+- Timestamps: `created_at`, `updated_at` with `default now()`
+- Multi-tenant via `org_id` foreign keys
+- Extensive SQL comments for schema documentation
 
-**Adding new entity:**
-1. Create migration in `migrations/`
-2. Run `bun run generate-types` to update Kysely types
-3. Add Zod schema in `src/db/schemas/{domain}/`
-4. Create resolver class with Node pattern in `src/resolvers/{domain}/`
-5. Export from domain index file
+**Security model:**
+- Row Level Security enabled on all tables
+- Helper functions: `org.current_user_organizations()`, `auth.current_user_id()`
+- Permission enum: `'read' | 'update' | 'delete'` in `org.permission_actions`
 
-**Working with forms:**
-Use react-hook-form with Zod resolvers. Schemas are already defined in `db/schemas/` for consistency between API and forms.
+### Common Migration Tasks
 
-**Navigation:**
-Use TanStack Router's file-based routing. Route files in `src/routes/` automatically generate navigation types.
+**Adding new Rust entity:**
+1. Create `services/{domain}/src/{entity}.rs` with async-graphql structs
+2. Add SQLx migration with RLS policies
+3. Export from `services/{domain}/src/lib.rs`
+4. Update TypeScript gateway resolver if needed
+
+**Database changes:**
+```bash
+sqlx migrate add {description}           # Create new migration
+sqlx migrate run                         # Apply migrations
+bun run generate-types                   # Update TypeScript types
+```
+
+**Working with RLS policies:**
+Every new table needs 4 policy types: `_org_access`, `_update`, `_insert`, `_delete`
+Follow existing patterns in `enable_rls_*_schema.up.sql` migrations.
