@@ -8,6 +8,7 @@ use crate::{
 };
 
 pub mod accounts;
+pub mod jwt;
 pub mod session;
 pub mod users;
 pub mod verification;

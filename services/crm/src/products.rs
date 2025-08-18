@@ -3,8 +3,8 @@
 
 use sea_query::Iden;
 
+use async_graphql::InputObject;
 use async_graphql::dataloader::{DataLoader, Loader};
-use async_graphql::{Enum, InputObject};
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use sqlx::PgPool;

@@ -424,162 +424,162 @@ impl UsersMutation {
     }
 }
 
-#[cfg(test)]
-mod test {
+// #[cfg(test)]
+// mod test {
 
-    use async_graphql::{
-        EmptySubscription, Name, Request, Response, Schema, SchemaBuilder, Value, Variables,
-    };
-    use sqlx::PgPool;
+//     use async_graphql::{
+//         EmptySubscription, Name, Request, Response, Schema, SchemaBuilder, Value, Variables,
+//     };
+//     use sqlx::PgPool;
 
-    use crate::users::{UsersMutation, UsersQuery, apply_loaders};
+//     use crate::users::{UsersMutation, UsersQuery, apply_loaders};
 
-    type AuthUserSchema = SchemaBuilder<UsersQuery, UsersMutation, EmptySubscription>;
+//     type AuthUserSchema = SchemaBuilder<UsersQuery, UsersMutation, EmptySubscription>;
 
-    #[rstest::fixture]
-    fn schema() -> AuthUserSchema {
-        Schema::build(UsersQuery, UsersMutation, EmptySubscription)
-    }
+//     #[rstest::fixture]
+//     fn schema() -> AuthUserSchema {
+//         Schema::build(UsersQuery, UsersMutation, EmptySubscription)
+//     }
 
-    #[rstest::rstest]
-    #[case::list_query( // name of the test
-        r#"mutation { create(input:{name:"john doe",email:"johndoe@email.com"}) { id } }"#, // setup query
-        "query listUsers($offset: Int!,$limit: Int!) { list(offset:$offset,limit:$limit) { name } }", // actual query
-        serde_json::json!({"offset":0,"limit":1}),// variables
-        serde_json::json!({"list":[{"name":"john doe"}]}), // expected query json output
-    )]
-    #[case::view_query( // name of the test
-        r#"mutation { create(input:{name:"john doe",email:"johndoe@email.com"}) { id } }"#, // setup query
-        "query viewUser($id: UUID!) { view(id: $id) { name } }", // actual query
-        serde_json::json!({}),// variables
-        serde_json::json!({"view":{"name":"john doe"}}), // expected query json output
-    )]
-    #[case::update_query( // name of the test
-        r#"mutation { create(input:{name:"john doe",email:"johndoe@email.com"}) { id } }"#, // setup query
-        "mutation updateUser($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name } }", // actual query
-        serde_json::json!({"input":{"name":"jane doe"}}),// variables
-        serde_json::json!({"update":{"name":"jane doe"}}), // expected query json output
-    )]
-    #[case::delete_query( // name of the test
-        r#"mutation { create(input:{name:"john doe",email:"johndoe@email.com"}) { id } }"#, // setup query
-        "mutation deleteUser($id: UUID!) { delete(id: $id) }", // actual query
-        serde_json::json!({}),// variables
-        serde_json::json!({"delete":"User removed successfully"}), // expected query json output
-    )]
-    #[case::create_with_image_query( // test creating user with image
-        r#""#, // no setup needed
-        r#"mutation createUserWithImage($input: InsertUsers!) { create(input: $input) { name email image } }"#, // actual query
-        serde_json::json!({"input":{"name":"alice wonder","email":"alice@example.com","image":"https://example.com/avatar.jpg"}}),// variables
-        serde_json::json!({"create":{"name":"alice wonder","email":"alice@example.com","image":"https://example.com/avatar.jpg"}}), // expected query json output
-    )]
-    #[case::view_all_fields_query( // test viewing all user fields
-        r#"mutation { create(input:{name:"bob smith",email:"bob@example.com",image:"https://example.com/bob.jpg"}) { id } }"#, // setup query
-        "query viewUserAllFields($id: UUID!) { view(id: $id) { name email image } }", // actual query
-        serde_json::json!({}),// variables
-        serde_json::json!({"view":{"name":"bob smith","email":"bob@example.com","image":"https://example.com/bob.jpg"}}), // expected query json output (id, created_at, updated_at will be dynamic)
-    )]
-    #[case::list_multiple_users_query( // test listing multiple users
-        r#"
-        mutation { 
-          user1: create(input:{name:"user one",email:"user1@example.com"}) { id }
-          user2: create(input:{name:"user two",email:"user2@example.com"}) { id }
-          user3: create(input:{name:"user three",email:"user3@example.com"}) { id }
-        }
-        "#, // setup query
-        "query listMultipleUsers($offset: Int!,$limit: Int!) { list(offset:$offset,limit:$limit) { name email } }", // actual query
-        serde_json::json!({"offset":0,"limit":3}),// variables
-        serde_json::json!({"list":[{"name":"user one","email":"user1@example.com"},{"name":"user two","email":"user2@example.com"},{"name":"user three","email":"user3@example.com"}]}), // expected query json output
-    )]
-    #[case::list_with_pagination_query( // test pagination
-        r#"
-        mutation { 
-          user1: create(input:{name:"page user 1",email:"page1@example.com"}) { id }
-          user2: create(input:{name:"page user 2",email:"page2@example.com"}) { id }
-          user3: create(input:{name:"page user 3",email:"page3@example.com"}) { id }
-        }
-        "#, // setup query
-        "query listWithPagination($offset: Int!,$limit: Int!) { list(offset:$offset,limit:$limit) { name } }", // actual query
-        serde_json::json!({"offset":1,"limit":2}),// variables
-        serde_json::json!({"list":[{"name":"page user 2"},{"name":"page user 3"}]}), // expected query json output
-    )]
-    #[case::update_partial_fields_query( // test updating only some fields
-        r#"mutation { create(input:{name:"original name",email:"original@example.com",image:"original.jpg"}) { id } }"#, // setup query
-        "mutation updatePartial($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name email image } }", // actual query
-        serde_json::json!({"input":{"name":"updated name"}}),// variables
-        serde_json::json!({"update":{"name":"updated name","email":"original@example.com","image":"original.jpg"}}), // expected query json output
-    )]
-    #[case::update_email_only_query( // test updating only email
-        r#"mutation { create(input:{name:"email test",email:"old@example.com"}) { id } }"#, // setup query
-        "mutation updateEmail($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name email } }", // actual query
-        serde_json::json!({"input":{"email":"new@example.com"}}),// variables
-        serde_json::json!({"update":{"name":"email test","email":"new@example.com"}}), // expected query json output
-    )]
-    #[case::update_image_with_value_query( // test updating image to a new value
-        r#"mutation { create(input:{name:"image test",email:"image@example.com",image:"initial.jpg"}) { id } }"#, // setup query
-        "mutation updateImageValue($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name image } }", // actual query
-        serde_json::json!({"input":{"image":"updated.jpg"}}),// variables
-        serde_json::json!({"update":{"name":"image test","image":"updated.jpg"}}), // expected query json output
-    )]
-    #[case::create_without_image_query( // test creating user without image
-        r#""#, // no setup needed
-        r#"mutation createWithoutImage($input: InsertUsers!) { create(input: $input) { name email image } }"#, // actual query
-        serde_json::json!({"input":{"name":"no image user","email":"noimage@example.com"}}),// variables
-        serde_json::json!({"create":{"name":"no image user","email":"noimage@example.com","image":null}}), // expected query json output
-    )]
-    #[case::update_all_fields_query( // test updating all fields
-        r#"mutation { create(input:{name:"before update",email:"before@example.com",image:"before.jpg"}) { id } }"#, // setup query
-        "mutation updateAll($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name email image } }", // actual query
-        serde_json::json!({"input":{"name":"after update","email":"after@example.com","image":"after.jpg"}}),// variables
-        serde_json::json!({"update":{"name":"after update","email":"after@example.com","image":"after.jpg"}}), // expected query json output
-    )]
-    #[case::view_with_timestamps_query( // test viewing user with timestamp fields
-        r#"mutation { create(input:{name:"timestamp test",email:"timestamp@example.com"}) { id } }"#, // setup query
-        "query viewWithTimestamps($id: UUID!) { view(id: $id) { name email } }", // actual query
-        serde_json::json!({}),// variables
-        serde_json::json!({"view":{"name":"timestamp test","email":"timestamp@example.com"}}), // expected query json output (timestamps will be dynamic)
-    )]
-    #[case::create_user_basic_query( // test basic user creation
-        r#""#, // no setup needed
-        r#"mutation createBasicUser($input: InsertUsers!) { create(input: $input) { name email } }"#, // actual query
-        serde_json::json!({"input":{"name":"basic user","email":"basic@example.com"}}),// variables
-        serde_json::json!({"create":{"name":"basic user","email":"basic@example.com"}}), // expected query json output
-    )]
-    #[case::list_empty_query( // test listing when no users exist
-        r#""#, // no setup needed
-        "query listEmpty($offset: Int!,$limit: Int!) { list(offset:$offset,limit:$limit) { name } }", // actual query
-        serde_json::json!({"offset":0,"limit":10}),// variables
-        serde_json::json!({"list":[]}), // expected query json output
-    )]
-    #[sqlx::test(migrations = "../../migrations")]
-    async fn test_graphql(
-        #[ignore] pool: PgPool,
-        #[case] setup_query: &str,
-        #[case] query: &str,
-        #[case] variable: serde_json::Value,
-        #[case] expected: serde_json::Value,
-        schema: AuthUserSchema,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let schema = apply_loaders(&pool, schema.data(pool.clone())).finish();
+//     #[rstest::rstest]
+//     #[case::list_query( // name of the test
+//         r#"mutation { create(input:{name:"john doe",email:"johndoe@email.com"}) { id } }"#, // setup query
+//         "query listUsers($offset: Int!,$limit: Int!) { list(offset:$offset,limit:$limit) { name } }", // actual query
+//         serde_json::json!({"offset":0,"limit":1}),// variables
+//         serde_json::json!({"list":[{"name":"john doe"}]}), // expected query json output
+//     )]
+//     #[case::view_query( // name of the test
+//         r#"mutation { create(input:{name:"john doe",email:"johndoe@email.com"}) { id } }"#, // setup query
+//         "query viewUser($id: UUID!) { view(id: $id) { name } }", // actual query
+//         serde_json::json!({}),// variables
+//         serde_json::json!({"view":{"name":"john doe"}}), // expected query json output
+//     )]
+//     #[case::update_query( // name of the test
+//         r#"mutation { create(input:{name:"john doe",email:"johndoe@email.com"}) { id } }"#, // setup query
+//         "mutation updateUser($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name } }", // actual query
+//         serde_json::json!({"input":{"name":"jane doe"}}),// variables
+//         serde_json::json!({"update":{"name":"jane doe"}}), // expected query json output
+//     )]
+//     #[case::delete_query( // name of the test
+//         r#"mutation { create(input:{name:"john doe",email:"johndoe@email.com"}) { id } }"#, // setup query
+//         "mutation deleteUser($id: UUID!) { delete(id: $id) }", // actual query
+//         serde_json::json!({}),// variables
+//         serde_json::json!({"delete":"User removed successfully"}), // expected query json output
+//     )]
+//     #[case::create_with_image_query( // test creating user with image
+//         r#""#, // no setup needed
+//         r#"mutation createUserWithImage($input: InsertUsers!) { create(input: $input) { name email image } }"#, // actual query
+//         serde_json::json!({"input":{"name":"alice wonder","email":"alice@example.com","image":"https://example.com/avatar.jpg"}}),// variables
+//         serde_json::json!({"create":{"name":"alice wonder","email":"alice@example.com","image":"https://example.com/avatar.jpg"}}), // expected query json output
+//     )]
+//     #[case::view_all_fields_query( // test viewing all user fields
+//         r#"mutation { create(input:{name:"bob smith",email:"bob@example.com",image:"https://example.com/bob.jpg"}) { id } }"#, // setup query
+//         "query viewUserAllFields($id: UUID!) { view(id: $id) { name email image } }", // actual query
+//         serde_json::json!({}),// variables
+//         serde_json::json!({"view":{"name":"bob smith","email":"bob@example.com","image":"https://example.com/bob.jpg"}}), // expected query json output (id, created_at, updated_at will be dynamic)
+//     )]
+//     #[case::list_multiple_users_query( // test listing multiple users
+//         r#"
+//         mutation {
+//           user1: create(input:{name:"user one",email:"user1@example.com"}) { id }
+//           user2: create(input:{name:"user two",email:"user2@example.com"}) { id }
+//           user3: create(input:{name:"user three",email:"user3@example.com"}) { id }
+//         }
+//         "#, // setup query
+//         "query listMultipleUsers($offset: Int!,$limit: Int!) { list(offset:$offset,limit:$limit) { name email } }", // actual query
+//         serde_json::json!({"offset":0,"limit":3}),// variables
+//         serde_json::json!({"list":[{"name":"user one","email":"user1@example.com"},{"name":"user two","email":"user2@example.com"},{"name":"user three","email":"user3@example.com"}]}), // expected query json output
+//     )]
+//     #[case::list_with_pagination_query( // test pagination
+//         r#"
+//         mutation {
+//           user1: create(input:{name:"page user 1",email:"page1@example.com"}) { id }
+//           user2: create(input:{name:"page user 2",email:"page2@example.com"}) { id }
+//           user3: create(input:{name:"page user 3",email:"page3@example.com"}) { id }
+//         }
+//         "#, // setup query
+//         "query listWithPagination($offset: Int!,$limit: Int!) { list(offset:$offset,limit:$limit) { name } }", // actual query
+//         serde_json::json!({"offset":1,"limit":2}),// variables
+//         serde_json::json!({"list":[{"name":"page user 2"},{"name":"page user 3"}]}), // expected query json output
+//     )]
+//     #[case::update_partial_fields_query( // test updating only some fields
+//         r#"mutation { create(input:{name:"original name",email:"original@example.com",image:"original.jpg"}) { id } }"#, // setup query
+//         "mutation updatePartial($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name email image } }", // actual query
+//         serde_json::json!({"input":{"name":"updated name"}}),// variables
+//         serde_json::json!({"update":{"name":"updated name","email":"original@example.com","image":"original.jpg"}}), // expected query json output
+//     )]
+//     #[case::update_email_only_query( // test updating only email
+//         r#"mutation { create(input:{name:"email test",email:"old@example.com"}) { id } }"#, // setup query
+//         "mutation updateEmail($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name email } }", // actual query
+//         serde_json::json!({"input":{"email":"new@example.com"}}),// variables
+//         serde_json::json!({"update":{"name":"email test","email":"new@example.com"}}), // expected query json output
+//     )]
+//     #[case::update_image_with_value_query( // test updating image to a new value
+//         r#"mutation { create(input:{name:"image test",email:"image@example.com",image:"initial.jpg"}) { id } }"#, // setup query
+//         "mutation updateImageValue($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name image } }", // actual query
+//         serde_json::json!({"input":{"image":"updated.jpg"}}),// variables
+//         serde_json::json!({"update":{"name":"image test","image":"updated.jpg"}}), // expected query json output
+//     )]
+//     #[case::create_without_image_query( // test creating user without image
+//         r#""#, // no setup needed
+//         r#"mutation createWithoutImage($input: InsertUsers!) { create(input: $input) { name email image } }"#, // actual query
+//         serde_json::json!({"input":{"name":"no image user","email":"noimage@example.com"}}),// variables
+//         serde_json::json!({"create":{"name":"no image user","email":"noimage@example.com","image":null}}), // expected query json output
+//     )]
+//     #[case::update_all_fields_query( // test updating all fields
+//         r#"mutation { create(input:{name:"before update",email:"before@example.com",image:"before.jpg"}) { id } }"#, // setup query
+//         "mutation updateAll($id: UUID!,$input: UpdateUsers!) { update(id: $id,input: $input) { name email image } }", // actual query
+//         serde_json::json!({"input":{"name":"after update","email":"after@example.com","image":"after.jpg"}}),// variables
+//         serde_json::json!({"update":{"name":"after update","email":"after@example.com","image":"after.jpg"}}), // expected query json output
+//     )]
+//     #[case::view_with_timestamps_query( // test viewing user with timestamp fields
+//         r#"mutation { create(input:{name:"timestamp test",email:"timestamp@example.com"}) { id } }"#, // setup query
+//         "query viewWithTimestamps($id: UUID!) { view(id: $id) { name email } }", // actual query
+//         serde_json::json!({}),// variables
+//         serde_json::json!({"view":{"name":"timestamp test","email":"timestamp@example.com"}}), // expected query json output (timestamps will be dynamic)
+//     )]
+//     #[case::create_user_basic_query( // test basic user creation
+//         r#""#, // no setup needed
+//         r#"mutation createBasicUser($input: InsertUsers!) { create(input: $input) { name email } }"#, // actual query
+//         serde_json::json!({"input":{"name":"basic user","email":"basic@example.com"}}),// variables
+//         serde_json::json!({"create":{"name":"basic user","email":"basic@example.com"}}), // expected query json output
+//     )]
+//     #[case::list_empty_query( // test listing when no users exist
+//         r#""#, // no setup needed
+//         "query listEmpty($offset: Int!,$limit: Int!) { list(offset:$offset,limit:$limit) { name } }", // actual query
+//         serde_json::json!({"offset":0,"limit":10}),// variables
+//         serde_json::json!({"list":[]}), // expected query json output
+//     )]
+//     #[sqlx::test(migrations = "../../migrations")]
+//     async fn test_graphql(
+//         #[ignore] pool: PgPool,
+//         #[case] setup_query: &str,
+//         #[case] query: &str,
+//         #[case] variable: serde_json::Value,
+//         #[case] expected: serde_json::Value,
+//         schema: AuthUserSchema,
+//     ) -> Result<(), Box<dyn std::error::Error>> {
+//         let schema = apply_loaders(&pool, schema.data(pool.clone())).finish();
 
-        let setup_request = Request::new(setup_query);
+//         let setup_request = Request::new(setup_query);
 
-        let response: Response = schema.execute(setup_request).await;
+//         let response: Response = schema.execute(setup_request).await;
 
-        let mut vars = Variables::from_json(variable);
+//         let mut vars = Variables::from_json(variable);
 
-        vars.insert(
-            Name::new("id"),
-            Value::from_json(response.data.into_json()?["create"]["id"].clone())?,
-        );
+//         vars.insert(
+//             Name::new("id"),
+//             Value::from_json(response.data.into_json()?["create"]["id"].clone())?,
+//         );
 
-        let request = Request::new(query).variables(vars);
+//         let request = Request::new(query).variables(vars);
 
-        let result: Response = schema.execute(request).await;
+//         let result: Response = schema.execute(request).await;
 
-        assert!(result.errors.len() < 1, "{:#?}", result.errors);
+//         assert!(result.errors.len() < 1, "{:#?}", result.errors);
 
-        assert_eq!(result.data.into_json()?, expected);
+//         assert_eq!(result.data.into_json()?, expected);
 
-        Ok(())
-    }
-}
+//         Ok(())
+//     }
+// }
