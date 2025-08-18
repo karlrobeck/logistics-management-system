@@ -124,7 +124,7 @@ begin
     end case;
     if notif_type is not null then
         select
-          shipment_id,
+          id,
           receiver_contact_id,
           sender_contact_id,
           tracking_number into s

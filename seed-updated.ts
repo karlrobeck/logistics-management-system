@@ -488,27 +488,6 @@ async function seedShipments(
       const receiverContactId = getRandom(
         contactIds.filter((id) => id !== senderContactId),
       );
-
-      // Generate dates with proper ordering: pickup_date <= delivery_date
-      const pickupDate = faker.helpers.maybe(() => faker.date.recent(), {
-        probability: 0.7,
-      });
-      const deliveryDate = faker.helpers.maybe(() => {
-        if (pickupDate) {
-          // If pickup date exists, delivery date should be after pickup date
-          return faker.date.between({
-            from: pickupDate,
-            to: faker.date.future(),
-          });
-        } else {
-          // If no pickup date, delivery can be any recent or future date
-          return faker.date.between({
-            from: faker.date.recent(),
-            to: faker.date.future(),
-          });
-        }
-      }, { probability: 0.3 });
-
       return {
         trackingNumber: faker.string.alphanumeric(12).toUpperCase(),
         status: faker.helpers.arrayElement(Object.values(LmsShipmentStatus)),
@@ -526,8 +505,12 @@ async function seedShipments(
           Object.values(LmsTransportMode),
         ),
         estimatedDeliveryDate: faker.date.future(),
-        pickupDate,
-        deliveryDate,
+        pickupDate: faker.helpers.maybe(() => faker.date.recent(), {
+          probability: 0.7,
+        }),
+        deliveryDate: faker.helpers.maybe(() => faker.date.recent(), {
+          probability: 0.3,
+        }),
         shippingCost: faker.finance.amount({ min: 10, max: 500 }),
         insuranceAmount: faker.helpers.maybe(
           () => faker.finance.amount({ min: 100, max: 5000 }),
@@ -626,24 +609,15 @@ async function seedRoutes(
   console.log("🔄 Seeding routes...");
   const data: Insertable<DB["lms.routes"]>[] = Array.from(
     { length: NUM_ROUTES },
-    () => {
-      // Generate departure first, then ensure arrival is after departure
-      const estimatedDeparture = faker.date.soon();
-      const estimatedArrival = faker.date.between({
-        from: estimatedDeparture,
-        to: new Date(estimatedDeparture.getTime() + 7 * 24 * 60 * 60 * 1000), // Within 7 days of departure
-      });
-
-      return {
-        routeName: `Route ${faker.location.city()} to ${faker.location.city()}`,
-        routeDate: faker.date.soon(),
-        status: faker.helpers.arrayElement(Object.values(LmsRouteStatus)),
-        driverId: getRandom(driverIds),
-        vehicleId: getRandom(vehicleIds),
-        estimatedDeparture,
-        estimatedArrival,
-      };
-    },
+    () => ({
+      routeName: `Route ${faker.location.city()} to ${faker.location.city()}`,
+      routeDate: faker.date.soon(),
+      status: faker.helpers.arrayElement(Object.values(LmsRouteStatus)),
+      driverId: getRandom(driverIds),
+      vehicleId: getRandom(vehicleIds),
+      estimatedDeparture: faker.date.soon(),
+      estimatedArrival: faker.date.future(),
+    }),
   );
 
   if (data.length === 0) return [];
@@ -717,31 +691,19 @@ async function seedOpportunitiesAndProducts(
   productIds: string[],
 ) {
   console.log("🔄 Seeding opportunities...");
-
-  // First, get contacts with their company IDs to ensure proper matching
-  const contactsWithCompanies = await db
-    .selectFrom("crm.contacts")
-    .select(["id", "companyId"])
-    .where("id", "in", contactIds)
-    .execute();
-
   const opportunityData: Insertable<DB["crm.opportunities"]>[] = Array.from(
     {
       length: NUM_OPPORTUNITIES,
     },
-    () => {
-      // Select a random contact and use their company for the opportunity
-      const selectedContact = getRandom(contactsWithCompanies);
-      return {
-        name: `Deal for ${faker.company.name()}`,
-        stage: faker.helpers.arrayElement(Object.values(CrmOpportunityStage)),
-        amount: faker.finance.amount({ min: 1000, max: 250000 }),
-        probability: faker.number.int({ min: 10, max: 90 }).toString(),
-        closeDate: faker.date.future(),
-        companyId: selectedContact?.companyId || getRandom(companyIds),
-        primaryContactId: selectedContact?.id || getRandom(contactIds),
-      };
-    },
+    () => ({
+      name: `Deal for ${faker.company.name()}`,
+      stage: faker.helpers.arrayElement(Object.values(CrmOpportunityStage)),
+      amount: faker.finance.amount({ min: 1000, max: 250000 }),
+      probability: faker.number.int({ min: 10, max: 90 }).toString(),
+      closeDate: faker.date.future(),
+      companyId: getRandom(companyIds),
+      primaryContactId: getRandom(contactIds),
+    }),
   );
 
   if (opportunityData.length === 0) return [];
@@ -862,6 +824,7 @@ async function seedInvoicesAndItems(
       contactId: getRandom(contactIds),
       subtotal: faker.finance.amount({ min: 100, max: 5000 }),
       taxAmount: faker.finance.amount({ min: 10, max: 500 }),
+      totalAmount: faker.finance.amount({ min: 110, max: 5500 }),
       currency: "USD",
       paymentTerms: faker.helpers.arrayElement(["Net-15", "Net-30", "Net-45"]),
     }),
@@ -915,41 +878,22 @@ async function seedRouteShipments(
       max: 15,
     });
     shipmentsForRoute.forEach((shipmentId, index) => {
-      // Generate estimated delivery first, then ensure actual delivery is after it
-      const estimatedDelivery = faker.date.future();
-      const actualDelivery = faker.helpers.maybe(() => {
-        // Actual delivery should be on or after estimated delivery
-        return faker.date.between({
-          from: estimatedDelivery,
-          to: new Date(estimatedDelivery.getTime() + 7 * 24 * 60 * 60 * 1000), // Within 7 days after estimated
-        });
-      }, { probability: 0.4 });
-
-      // Generate delivery status and signature requirements
-      const deliveryStatus = faker.helpers.arrayElement(
-        Object.values(LmsDeliveryStatus),
-      );
-      const signatureRequired = faker.datatype.boolean();
-
-      // Ensure recipient signature is provided when required
-      let recipientSignature: string | null = null;
-      if (deliveryStatus === "delivered" && signatureRequired) {
-        recipientSignature = faker.person.fullName();
-      } else {
-        recipientSignature = faker.helpers.maybe(() =>
-          faker.person.fullName(), { probability: 0.3 }) || null;
-      }
-
       data.push({
         routeId,
         shipmentId,
         sequenceNumber: index + 1,
-        deliveryStatus,
+        deliveryStatus: faker.helpers.arrayElement(
+          Object.values(LmsDeliveryStatus),
+        ),
         deliveryDate: faker.date.soon(),
-        estimatedDelivery,
-        signatureRequired,
-        recipientSignature,
-        actualDelivery,
+        estimatedDelivery: faker.date.future(),
+        signatureRequired: faker.datatype.boolean(),
+        recipientSignature: faker.helpers.maybe(() => faker.person.fullName(), {
+          probability: 0.3,
+        }),
+        actualDelivery: faker.helpers.maybe(() => faker.date.recent(), {
+          probability: 0.4,
+        }),
       });
     });
   });
@@ -968,79 +912,12 @@ async function seedTransportLegs(
   driverIds: string[],
   vehicleIds: string[],
   providerIds: string[],
-  providerServiceIds: string[], // Add provider service IDs
 ) {
   console.log("🔄 Seeding transport legs...");
-
-  // Pre-generate valid provider-service pairs
-  const validProviderServicePairs: Array<
-    { providerId: string; serviceId: string }
-  > = [];
-  for (const providerId of providerIds) {
-    const services = await db
-      .selectFrom("lms.providerServices")
-      .select("id")
-      .where("providerId", "=", providerId)
-      .execute();
-    services.forEach((service) => {
-      validProviderServicePairs.push({
-        providerId,
-        serviceId: service.id,
-      });
-    });
-  }
-
   const data: Insertable<DB["lms.transportLegs"]>[] = [];
   shipmentIds.forEach((shipmentId) => {
     const originWarehouseId = getRandom(warehouseIds);
     const destinationAddressId = getRandom(addressIds);
-
-    // Generate dates with proper ordering
-    const scheduledPickup = faker.date.soon();
-    const scheduledDelivery = faker.date.between({
-      from: scheduledPickup,
-      to: new Date(scheduledPickup.getTime() + 5 * 24 * 60 * 60 * 1000), // Within 5 days
-    });
-
-    const actualPickup = faker.helpers.maybe(() => {
-      // Actual pickup should be on or after the scheduled pickup time
-      return faker.date.between({
-        from: scheduledPickup, // Start from scheduled pickup, not before
-        to: new Date(scheduledPickup.getTime() + 48 * 60 * 60 * 1000), // Up to 2 days after
-      });
-    }, { probability: 0.6 });
-
-    const actualDelivery = faker.helpers.maybe(() => {
-      if (actualPickup) {
-        // If we have actual pickup, delivery should be after that and after scheduled delivery
-        const minDeliveryTime = actualPickup > scheduledDelivery
-          ? actualPickup
-          : scheduledDelivery;
-        return faker.date.between({
-          from: minDeliveryTime,
-          to: new Date(minDeliveryTime.getTime() + 7 * 24 * 60 * 60 * 1000), // Within 7 days
-        });
-      } else {
-        // If no actual pickup, delivery should be on or after scheduled delivery
-        return faker.date.between({
-          from: scheduledDelivery,
-          to: new Date(scheduledDelivery.getTime() + 7 * 24 * 60 * 60 * 1000),
-        });
-      }
-    }, { probability: 0.4 });
-
-    // Handle provider pairing constraint - use valid pairs or null
-    let providerId: string | null = null;
-    let providerServiceId: string | null = null;
-
-    if (faker.datatype.boolean() && validProviderServicePairs.length > 0) {
-      const pair = getRandom(validProviderServicePairs);
-      if (pair) {
-        providerId = pair.providerId;
-        providerServiceId = pair.serviceId;
-      }
-    }
-
     data.push({
       shipmentId,
       legSequence: 1,
@@ -1052,12 +929,15 @@ async function seedTransportLegs(
       destinationAddressId,
       driverId: getRandom(driverIds),
       vehicleId: getRandom(vehicleIds),
-      providerId,
-      providerServiceId,
-      scheduledPickup,
-      scheduledDelivery,
-      actualPickup,
-      actualDelivery,
+      providerId: getRandom(providerIds),
+      scheduledPickup: faker.date.soon(),
+      scheduledDelivery: faker.date.future(),
+      actualPickup: faker.helpers.maybe(() => faker.date.recent(), {
+        probability: 0.6,
+      }),
+      actualDelivery: faker.helpers.maybe(() => faker.date.recent(), {
+        probability: 0.4,
+      }),
       cost: faker.finance.amount({ min: 50, max: 500 }),
       currency: "USD",
       specialInstructions: faker.helpers.maybe(() => faker.lorem.sentence(), {
@@ -1124,7 +1004,7 @@ async function main() {
       shippingServiceIds,
     );
     await seedCases(db, contactIds);
-    const providerServiceIds = await seedProviderServices(db, providerIds);
+    await seedProviderServices(db, providerIds);
     const routeIds = await seedRoutes(db, driverIds, vehicleIds);
     await seedCampaignsAndContacts(db, contactIds);
     await seedOpportunitiesAndProducts(db, companyIds, contactIds, productIds);
@@ -1143,7 +1023,6 @@ async function main() {
       driverIds,
       vehicleIds,
       providerIds,
-      providerServiceIds,
     );
 
     console.log("\n🏁 Seeding completed successfully!");

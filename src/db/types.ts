@@ -3,257 +3,265 @@
  * Please do not edit it manually.
  */
 
-import type { ColumnType } from 'kysely';
+import type { ColumnType } from "kysely";
 
 export enum CrmCampaignContactsStatus {
-  CLICKED = 'clicked',
-  OPENED = 'opened',
-  RESPONDED = 'responded',
-  SENT = 'sent',
-  UNSUBSCRIBE = 'unsubscribe',
+  CLICKED = "clicked",
+  OPENED = "opened",
+  RESPONDED = "responded",
+  SENT = "sent",
+  UNSUBSCRIBE = "unsubscribe",
 }
 
 export enum CrmCampaignStatus {
-  ACTIVE = 'active',
-  COMPLETED = 'completed',
-  PAUSED = 'paused',
-  PLANNED = 'planned',
+  ACTIVE = "active",
+  COMPLETED = "completed",
+  PAUSED = "paused",
+  PLANNED = "planned",
 }
 
 export enum CrmCasePriority {
-  CRITICAL = 'critical',
-  HIGH = 'high',
-  LOW = 'low',
-  MEDIUM = 'medium',
+  CRITICAL = "critical",
+  HIGH = "high",
+  LOW = "low",
+  MEDIUM = "medium",
 }
 
 export enum CrmCaseStatus {
-  CLOSED = 'closed',
-  IN_PROGRESS = 'in_progress',
-  OPEN = 'open',
-  PENDING_CUSTOMER = 'pending_customer',
+  CLOSED = "closed",
+  IN_PROGRESS = "in_progress",
+  OPEN = "open",
+  PENDING_CUSTOMER = "pending_customer",
 }
 
 export enum CrmContactStatus {
-  CUSTOMER = 'customer',
-  INACTIVE = 'inactive',
-  LEAD = 'lead',
-  PROSPECT = 'prospect',
+  CUSTOMER = "customer",
+  INACTIVE = "inactive",
+  LEAD = "lead",
+  PROSPECT = "prospect",
 }
 
 export enum CrmInteractionType {
-  CALL = 'call',
-  CHAT = 'chat',
-  EMAIL = 'email',
-  MEETING = 'meeting',
-  NOTE = 'note',
+  CALL = "call",
+  CHAT = "chat",
+  EMAIL = "email",
+  MEETING = "meeting",
+  NOTE = "note",
 }
 
 export enum CrmInvoiceStatus {
-  CANCELLED = 'cancelled',
-  DRAFT = 'draft',
-  OVERDUE = 'overdue',
-  PAID = 'paid',
-  SENT = 'sent',
+  CANCELLED = "cancelled",
+  DRAFT = "draft",
+  OVERDUE = "overdue",
+  PAID = "paid",
+  SENT = "sent",
 }
 
 export enum CrmLeadStatus {
-  CONTACTED = 'contacted',
-  NEW = 'new',
-  QUALIFIED = 'qualified',
-  UNQUALIFIED = 'unqualified',
+  CONTACTED = "contacted",
+  NEW = "new",
+  QUALIFIED = "qualified",
+  UNQUALIFIED = "unqualified",
 }
 
 export enum CrmNotificationChannel {
-  EMAIL = 'email',
-  PUSH = 'push',
-  SMS = 'sms',
-  WEBHOOK = 'webhook',
+  EMAIL = "email",
+  PUSH = "push",
+  SMS = "sms",
+  WEBHOOK = "webhook",
 }
 
 export enum CrmNotificationDeliveryStatus {
-  BOUNCED = 'bounced',
-  DELIVERED = 'delivered',
-  FAILED = 'failed',
-  PENDING = 'pending',
-  SENT = 'sent',
+  BOUNCED = "bounced",
+  DELIVERED = "delivered",
+  FAILED = "failed",
+  PENDING = "pending",
+  SENT = "sent",
 }
 
 export enum CrmNotificationType {
-  DELAYED = 'delayed',
-  DELIVERED = 'delivered',
-  EXCEPTION = 'exception',
-  IN_TRANSIT = 'in_transit',
-  OUT_FOR_DELIVERY = 'out_for_delivery',
-  PICKUP_SCHEDULED = 'pickup_scheduled',
+  DELAYED = "delayed",
+  DELIVERED = "delivered",
+  EXCEPTION = "exception",
+  IN_TRANSIT = "in_transit",
+  OUT_FOR_DELIVERY = "out_for_delivery",
+  PICKUP_SCHEDULED = "pickup_scheduled",
 }
 
 export enum CrmOpportunityStage {
-  CLOSED_LOST = 'closed_lost',
-  CLOSED_WON = 'closed_won',
-  PROPOSAL = 'proposal',
-  PROSPECTING = 'prospecting',
-  QUALIFICATION = 'qualification',
+  CLOSED_LOST = "closed-lost",
+  CLOSED_WON = "closed-won",
+  PROPOSAL = "proposal",
+  PROSPECTING = "prospecting",
+  QUALIFICATION = "qualification",
 }
 
 export enum LmsAddressType {
-  BILLING = 'billing',
-  OFFICE = 'office',
-  SHIPPING = 'shipping',
-  WAREHOUSE = 'warehouse',
+  BILLING = "billing",
+  OFFICE = "office",
+  SHIPPING = "shipping",
+  WAREHOUSE = "warehouse",
 }
 
 export enum LmsDeliveryStatus {
-  ATTEMPTED = 'attempted',
-  DELIVERED = 'delivered',
-  FAILED = 'failed',
-  PENDING = 'pending',
-  RESCHEDULED = 'rescheduled',
+  ATTEMPTED = "attempted",
+  DELIVERED = "delivered",
+  FAILED = "failed",
+  PENDING = "pending",
+  RESCHEDULED = "rescheduled",
 }
 
 export enum LmsLegStatus {
-  CANCELLED = 'cancelled',
-  COMPLETED = 'completed',
-  IN_PROGRESS = 'in_progress',
-  PLANNED = 'planned',
+  CANCELLED = "cancelled",
+  COMPLETED = "completed",
+  IN_PROGRESS = "in_progress",
+  PLANNED = "planned",
 }
 
 export enum LmsPackageType {
-  BAG = 'bag',
-  BOX = 'box',
-  CRATE = 'crate',
-  ENVELOPE = 'envelope',
-  PALLET = 'pallet',
-  TUBE = 'tube',
+  BAG = "bag",
+  BOX = "box",
+  CRATE = "crate",
+  ENVELOPE = "envelope",
+  PALLET = "pallet",
+  TUBE = "tube",
 }
 
 export enum LmsPerformanceMetricType {
-  COST_EFFICIENCY = 'cost_efficiency',
-  CUSTOMER_SATISFACTION = 'customer_satisfaction',
-  DAMAGE_RATE = 'damage_rate',
-  ON_TIME_DELIVERY = 'on_time_delivery',
+  COST_EFFICIENCY = "cost_efficiency",
+  CUSTOMER_SATISFACTION = "customer_satisfaction",
+  DAMAGE_RATE = "damage_rate",
+  ON_TIME_DELIVERY = "on_time_delivery",
 }
 
 export enum LmsProviderInvoiceStatus {
-  CANCELLED = 'cancelled',
-  DRAFT = 'draft',
-  OVERDUE = 'overdue',
-  PAID = 'paid',
-  SENT = 'sent',
+  CANCELLED = "cancelled",
+  DRAFT = "draft",
+  OVERDUE = "overdue",
+  PAID = "paid",
+  SENT = "sent",
 }
 
 export enum LmsProviderType {
-  COURIER = 'courier',
-  EXPRESS = 'express',
-  FREIGHT = 'freight',
-  FTL = 'ftl',
-  LTL = 'ltl',
-  POSTAL = 'postal',
+  COURIER = "courier",
+  EXPRESS = "express",
+  FREIGHT = "freight",
+  FTL = "ftl",
+  LTL = "ltl",
+  POSTAL = "postal",
 }
 
 export enum LmsRouteStatus {
-  CANCELLED = 'cancelled',
-  COMPLETED = 'completed',
-  IN_PROGRESS = 'in_progress',
-  PLANNED = 'planned',
+  CANCELLED = "cancelled",
+  COMPLETED = "completed",
+  IN_PROGRESS = "in_progress",
+  PLANNED = "planned",
 }
 
 export enum LmsServiceType {
-  ECONOMY = 'economy',
-  EXPRESS = 'express',
-  FREIGHT = 'freight',
-  OVERNIGHT = 'overnight',
-  STANDARD = 'standard',
+  ECONOMY = "economy",
+  EXPRESS = "express",
+  FREIGHT = "freight",
+  OVERNIGHT = "overnight",
+  STANDARD = "standard",
 }
 
 export enum LmsShipmentStatus {
-  CANCELLED = 'cancelled',
-  CREATED = 'created',
-  DELIVERED = 'delivered',
-  EXCEPTION = 'exception',
-  IN_TRANSIT = 'in_transit',
-  OUT_FOR_DELIVERY = 'out_for_delivery',
-  PICKED_UP = 'picked_up',
+  CANCELLED = "cancelled",
+  CREATED = "created",
+  DELIVERED = "delivered",
+  EXCEPTION = "exception",
+  IN_TRANSIT = "in_transit",
+  OUT_FOR_DELIVERY = "out_for_delivery",
+  PICKED_UP = "picked_up",
 }
 
 export enum LmsTrackingEventType {
-  ARRIVED = 'arrived',
-  CANCELLED = 'cancelled',
-  CREATED = 'created',
-  DELIVERED = 'delivered',
-  DEPARTED = 'departed',
-  EXCEPTION = 'exception',
-  OUT_FOR_DELIVERY = 'out_for_delivery',
-  PICKED_UP = 'picked_up',
+  ARRIVED = "arrived",
+  CANCELLED = "cancelled",
+  CREATED = "created",
+  DELIVERED = "delivered",
+  DEPARTED = "departed",
+  EXCEPTION = "exception",
+  OUT_FOR_DELIVERY = "out-for-delivery",
+  PICKED_UP = "picked_up",
 }
 
 export enum LmsTransportLegType {
-  DELIVERY = 'delivery',
-  LINEHAUL = 'linehaul',
-  PICKUP = 'pickup',
-  TRANSFER = 'transfer',
+  DELIVERY = "delivery",
+  LINEHAUL = "linehaul",
+  PICKUP = "pickup",
+  TRANSFER = "transfer",
 }
 
 export enum LmsTransportMode {
-  AIR = 'air',
-  RAIL = 'rail',
-  ROAD = 'road',
-  SEA = 'sea',
+  AIR = "air",
+  RAIL = "rail",
+  ROAD = "road",
+  SEA = "sea",
 }
 
 export enum LmsWarehouseInventoryStatus {
-  PICKED = 'picked',
-  RECEIVED = 'received',
-  SHIPPED = 'shipped',
-  STORED = 'stored',
+  PICKED = "picked",
+  RECEIVED = "received",
+  SHIPPED = "shipped",
+  STORED = "stored",
 }
 
 export enum LmsWarehouseType {
-  BONDED = 'bonded',
-  COLD_STORAGE = 'cold_storage',
-  CROSS_DOCK = 'cross_dock',
-  DISTRIBUTION = 'distribution',
-  FULFILLMENT = 'fulfillment',
+  BONDED = "bonded",
+  COLD_STORAGE = "cold_storage",
+  CROSS_DOCK = "cross_dock",
+  DISTRIBUTION = "distribution",
+  FULFILLMENT = "fulfillment",
 }
 
-export enum OrgDriverStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  ON_LEAVE = 'on_leave',
-  TERMINATED = 'terminated',
+export enum OrgPermissionActions {
+  DELETE = "delete",
+  READ = "read",
+  SELECT = "select",
+  UPDATE = "update",
 }
 
-export enum OrgPermissionStatus {
-  CREATE = 'create',
-  DELETE = 'delete',
-  READ = 'read',
-  UPDATE = 'update',
+export enum TmsDriverStatus {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+  ON_LEAVE = "on-leave",
+  TERMINATED = "terminated",
 }
 
-export enum OrgVehicleStatus {
-  ACTIVE = 'active',
-  MAINTENANCE = 'maintenance',
-  OUT_OF_SERVICE = 'out_of_service',
-  RETIRED = 'retired',
+export enum TmsVehicleStatus {
+  ACTIVE = "active",
+  MAINTENANCE = "maintenance",
+  OUT_OF_SERVICE = "out-of-service",
+  RETIRED = "retired",
 }
 
-export enum OrgVehicleType {
-  CAR = 'car',
-  MOTORCYCLE = 'motorcycle',
-  TRAILER = 'trailer',
-  TRUCK = 'truck',
-  VAN = 'van',
+export enum TmsVehicleType {
+  CAR = "car",
+  MOTORCYCLE = "motorcycle",
+  TRAILER = "trailer",
+  TRUCK = "truck",
+  VAN = "van",
 }
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
-export type Int8 = ColumnType<
-  string,
-  bigint | number | string,
-  bigint | number | string
->;
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+
+export type Json = JsonValue;
+
+export type JsonArray = JsonValue[];
+
+export type JsonObject = {
+  [x: string]: JsonValue | undefined;
+};
+
+export type JsonPrimitive = boolean | number | string | null;
+
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
@@ -268,1213 +276,2163 @@ export interface _SqlxMigrations {
   version: Int8;
 }
 
+export interface AuthAccounts {
+  /**
+   * Access token issued by the provider, if applicable.
+   */
+  accessToken: string | null;
+  /**
+   * Expiration timestamp for the access token.
+   */
+  accessTokenExpiresAt: Timestamp | null;
+  /**
+   * Provider-specific account identifier (e.g., subject/user id at the provider).
+   */
+  accountId: string;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the account linkage record.
+   */
+  id: Generated<string>;
+  /**
+   * ID token (JWT) returned by the provider, if applicable.
+   */
+  idToken: string | null;
+  /**
+   * Password hash for local credentials (if using email+password).
+   */
+  password: string | null;
+  /**
+   * Identifier for the identity provider (e.g., google, github, email).
+   */
+  providerId: string;
+  /**
+   * Refresh token issued by the provider, if applicable.
+   */
+  refreshToken: string | null;
+  /**
+   * Expiration timestamp for the refresh token.
+   */
+  refreshTokenExpiresAt: Timestamp | null;
+  /**
+   * Scopes granted for the tokens (space- or comma-separated).
+   */
+  scope: string | null;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * FK to auth.users(id) that owns this account linkage.
+   */
+  userId: string;
+}
+
+export interface AuthSessions {
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * When the session becomes invalid and will no longer be accepted.
+   */
+  expiresAt: Timestamp;
+  /**
+   * Primary key: UUID for the session record.
+   */
+  id: Generated<string>;
+  /**
+   * Last seen IP address for the session (if available).
+   */
+  ipAddress: string | null;
+  /**
+   * Opaque, unique session token.
+   */
+  token: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * User agent string from the client (if available).
+   */
+  userAgent: string | null;
+  /**
+   * FK to auth.users(id) indicating the session owner.
+   */
+  userId: string;
+}
+
 export interface AuthUsers {
   /**
-   * Timestamp when user was created
+   * Row creation timestamp (UTC).
    */
-  created: Generated<Timestamp>;
+  createdAt: Generated<Timestamp>;
   /**
-   * Unique email address for authentication
+   * Unique email address for the user.
    */
   email: string;
   /**
-   * Whether the email address has been verified
+   * Timestamp when the email address was verified; null if not verified.
    */
-  emailVerified: Generated<boolean>;
+  emailVerified: Timestamp | null;
+  /**
+   * Primary key: stable UUID for the user.
+   */
   id: Generated<string>;
   /**
-   * User display name
+   * URL to the user's profile image/avatar.
+   */
+  image: string | null;
+  /**
+   * Display name shown in the UI.
    */
   name: string;
   /**
-   * Hashed password using bcrypt or similar - never store plaintext
+   * Row last-updated timestamp (UTC).
    */
-  password: string;
+  updatedAt: Generated<Timestamp>;
+}
+
+export interface AuthVerification {
   /**
-   * Timestamp when user was last updated
+   * Row creation timestamp (UTC).
    */
-  updated: Generated<Timestamp>;
+  createdAt: Generated<Timestamp>;
+  /**
+   * When the verification challenge expires and is no longer valid.
+   */
+  expiresAt: Timestamp;
+  /**
+   * Primary key: UUID for the verification record.
+   */
+  id: Generated<string>;
+  /**
+   * Subject being verified (e.g., email address or user id).
+   */
+  identifier: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * Opaque verification value (token, code).
+   */
+  value: string;
 }
 
 export interface CrmCampaignContacts {
   /**
-   * Reference to the marketing campaign
+   * FK to crm.campaigns(id).
    */
   campaignId: string;
   /**
-   * Reference to the contact person
+   * FK to crm.contacts(id).
    */
   contactId: string;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the campaign-contact record.
+   */
   id: Generated<string>;
   /**
-   * When the last interaction occurred
+   * Timestamp of the last engagement event.
    */
   interactionDate: Timestamp | null;
   /**
-   * Current interaction status with campaign
+   * Engagement status for this contact.
    */
   status: CrmCampaignContactsStatus;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmCampaigns {
   /**
-   * Allocated budget for the campaign
+   * Budget allocated to the campaign.
    */
   budget: Generated<Numeric | null>;
-  created: Generated<Timestamp>;
   /**
-   * Detailed campaign description
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Optional campaign description.
    */
   description: string | null;
   /**
-   * Campaign end date
+   * Campaign end date (optional).
    */
   endDate: Timestamp | null;
+  /**
+   * Primary key: UUID for the campaign.
+   */
   id: Generated<string>;
   /**
-   * Campaign name or title
+   * Campaign name.
    */
   name: string;
   /**
-   * Campaign start date
+   * Campaign start date.
    */
   startDate: Timestamp;
   /**
-   * Current campaign status
+   * Current campaign status.
    */
   status: CrmCampaignStatus;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmCases {
   /**
-   * When the case was closed
+   * When the case was closed (if applicable).
    */
   closedAt: Timestamp | null;
   /**
-   * Associated contact who reported the case
+   * FK to crm.contacts(id) who opened/owns the case.
    */
   contactId: string | null;
-  created: Generated<Timestamp>;
   /**
-   * Detailed case description
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Detailed description of the case.
    */
   description: string;
+  /**
+   * Primary key: UUID for the case.
+   */
   id: Generated<string>;
   /**
-   * Case priority level
+   * Priority level.
    */
   priority: CrmCasePriority;
   /**
-   * Current case status
+   * Current status of the case.
    */
   status: CrmCaseStatus;
   /**
-   * Brief summary of the case
+   * Case subject/title.
    */
   subject: string;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmCompanies {
-  addressId: string | null;
-  created: Generated<Timestamp>;
   /**
-   * Detailed company description
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Optional description/notes about the company.
    */
   description: string | null;
   /**
-   * Primary contact email address
+   * Primary contact email for the company.
    */
   email: string | null;
+  /**
+   * Primary key: UUID for the company.
+   */
   id: Generated<string>;
   /**
-   * Business industry classification
+   * Industry classification.
    */
   industry: string | null;
   /**
-   * Company display name
+   * Unique company name.
    */
   name: string;
   /**
-   * Primary contact phone number
+   * Main phone number for the company.
    */
   phoneNumber: string | null;
-  updated: Generated<Timestamp>;
   /**
-   * Company website URL
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * Company website URL.
    */
   website: string | null;
 }
 
 export interface CrmContacts {
-  addressId: string | null;
   /**
-   * Contact birth date for relationship building
+   * Birth date of the contact (optional).
    */
   birthDate: Timestamp | null;
   /**
-   * Reference to associated company
+   * FK to crm.companies(id) if the contact is associated with a company.
    */
   companyId: string | null;
-  created: Generated<Timestamp>;
   /**
-   * Unique contact email address
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Unique email address of the contact.
    */
   email: string;
   /**
-   * Contact first name
+   * Contact first name.
    */
   firstName: string;
+  /**
+   * Primary key: UUID for the contact.
+   */
   id: Generated<string>;
   /**
-   * Professional role or position
+   * Job title/role of the contact.
    */
   jobTitle: string | null;
   /**
-   * Contact last name
+   * Contact last name.
    */
   lastName: string;
   /**
-   * Origin of lead acquisition
+   * Where this contact originated (e.g., referral, web, event).
    */
   leadSource: string | null;
   /**
-   * Contact phone number
+   * Phone number of the contact.
    */
   phoneNumber: string | null;
   /**
-   * Current relationship status with contact
+   * Lifecycle status of the contact.
    */
-  status: CrmContactStatus;
-  updated: Generated<Timestamp>;
+  status: Generated<CrmContactStatus>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmInteractions {
   /**
-   * Associated contact person
+   * FK to crm.contacts(id) if linked to a contact.
    */
   contactId: string | null;
-  created: Generated<Timestamp>;
   /**
-   * Detailed notes about the interaction
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Detailed notes of the interaction.
    */
   description: string | null;
+  /**
+   * Primary key: UUID for the interaction record.
+   */
   id: Generated<string>;
   /**
-   * When the interaction occurred
+   * When the interaction occurred.
    */
   interactionDate: Timestamp;
   /**
-   * Associated sales opportunity
+   * FK to crm.opportunities(id) if linked to an opportunity.
    */
   opportunityId: string | null;
   /**
-   * Brief summary or subject of the interaction
+   * Subject or short title.
    */
   subject: string | null;
   /**
-   * Type of interaction (call, email, meeting, etc.)
+   * Interaction type.
    */
   type: CrmInteractionType;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmInvoiceLineItems {
-  created: Generated<Timestamp>;
   /**
-   * Description of service or charge
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Description of the billed item or service.
    */
   description: string;
+  /**
+   * Primary key: UUID for the line item.
+   */
   id: Generated<string>;
+  /**
+   * FK to crm.invoices(id) this item belongs to.
+   */
   invoiceId: string;
   /**
-   * Calculated total for this line item
+   * Computed total for the line = unit_price * quantity.
    */
   lineTotal: Generated<Numeric | null>;
   /**
-   * Quantity of service units
+   * Quantity for the item (must be > 0).
    */
   quantity: Generated<Numeric>;
+  /**
+   * Optional FK to lms.shipments(id) this charge relates to.
+   */
   shipmentId: string | null;
   /**
-   * Price per unit
+   * Unit price for this item.
    */
   unitPrice: Numeric;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmInvoices {
+  /**
+   * FK to crm.companies(id) for the billed company.
+   */
   companyId: string | null;
+  /**
+   * FK to crm.contacts(id) for the billed contact.
+   */
   contactId: string | null;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * ISO-4217 currency code.
+   */
   currency: Generated<string>;
+  /**
+   * Payment due date.
+   */
   dueDate: Timestamp;
+  /**
+   * Primary key: UUID for the invoice.
+   */
   id: Generated<string>;
+  /**
+   * Date when the invoice was issued.
+   */
   invoiceDate: Timestamp;
   /**
-   * Unique invoice identifier
+   * Unique invoice number (human-readable).
    */
   invoiceNumber: string;
   /**
-   * Payment terms and conditions
+   * Payment terms (e.g., Net-30).
    */
   paymentTerms: string | null;
   /**
-   * Current payment status
+   * Invoice lifecycle status (see crm.invoice_status).
    */
   status: CrmInvoiceStatus;
   /**
-   * Invoice subtotal before taxes
+   * Subtotal amount before taxes.
    */
   subtotal: Numeric;
   /**
-   * Total tax amount
+   * Tax amount applied to the invoice.
    */
   taxAmount: Generated<Numeric>;
   /**
-   * Final invoice total
+   * Total amount billed (subtotal + taxes + adjustments).
    */
-  totalAmount: Numeric;
-  updated: Generated<Timestamp>;
+  totalAmount: Generated<Numeric>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmLeads {
   /**
-   * Associated company name
+   * Company name associated with the lead (free text).
    */
   companyName: string | null;
   /**
-   * Reference to contact if lead was converted
+   * FK to crm.contacts(id) when this lead has been converted.
    */
   convertedToContactId: string | null;
-  created: Generated<Timestamp>;
   /**
-   * Unique lead email address
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Unique email address of the lead.
    */
   email: string;
   /**
-   * Lead first name
+   * Lead first name.
    */
   firstName: string;
+  /**
+   * Primary key: UUID for the lead.
+   */
   id: Generated<string>;
   /**
-   * Lead last name
+   * Lead last name.
    */
   lastName: string;
   /**
-   * Numerical score indicating lead quality (0-100)
+   * Numeric score indicating likelihood to convert.
    */
   leadScore: Generated<number>;
   /**
-   * Channel or method of lead acquisition
+   * Where this lead originated (e.g., referral, web, event).
    */
   leadSource: string | null;
   /**
-   * Current stage in lead qualification process
+   * Lead pipeline status.
    */
-  leadStatus: CrmLeadStatus;
+  leadStatus: Generated<CrmLeadStatus>;
   /**
-   * Lead contact phone number
+   * Phone number of the lead.
    */
   phoneNumber: string | null;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmNotifications {
   /**
-   * Communication channel used
+   * Channel used to deliver the notification.
    */
   channel: CrmNotificationChannel;
-  contactId: string;
-  created: Generated<Timestamp>;
   /**
-   * Status of notification delivery
+   * FK to crm.contacts(id) designated to receive the message.
+   */
+  contactId: string;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Delivery result (pending/sent/delivered/failed/bounced).
    */
   deliveryStatus: CrmNotificationDeliveryStatus;
+  /**
+   * Primary key: UUID for the notification.
+   */
   id: Generated<string>;
+  /**
+   * Message body (rendered content).
+   */
   message: string;
   /**
-   * Type of notification sent
+   * Notification type/category.
    */
   notificationType: CrmNotificationType;
   /**
-   * Recipient contact information
+   * Recipient address/identifier (email/phone/webhook URL).
    */
   recipient: string;
+  /**
+   * Timestamp when the message was sent (if applicable).
+   */
   sentAt: Timestamp | null;
+  /**
+   * FK to lms.shipments(id) that the notification concerns.
+   */
   shipmentId: string;
+  /**
+   * Optional subject/title for the message (email-like).
+   */
   subject: string | null;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmOpportunities {
   /**
-   * Expected revenue amount in base currency
+   * Expected revenue amount for the opportunity.
    */
   amount: Generated<Numeric>;
   /**
-   * Expected or actual closing date
+   * Planned/actual close date.
    */
   closeDate: Timestamp | null;
   /**
-   * Reference to the company for this opportunity
+   * FK to crm.companies(id) representing the account.
    */
   companyId: string | null;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the opportunity.
+   */
   id: Generated<string>;
   /**
-   * Descriptive name for the opportunity
+   * Short name/label for the opportunity.
    */
   name: string;
   /**
-   * Main contact person for this opportunity
+   * FK to crm.contacts(id) for the primary contact.
    */
   primaryContactId: string | null;
   /**
-   * Percentage probability of closing (0-100)
+   * Win probability percentage (0-100).
    */
   probability: Generated<Numeric>;
   /**
-   * Current stage in the sales process
+   * Sales pipeline stage.
    */
   stage: CrmOpportunityStage;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmOpportunityProducts {
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the line item.
+   */
   id: Generated<string>;
   /**
-   * Reference to the sales opportunity
+   * FK to crm.opportunities(id).
    */
   opportunityId: string;
   /**
-   * Reference to the product
+   * FK to crm.products(id).
    */
   productId: string;
   /**
-   * Number of units for this product in the opportunity
+   * Quantity of the product.
    */
   quantity: Generated<Numeric>;
   /**
-   * Calculated total price (quantity × unit_price)
+   * Computed total = quantity * unit_price.
    */
   totalPrice: Generated<Numeric | null>;
   /**
-   * Price per unit for this product in this opportunity
+   * Unit price applied for this line item (may differ from product base price).
    */
   unitPrice: Numeric;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface CrmProducts {
-  created: Generated<Timestamp>;
   /**
-   * Detailed product description
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Product description.
    */
   description: string | null;
+  /**
+   * Primary key: UUID for the product.
+   */
   id: Generated<string>;
   /**
-   * Product name or title
+   * Unique product name.
    */
   name: string;
   /**
-   * Base price for the product
+   * Base price for the product.
    */
   price: Numeric;
   /**
-   * Stock Keeping Unit identifier
+   * Stock-keeping unit code (unique).
    */
   sku: string | null;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+}
+
+export interface HdbCatalogHdbActionLog {
+  actionName: string | null;
+  createdAt: Generated<Timestamp>;
+  errors: Json | null;
+  id: Generated<string>;
+  inputPayload: Json;
+  requestHeaders: Json;
+  responsePayload: Json | null;
+  responseReceivedAt: Timestamp | null;
+  sessionVariables: Json;
+  status: string;
+}
+
+export interface HdbCatalogHdbCronEventInvocationLogs {
+  createdAt: Generated<Timestamp | null>;
+  eventId: string | null;
+  id: Generated<string>;
+  request: Json | null;
+  response: Json | null;
+  status: number | null;
+}
+
+export interface HdbCatalogHdbCronEvents {
+  createdAt: Generated<Timestamp | null>;
+  id: Generated<string>;
+  nextRetryAt: Timestamp | null;
+  scheduledTime: Timestamp;
+  status: Generated<string>;
+  tries: Generated<number>;
+  triggerName: string;
+}
+
+export interface HdbCatalogHdbMetadata {
+  id: number;
+  metadata: Json;
+  resourceVersion: Generated<number>;
+}
+
+export interface HdbCatalogHdbScheduledEventInvocationLogs {
+  createdAt: Generated<Timestamp | null>;
+  eventId: string | null;
+  id: Generated<string>;
+  request: Json | null;
+  response: Json | null;
+  status: number | null;
+}
+
+export interface HdbCatalogHdbScheduledEvents {
+  comment: string | null;
+  createdAt: Generated<Timestamp | null>;
+  headerConf: Json | null;
+  id: Generated<string>;
+  nextRetryAt: Timestamp | null;
+  payload: Json | null;
+  retryConf: Json | null;
+  scheduledTime: Timestamp;
+  status: Generated<string>;
+  tries: Generated<number>;
+  webhookConf: Json;
+}
+
+export interface HdbCatalogHdbSchemaNotifications {
+  id: number;
+  instanceId: string;
+  notification: Json;
+  resourceVersion: Generated<number>;
+  updatedAt: Generated<Timestamp | null>;
+}
+
+export interface HdbCatalogHdbVersion {
+  cliState: Generated<Json>;
+  consoleState: Generated<Json>;
+  eeClientId: string | null;
+  eeClientSecret: string | null;
+  hasuraUuid: Generated<string>;
+  upgradedOn: Timestamp;
+  version: string;
 }
 
 export interface LmsAddresses {
   /**
-   * Primary address line (street number and name)
+   * Address line 1 (street, building, house number).
    */
   addressLine1: string;
   /**
-   * Secondary address line (apartment, suite, etc.)
+   * Address line 2 (apartment, suite, unit). Optional.
    */
   addressLine2: string | null;
   /**
-   * Type of address usage
+   * Intended usage of the address.
    */
   addressType: LmsAddressType;
   /**
-   * City name
+   * City or locality.
    */
   city: string;
   /**
-   * ISO 3166-1 alpha-3 country code
+   * ISO 3166-1 alpha-3 (three-letter) country code.
    */
   country: string;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the address record.
+   */
   id: Generated<string>;
   /**
-   * Whether address has been verified against postal service
+   * Whether the address has been validated/standardized.
    */
   isValidated: Generated<boolean>;
   /**
-   * Latitude coordinate for mapping
+   * Latitude in decimal degrees; part of unique pair (latitude, longitude) to prevent duplicate geocoded points.
    */
   latitude: Numeric | null;
   /**
-   * Longitude coordinate for mapping
+   * Longitude in decimal degrees; part of unique pair (latitude, longitude) to prevent duplicate geocoded points.
    */
   longitude: Numeric | null;
   /**
-   * Postal or ZIP code
+   * ZIP/postal code.
    */
   postalCode: string;
   /**
-   * State or province
+   * State, province, or region.
    */
   state: string;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsPackages {
   /**
-   * Description of package contents
+   * Short description of package contents.
    */
   contentsDescription: string | null;
-  created: Generated<Timestamp>;
   /**
-   * Declared value for customs and insurance
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Declared value for customs/insurance.
    */
   declaredValue: Numeric | null;
   /**
-   * Package height in cm
+   * Height (cm).
    */
   height: Numeric | null;
+  /**
+   * Primary key: UUID for the package.
+   */
   id: Generated<string>;
   /**
-   * Package length in cm
+   * Length (cm).
    */
   length: Numeric | null;
   /**
-   * Package identifier within shipment
+   * Shipment-local identifier for the package (unique per shipment).
    */
   packageNumber: string;
   /**
-   * Physical package type
+   * Packaging type (see lms.package_type).
    */
   packageType: LmsPackageType;
-  shipmentId: string;
-  updated: Generated<Timestamp>;
   /**
-   * Package weight in kg
+   * FK to lms.shipments(id).
+   */
+  shipmentId: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * Weight of the package (kg).
    */
   weight: Numeric;
   /**
-   * Package width in cm
+   * Width (cm).
    */
   width: Numeric | null;
 }
 
 export interface LmsPricingRates {
   /**
-   * Base shipping cost in PHP
+   * Base rate component.
    */
   baseRate: Numeric;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * FK to lms.pricing_zones(id) for destination.
+   */
   destinationZoneId: string;
+  /**
+   * Date when this rate becomes effective.
+   */
   effectiveDate: Timestamp;
+  effectiveRange: Generated<string | null>;
+  /**
+   * Date when this rate expires (optional).
+   */
   expiryDate: Timestamp | null;
   /**
-   * Fuel surcharge percentage
+   * Fuel surcharge percentage.
    */
   fuelSurchargeRate: Generated<Numeric | null>;
+  /**
+   * Primary key: UUID for the rate row.
+   */
   id: Generated<string>;
+  /**
+   * FK to lms.pricing_zones(id) for origin.
+   */
   originZoneId: string;
   /**
-   * Additional cost per kg in PHP
+   * Per-kilogram rate component.
    */
   perKgRate: Numeric;
-  serviceId: string;
-  updated: Generated<Timestamp>;
   /**
-   * Maximum weight for this rate in kg
+   * FK to lms.shipping_services(id).
+   */
+  serviceId: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * Maximum weight for the bracket (kg).
    */
   weightMax: Numeric;
   /**
-   * Minimum weight for this rate in kg
+   * Minimum weight for the bracket (kg).
    */
   weightMin: Numeric;
+  weightRange: Generated<string | null>;
 }
 
 export interface LmsPricingZoneCountries {
   /**
-   * ISO 3166-1 alpha-3 country code
+   * ISO-3166-1 alpha-3 country code belonging to the zone.
    */
   countryCode: string;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the mapping row.
+   */
   id: Generated<string>;
+  /**
+   * FK to lms.pricing_zones(id).
+   */
   pricingZoneId: string;
 }
 
 export interface LmsPricingZones {
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the pricing zone.
+   */
   id: Generated<string>;
   /**
-   * Zone display name
+   * Human-readable name for the zone.
    */
   name: string;
-  updated: Generated<Timestamp>;
   /**
-   * Short code for zone identification
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * Short unique code for the zone.
    */
   zoneCode: string;
 }
 
 export interface LmsProviderInvoiceLineItems {
-  created: Generated<Timestamp>;
   /**
-   * Description of service or charge
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Description of the charge.
    */
   description: string;
+  /**
+   * Primary key: UUID for the line item.
+   */
   id: Generated<string>;
   /**
-   * Total for this line item
+   * Computed total = unit_price * quantity.
    */
   lineTotal: Generated<Numeric | null>;
+  /**
+   * FK to lms.provider_invoices(id).
+   */
   providerInvoiceId: string;
   /**
-   * Quantity of service units
+   * Quantity (must be > 0).
    */
   quantity: Generated<number>;
-  transportLegId: string;
+  transportLegId: string | null;
   /**
-   * Price per unit
+   * Unit price.
    */
   unitPrice: Numeric;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsProviderInvoices {
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * ISO-4217 currency code.
+   */
   currency: Generated<string>;
+  /**
+   * Payment due date.
+   */
   dueDate: Timestamp;
+  /**
+   * Primary key: UUID for the invoice.
+   */
   id: Generated<string>;
+  /**
+   * Invoice issue date.
+   */
   invoiceDate: Timestamp;
   /**
-   * Provider invoice number
+   * Unique invoice number within the provider.
    */
   invoiceNumber: string;
+  /**
+   * Date when payment was made.
+   */
   paymentDate: Timestamp | null;
+  /**
+   * FK to lms.transportation_providers(id).
+   */
   providerId: string;
   /**
-   * Current payment status
+   * Invoice status (see lms.provider_invoice_status).
    */
-  status: LmsProviderInvoiceStatus;
+  status: Generated<LmsProviderInvoiceStatus>;
   /**
-   * Invoice subtotal before taxes
+   * Subtotal amount before taxes.
    */
   subtotal: Numeric;
   /**
-   * Total tax amount
+   * Tax amount.
    */
   taxAmount: Generated<Numeric | null>;
   /**
-   * Final invoice total
+   * Computed total = subtotal + tax_amount.
    */
   totalAmount: Generated<Numeric | null>;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsProviderPerformance {
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the performance row.
+   */
   id: Generated<string>;
   /**
-   * Date when metric was measured
+   * When the metric was measured.
    */
   measurementDate: Timestamp;
   /**
-   * Type of performance metric being measured
+   * Metric category (see lms.performance_metric_type).
    */
   metricType: LmsPerformanceMetricType;
   /**
-   * Numeric value of the metric
+   * Numeric value of the metric.
    */
   metricValue: Numeric | null;
+  /**
+   * Optional notes/details.
+   */
   notes: string | null;
+  /**
+   * FK to lms.transportation_providers(id).
+   */
   providerId: string;
+  /**
+   * FK to lms.shipments(id).
+   */
   shipmentId: string;
   transportLegId: string | null;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsProviderRates {
+  /**
+   * Base rate component.
+   */
   baseRate: Numeric;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * ISO-4217 currency code.
+   */
   currency: Generated<string>;
+  /**
+   * FK to lms.pricing_zones(id) for destination.
+   */
   destinationZoneId: string;
+  /**
+   * Date when this rate becomes effective.
+   */
   effectiveDate: Timestamp;
+  effectiveRange: Generated<string | null>;
+  /**
+   * Date when this rate expires (optional).
+   */
   expiryDate: Timestamp | null;
+  /**
+   * Fuel surcharge percentage.
+   */
   fuelSurchargeRate: Generated<Numeric | null>;
+  /**
+   * Primary key: UUID for the provider rate row.
+   */
   id: Generated<string>;
+  /**
+   * FK to lms.pricing_zones(id) for origin.
+   */
   originZoneId: string;
+  /**
+   * Per-kilogram rate component.
+   */
   perKgRate: Numeric;
+  /**
+   * FK to lms.provider_services(id).
+   */
   providerServiceId: string;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * Maximum weight for the bracket (kg).
+   */
   weightMax: Numeric;
+  /**
+   * Minimum weight for the bracket (kg).
+   */
   weightMin: Numeric;
+  weightRange: Generated<string | null>;
 }
 
 export interface LmsProviderServiceDestinationCountries {
   /**
-   * ISO 3166-1 alpha-3 country code
+   * ISO-3166-1 alpha-3 destination country code.
    */
   countryCode: string;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the destination mapping.
+   */
   id: Generated<string>;
+  /**
+   * FK to lms.provider_services(id).
+   */
   providerServiceId: string;
 }
 
 export interface LmsProviderServiceMaxDimensions {
-  created: Generated<Timestamp>;
   /**
-   * Height in cm
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Max height (cm).
    */
   height: Numeric | null;
+  /**
+   * Primary key: UUID for the record.
+   */
   id: Generated<string>;
   /**
-   * Length in cm
+   * Max length (cm).
    */
   length: Numeric | null;
+  /**
+   * FK to lms.provider_services(id).
+   */
   providerServiceId: string;
   /**
-   * Width in cm
+   * Max width (cm).
    */
   width: Numeric | null;
 }
 
 export interface LmsProviderServiceOriginCountries {
   /**
-   * ISO 3166-1 alpha-3 country code
+   * ISO-3166-1 alpha-3 origin country code.
    */
   countryCode: string;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the origin mapping.
+   */
   id: Generated<string>;
+  /**
+   * FK to lms.provider_services(id).
+   */
   providerServiceId: string;
 }
 
 export interface LmsProviderServices {
-  created: Generated<Timestamp>;
   /**
-   * Daily cutoff time for pickups
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Latest time for same-day processing.
    */
   cutoffTime: string | null;
+  /**
+   * Primary key: UUID for the provider service.
+   */
   id: Generated<string>;
+  /**
+   * Whether insurance is available.
+   */
   insuranceAvailable: Generated<boolean>;
+  /**
+   * Whether the provider service is active.
+   */
   isActive: Generated<boolean>;
+  /**
+   * Max allowed weight for this provider service.
+   */
   maxWeight: Numeric | null;
+  /**
+   * FK to lms.transportation_providers(id).
+   */
   providerId: string;
   /**
-   * Provider-specific service name
+   * Display name for the provider-specific service.
    */
   serviceName: string;
   /**
-   * Type of service offered
+   * Service type (see lms.service_type).
    */
   serviceType: LmsServiceType;
+  /**
+   * Whether tracking is supported by provider.
+   */
   trackingAvailable: Generated<boolean>;
+  /**
+   * Estimated maximum transit time (days).
+   */
   transitTimeMax: number | null;
+  /**
+   * Estimated minimum transit time (days).
+   */
   transitTimeMin: number | null;
   /**
-   * Mode of transportation
+   * Transport mode used by the service.
    */
   transportMode: LmsTransportMode;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsRoutes {
+  /**
+   * Actual arrival timestamp.
+   */
   actualArrival: Timestamp | null;
+  /**
+   * Actual departure timestamp.
+   */
   actualDeparture: Timestamp | null;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * FK to tms.drivers(id) assigned to this route.
+   */
   driverId: string | null;
+  /**
+   * Planned arrival timestamp.
+   */
   estimatedArrival: Timestamp | null;
+  /**
+   * Planned departure timestamp.
+   */
   estimatedDeparture: Timestamp | null;
+  /**
+   * Primary key: UUID for the route.
+   */
   id: Generated<string>;
   /**
-   * Date the route is scheduled
+   * Date of the route.
    */
   routeDate: Timestamp;
   /**
-   * Descriptive name for the route
+   * Route display name or code.
    */
   routeName: string;
   /**
-   * Current status of the route
+   * Current route status.
    */
   status: LmsRouteStatus;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * FK to tms.vehicles(id) used for this route.
+   */
   vehicleId: string | null;
 }
 
 export interface LmsRouteShipments {
+  /**
+   * Actual delivery timestamp.
+   */
   actualDelivery: Timestamp | null;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Planned delivery date for the stop.
+   */
   deliveryDate: Timestamp;
   /**
-   * Status of delivery attempt
+   * Per-shipment delivery status while on route.
    */
   deliveryStatus: LmsDeliveryStatus;
+  /**
+   * Planned delivery timestamp.
+   */
   estimatedDelivery: Timestamp | null;
+  /**
+   * Primary key: UUID for the route-shipment mapping.
+   */
   id: Generated<string>;
   /**
-   * Name of person who signed for delivery
+   * Recipient name/signature captured.
    */
   recipientSignature: string | null;
+  /**
+   * FK to lms.routes(id).
+   */
   routeId: string;
   /**
-   * Delivery order on the route
+   * Order of delivery for this shipment on the route.
    */
   sequenceNumber: number;
+  /**
+   * FK to lms.shipments(id).
+   */
   shipmentId: string;
+  /**
+   * Whether recipient signature is required.
+   */
   signatureRequired: Generated<boolean>;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsShipments {
-  assignedDepartmentId: string | null;
-  created: Generated<Timestamp>;
   /**
-   * User who created the shipment
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * FK to auth.users(id) who created the shipment.
    */
   createdBy: string | null;
   /**
-   * ISO 4217 currency code
+   * ISO-4217 currency code.
    */
   currency: Generated<string>;
+  /**
+   * Delivery date (actual).
+   */
   deliveryDate: Timestamp | null;
+  /**
+   * Estimated delivery date.
+   */
   estimatedDeliveryDate: Timestamp | null;
+  /**
+   * Primary key: UUID for the shipment.
+   */
   id: Generated<string>;
   /**
-   * Insurance coverage amount
+   * Insurance amount for the shipment (optional).
    */
   insuranceAmount: Numeric | null;
+  /**
+   * Pickup date (planned or actual).
+   */
   pickupDate: Timestamp | null;
   /**
-   * Primary method of transportation
+   * Primary transport mode (air/sea/road/rail).
    */
   primaryTransportMode: LmsTransportMode;
+  /**
+   * FK to lms.addresses(id) for delivery destination.
+   */
   receiverAddressId: string;
+  /**
+   * FK to crm.companies(id) for the receiver company.
+   */
   receiverCompanyId: string | null;
+  /**
+   * FK to crm.contacts(id) for the receiver contact.
+   */
   receiverContactId: string | null;
+  /**
+   * FK to lms.addresses(id) for pickup origin.
+   */
   senderAddressId: string;
+  /**
+   * FK to crm.companies(id) for the sender company.
+   */
   senderCompanyId: string | null;
+  /**
+   * FK to crm.contacts(id) for the sender contact.
+   */
   senderContactId: string | null;
+  /**
+   * FK to lms.shipping_services(id) used for rating/booking.
+   */
   serviceId: string;
+  /**
+   * Rated shipping cost (optional).
+   */
   shippingCost: Numeric | null;
+  /**
+   * Special handling instructions.
+   */
   specialInstructions: string | null;
   /**
-   * Current shipment status in delivery lifecycle
+   * Current shipment status.
    */
   status: LmsShipmentStatus;
   /**
-   * Declared value of shipment contents
+   * Declared total value of the shipment.
    */
   totalValue: Numeric | null;
   /**
-   * Combined weight of all packages in kg
+   * Total shipment weight (kg).
    */
   totalWeight: Numeric;
   /**
-   * Unique tracking identifier for customer reference
+   * Unique tracking number.
    */
   trackingNumber: string;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsShippingServiceMaxDimensions {
-  created: Generated<Timestamp>;
   /**
-   * Height in cm
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Max height allowed (cm by default).
    */
   height: Numeric | null;
+  /**
+   * Primary key: UUID for the record.
+   */
   id: Generated<string>;
   /**
-   * Length in cm
+   * Max length allowed (cm by default).
    */
   length: Numeric | null;
+  /**
+   * FK to lms.shipping_services(id).
+   */
   shippingServiceId: string;
   /**
-   * Width in cm
+   * Max width allowed (cm by default).
    */
   width: Numeric | null;
 }
 
 export interface LmsShippingServices {
-  created: Generated<Timestamp>;
   /**
-   * Maximum delivery time in hours
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Estimated maximum delivery time (days).
    */
   deliveryTimeMax: number | null;
   /**
-   * Minimum delivery time in hours
+   * Estimated minimum delivery time (days).
    */
   deliveryTimeMin: number | null;
   /**
-   * Detailed service description
+   * Optional service description.
    */
   description: string | null;
+  /**
+   * Primary key: UUID for the shipping service.
+   */
   id: Generated<string>;
+  /**
+   * Whether this service is currently available.
+   */
   isActive: Generated<boolean>;
   /**
-   * Maximum package weight in kg
+   * Max allowed weight for this service (kg by default).
    */
   maxWeight: Numeric | null;
   /**
-   * Service display name
+   * Service display name (unique).
    */
   name: string;
   /**
-   * Service category classification
+   * Service category (see lms.service_type).
    */
   serviceType: LmsServiceType;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsTrackingEvents {
-  created: Generated<Timestamp>;
   /**
-   * Human-readable event description
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Short description/details of the event.
    */
   eventDescription: string;
   /**
-   * Location where event occurred
+   * Optional free-text location for the event.
    */
   eventLocation: string | null;
   /**
-   * When the event occurred
+   * When the event occurred.
    */
   eventTimestamp: Timestamp;
   /**
-   * Type of tracking event
+   * Event type (see lms.tracking_event_type).
    */
   eventType: LmsTrackingEventType;
+  /**
+   * Primary key: UUID for the event.
+   */
   id: Generated<string>;
+  /**
+   * FK to lms.shipments(id).
+   */
   shipmentId: string;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsTransportationProviders {
+  /**
+   * FK to lms.addresses(id).
+   */
   addressId: string | null;
   /**
-   * API URL for integration
+   * API endpoint URL for provider integration.
    */
   apiEndpoint: string | null;
   /**
-   * API authentication key
+   * API key/secret for provider integration.
    */
   apiKey: string | null;
   /**
-   * Provider company name
+   * Legal/trading name of the provider.
    */
   companyName: string;
   /**
-   * Primary contact name
+   * Primary contact person name.
    */
   contactPerson: string | null;
-  contractEndDate: Timestamp | null;
-  contractStartDate: Timestamp | null;
-  created: Generated<Timestamp>;
   /**
-   * Primary contact email
+   * Contract end/renewal date.
+   */
+  contractEndDate: Timestamp | null;
+  /**
+   * Contract start date.
+   */
+  contractStartDate: Timestamp | null;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Contact email address.
    */
   email: string | null;
+  /**
+   * Primary key: UUID for the provider.
+   */
   id: Generated<string>;
+  /**
+   * Coverage amount for provider liability insurance.
+   */
   insuranceCoverage: Numeric | null;
+  /**
+   * Whether the provider is currently active.
+   */
   isActive: Generated<boolean>;
+  /**
+   * Payment terms (e.g., Net-30).
+   */
   paymentTerms: string | null;
   /**
-   * Provider performance rating (0-5 scale)
+   * Aggregate performance rating (0-5).
    */
   performanceRating: Numeric | null;
   /**
-   * Primary contact phone
+   * Contact phone number.
    */
   phoneNumber: string | null;
-  preferredByDepartmentId: string | null;
   /**
-   * Type of transportation service
+   * Provider category (see lms.provider_type).
    */
   providerType: LmsProviderType;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
 export interface LmsTransportLegs {
+  /**
+   * Actual delivery timestamp.
+   */
   actualDelivery: Timestamp | null;
+  /**
+   * Actual pickup timestamp.
+   */
   actualPickup: Timestamp | null;
+  /**
+   * Cost attributed to this leg.
+   */
   cost: Numeric | null;
-  created: Generated<Timestamp>;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * ISO-4217 currency code for the leg cost.
+   */
   currency: Generated<string | null>;
+  /**
+   * FK to lms.addresses(id) destination (optional).
+   */
   destinationAddressId: string | null;
+  /**
+   * FK to lms.warehouses(id) destination (optional).
+   */
   destinationWarehouseId: string | null;
+  /**
+   * FK to tms.drivers(id) assigned to this leg (if applicable).
+   */
   driverId: string | null;
+  /**
+   * Primary key: UUID for the transport leg.
+   */
   id: Generated<string>;
   /**
-   * Sequence order of this leg in the shipment journey
+   * Sequence number within the shipment (starts at 1).
    */
   legSequence: number;
+  /**
+   * FK to lms.addresses(id) origin (optional).
+   */
   originAddressId: string | null;
+  /**
+   * FK to lms.warehouses(id) origin (optional).
+   */
   originWarehouseId: string | null;
+  /**
+   * FK to lms.transportation_providers(id).
+   */
   providerId: string | null;
+  /**
+   * FK to lms.provider_services(id).
+   */
   providerServiceId: string | null;
   /**
-   * External provider tracking number
+   * Tracking number at the provider level (optional).
    */
   providerTrackingNumber: string | null;
+  /**
+   * Planned delivery timestamp.
+   */
   scheduledDelivery: Timestamp | null;
+  /**
+   * Planned pickup timestamp.
+   */
   scheduledPickup: Timestamp | null;
+  /**
+   * FK to lms.shipments(id).
+   */
   shipmentId: string;
+  /**
+   * Special handling or notes for this leg.
+   */
   specialInstructions: string | null;
   /**
-   * Current status of this transport leg
+   * Current status of the leg.
    */
   status: LmsLegStatus;
   /**
-   * Type of transportation leg
+   * Type of leg (pickup/linehaul/delivery/transfer).
    */
   transportType: LmsTransportLegType;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * FK to tms.vehicles(id) used for this leg (if applicable).
+   */
   vehicleId: string | null;
 }
 
 export interface LmsWarehouseInventories {
   /**
-   * When package arrived at warehouse
+   * When the package arrived at the warehouse.
    */
   arrivedAt: Timestamp | null;
-  created: Generated<Timestamp>;
   /**
-   * When package left warehouse
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * When the package departed the warehouse.
    */
   departedAt: Timestamp | null;
+  /**
+   * Primary key: UUID for the inventory record.
+   */
   id: Generated<string>;
   /**
-   * Specific location within warehouse (aisle, shelf, etc.)
+   * Optional location/shelf/bin code inside the warehouse.
    */
   locationCode: string | null;
+  /**
+   * FK to lms.packages(id).
+   */
   packageId: string;
+  /**
+   * FK to lms.shipments(id).
+   */
   shipmentId: string;
   /**
-   * Current status of package in warehouse
+   * Inventory status (see lms.warehouse_inventory_status).
    */
   status: LmsWarehouseInventoryStatus;
-  updated: Generated<Timestamp>;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * FK to lms.warehouses(id).
+   */
   warehouseId: string;
 }
 
 export interface LmsWarehouses {
+  /**
+   * FK to lms.addresses(id).
+   */
   addressId: string;
   /**
-   * Storage capacity in cubic meters
+   * Optional capacity number (unit depends on org policy).
    */
   capacity: number | null;
   /**
-   * Short code for warehouse identification
+   * Short unique code for the warehouse.
    */
   code: string;
-  created: Generated<Timestamp>;
-  departmentId: string | null;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the warehouse.
+   */
   id: Generated<string>;
+  /**
+   * Whether the warehouse is active.
+   */
   isActive: Generated<boolean>;
   /**
-   * Warehouse manager user reference
+   * FK to auth.users(id) managing this warehouse.
    */
   managerId: string | null;
   /**
-   * Warehouse display name
+   * Warehouse display name.
    */
   name: string;
-  updated: Generated<Timestamp>;
   /**
-   * Type of warehouse operation
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * Warehouse type (see lms.warehouse_type).
    */
   warehouseType: LmsWarehouseType;
 }
 
-export interface OrgDepartmentPermissions {
-  action: OrgPermissionStatus;
-  created: Generated<Timestamp>;
-  departmentId: string;
+export interface OrgOrganization {
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the organization.
+   */
   id: Generated<string>;
-  resource: string;
-  updated: Generated<Timestamp>;
-}
-
-export interface OrgDepartments {
   /**
-   * Department budget allocation
-   */
-  budget: Numeric | null;
-  /**
-   * Unique department code for identification
-   */
-  code: string;
-  created: Generated<Timestamp>;
-  /**
-   * Type of department (e.g., logistics, finance, operations)
-   */
-  departmentType: string;
-  description: string | null;
-  email: string | null;
-  id: Generated<string>;
-  isActive: Generated<boolean>;
-  /**
-   * Department manager user reference
-   */
-  managerId: string | null;
-  /**
-   * Department display name
+   * Human-readable organization name.
    */
   name: string;
-  phoneNumber: string | null;
-  updated: Generated<Timestamp>;
+  /**
+   * FK to auth.users(id) designating the org owner.
+   */
+  ownerId: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
-export interface OrgDepartmentTransportModes {
-  created: Generated<Timestamp>;
-  departmentId: string;
+export interface OrgRoleActions {
+  /**
+   * Permitted action from org.permission_actions.
+   */
+  action: OrgPermissionActions;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the role-action grant.
+   */
   id: Generated<string>;
   /**
-   * Whether this is the primary transport mode for the department
+   * FK to org.roles(id).
    */
-  isPrimary: Generated<boolean>;
+  roleId: string;
   /**
-   * Transport method (e.g., truck, rail, air, sea)
+   * Row last-updated timestamp (UTC).
    */
-  transportMode: string;
-  updated: Generated<Timestamp>;
+  updatedAt: Generated<Timestamp>;
 }
 
-export interface OrgDepartmentUserPermissions {
-  created: Generated<Timestamp>;
+export interface OrgRoles {
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Optional role description.
+   */
+  description: string | null;
+  /**
+   * Primary key: UUID for the role.
+   */
   id: Generated<string>;
-  permissionId: string;
+  /**
+   * Role name (e.g., admin, member).
+   */
+  name: string;
+  /**
+   * FK to org.organization(id) that owns this role.
+   */
+  orgId: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+}
+
+export interface OrgTeamMembers {
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the membership record.
+   */
+  id: Generated<string>;
+  /**
+   * FK to org.teams(id).
+   */
+  teamId: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * FK to auth.users(id).
+   */
   userId: string;
 }
 
-export interface OrgDepartmentUsers {
-  assignedDate: Generated<Timestamp>;
-  created: Generated<Timestamp>;
-  departmentId: string;
+export interface OrgTeamResouces {
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the resource.
+   */
   id: Generated<string>;
-  isActive: Generated<boolean>;
-  role: string;
-  updated: Generated<Timestamp>;
-  userId: string;
+  /**
+   * Resource identifier string.
+   */
+  resource: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
-export interface OrgDrivers {
-  created: Generated<Timestamp>;
+export interface OrgTeamRoles {
+  /**
+   * FK to org.roles(id).
+   */
+  roleId: string;
+  /**
+   * FK to org.teams(id).
+   */
+  teamId: string;
+}
+
+export interface OrgTeams {
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Optional team description.
+   */
+  description: string | null;
+  /**
+   * Primary key: UUID for the team.
+   */
+  id: Generated<string>;
+  /**
+   * Team name.
+   */
+  name: string;
+  /**
+   * FK to org.organization(id) that owns this team.
+   */
+  orgId: string;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+}
+
+export interface TmsDrivers {
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Contact email address (unique).
+   */
   email: string;
   /**
-   * Company employee identification number
+   * Internal employee identifier (unique).
    */
   employeeId: string;
+  /**
+   * Driver first name.
+   */
   firstName: string;
+  /**
+   * Date the driver was hired.
+   */
   hireDate: Timestamp;
+  /**
+   * Primary key: UUID for the driver.
+   */
   id: Generated<string>;
+  /**
+   * Driver last name.
+   */
   lastName: string;
   /**
-   * Driver license number
+   * Government driver's license number (unique).
    */
   licenseNumber: string;
+  /**
+   * Contact phone number for the driver.
+   */
   phoneNumber: string;
   /**
-   * Current employment status
+   * Current driver status (see tms.driver_status).
    */
-  status: OrgDriverStatus;
-  updated: Generated<Timestamp>;
+  status: TmsDriverStatus;
+  /**
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
 }
 
-export interface OrgVehicles {
+export interface TmsVehicles {
   /**
-   * Maximum volume capacity in cubic meters
+   * Volume capacity in cubic meters (or configured unit).
    */
   capacityVolume: Numeric | null;
   /**
-   * Maximum weight capacity in kg
+   * Weight capacity in kilograms (or configured unit).
    */
   capacityWeight: Numeric | null;
-  created: Generated<Timestamp>;
-  departmentId: string | null;
+  /**
+   * Row creation timestamp (UTC).
+   */
+  createdAt: Generated<Timestamp>;
+  /**
+   * Primary key: UUID for the vehicle.
+   */
   id: Generated<string>;
   /**
-   * Government license plate number
+   * License plate number (unique).
    */
   licensePlate: string;
+  /**
+   * Vehicle manufacturer (make).
+   */
   make: string;
+  /**
+   * Vehicle model.
+   */
   model: string;
   /**
-   * Current operational status
+   * Current operational status.
    */
-  status: OrgVehicleStatus;
-  updated: Generated<Timestamp>;
+  status: TmsVehicleStatus;
   /**
-   * Company vehicle identification number
+   * Row last-updated timestamp (UTC).
+   */
+  updatedAt: Generated<Timestamp>;
+  /**
+   * Internal vehicle identifier (unique).
    */
   vehicleNumber: string;
   /**
-   * Type of vehicle
+   * Vehicle type (see tms.vehicle_type).
    */
-  vehicleType: OrgVehicleType;
-  warehouseId: string | null;
+  vehicleType: TmsVehicleType;
+  /**
+   * Model year; constrained to a reasonable range.
+   */
   year: number;
 }
 
 export interface DB {
   _SqlxMigrations: _SqlxMigrations;
-  authUsers: AuthUsers;
-  crmCampaignContacts: CrmCampaignContacts;
-  crmCampaigns: CrmCampaigns;
-  crmCases: CrmCases;
-  crmCompanies: CrmCompanies;
-  crmContacts: CrmContacts;
-  crmInteractions: CrmInteractions;
-  crmInvoiceLineItems: CrmInvoiceLineItems;
-  crmInvoices: CrmInvoices;
-  crmLeads: CrmLeads;
-  crmNotifications: CrmNotifications;
-  crmOpportunities: CrmOpportunities;
-  crmOpportunityProducts: CrmOpportunityProducts;
-  crmProducts: CrmProducts;
-  lmsAddresses: LmsAddresses;
-  lmsPackages: LmsPackages;
-  lmsPricingRates: LmsPricingRates;
-  lmsPricingZoneCountries: LmsPricingZoneCountries;
-  lmsPricingZones: LmsPricingZones;
-  lmsProviderInvoiceLineItems: LmsProviderInvoiceLineItems;
-  lmsProviderInvoices: LmsProviderInvoices;
-  lmsProviderPerformance: LmsProviderPerformance;
-  lmsProviderRates: LmsProviderRates;
-  lmsProviderServiceDestinationCountries: LmsProviderServiceDestinationCountries;
-  lmsProviderServiceMaxDimensions: LmsProviderServiceMaxDimensions;
-  lmsProviderServiceOriginCountries: LmsProviderServiceOriginCountries;
-  lmsProviderServices: LmsProviderServices;
-  lmsRoutes: LmsRoutes;
-  lmsRouteShipments: LmsRouteShipments;
-  lmsShipments: LmsShipments;
-  lmsShippingServiceMaxDimensions: LmsShippingServiceMaxDimensions;
-  lmsShippingServices: LmsShippingServices;
-  lmsTrackingEvents: LmsTrackingEvents;
-  lmsTransportationProviders: LmsTransportationProviders;
-  lmsTransportLegs: LmsTransportLegs;
-  lmsWarehouseInventories: LmsWarehouseInventories;
-  lmsWarehouses: LmsWarehouses;
-  orgDepartmentPermissions: OrgDepartmentPermissions;
-  orgDepartments: OrgDepartments;
-  orgDepartmentTransportModes: OrgDepartmentTransportModes;
-  orgDepartmentUserPermissions: OrgDepartmentUserPermissions;
-  orgDepartmentUsers: OrgDepartmentUsers;
-  orgDrivers: OrgDrivers;
-  orgVehicles: OrgVehicles;
+  "auth.accounts": AuthAccounts;
+  "auth.sessions": AuthSessions;
+  "auth.users": AuthUsers;
+  "auth.verification": AuthVerification;
+  "crm.campaignContacts": CrmCampaignContacts;
+  "crm.campaigns": CrmCampaigns;
+  "crm.cases": CrmCases;
+  "crm.companies": CrmCompanies;
+  "crm.contacts": CrmContacts;
+  "crm.interactions": CrmInteractions;
+  "crm.invoiceLineItems": CrmInvoiceLineItems;
+  "crm.invoices": CrmInvoices;
+  "crm.leads": CrmLeads;
+  "crm.notifications": CrmNotifications;
+  "crm.opportunities": CrmOpportunities;
+  "crm.opportunityProducts": CrmOpportunityProducts;
+  "crm.products": CrmProducts;
+  "hdbCatalog.hdbActionLog": HdbCatalogHdbActionLog;
+  "hdbCatalog.hdbCronEventInvocationLogs": HdbCatalogHdbCronEventInvocationLogs;
+  "hdbCatalog.hdbCronEvents": HdbCatalogHdbCronEvents;
+  "hdbCatalog.hdbMetadata": HdbCatalogHdbMetadata;
+  "hdbCatalog.hdbScheduledEventInvocationLogs": HdbCatalogHdbScheduledEventInvocationLogs;
+  "hdbCatalog.hdbScheduledEvents": HdbCatalogHdbScheduledEvents;
+  "hdbCatalog.hdbSchemaNotifications": HdbCatalogHdbSchemaNotifications;
+  "hdbCatalog.hdbVersion": HdbCatalogHdbVersion;
+  "lms.addresses": LmsAddresses;
+  "lms.packages": LmsPackages;
+  "lms.pricingRates": LmsPricingRates;
+  "lms.pricingZoneCountries": LmsPricingZoneCountries;
+  "lms.pricingZones": LmsPricingZones;
+  "lms.providerInvoiceLineItems": LmsProviderInvoiceLineItems;
+  "lms.providerInvoices": LmsProviderInvoices;
+  "lms.providerPerformance": LmsProviderPerformance;
+  "lms.providerRates": LmsProviderRates;
+  "lms.providerServiceDestinationCountries": LmsProviderServiceDestinationCountries;
+  "lms.providerServiceMaxDimensions": LmsProviderServiceMaxDimensions;
+  "lms.providerServiceOriginCountries": LmsProviderServiceOriginCountries;
+  "lms.providerServices": LmsProviderServices;
+  "lms.routes": LmsRoutes;
+  "lms.routeShipments": LmsRouteShipments;
+  "lms.shipments": LmsShipments;
+  "lms.shippingServiceMaxDimensions": LmsShippingServiceMaxDimensions;
+  "lms.shippingServices": LmsShippingServices;
+  "lms.trackingEvents": LmsTrackingEvents;
+  "lms.transportationProviders": LmsTransportationProviders;
+  "lms.transportLegs": LmsTransportLegs;
+  "lms.warehouseInventories": LmsWarehouseInventories;
+  "lms.warehouses": LmsWarehouses;
+  "org.organization": OrgOrganization;
+  "org.roleActions": OrgRoleActions;
+  "org.roles": OrgRoles;
+  "org.teamMembers": OrgTeamMembers;
+  "org.teamResouces": OrgTeamResouces;
+  "org.teamRoles": OrgTeamRoles;
+  "org.teams": OrgTeams;
+  "tms.drivers": TmsDrivers;
+  "tms.vehicles": TmsVehicles;
 }
