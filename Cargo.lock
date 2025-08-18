@@ -1090,6 +1090,20 @@ checksum = "241eaef5fd12c88705a01fc1066c48c4b36e0dd4377dcdc7ec3942cea7a69956"
 [[package]]
 name = "lms"
 version = "0.1.0"
+dependencies = [
+ "async-graphql",
+ "auth",
+ "chrono",
+ "crm",
+ "rstest",
+ "sea-query",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "uuid",
+ "validator",
+]
 
 [[package]]
 name = "lock_api"
@@ -2240,6 +2254,23 @@ name = "tinyvec_macros"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
+
+[[package]]
+name = "tms"
+version = "0.1.0"
+dependencies = [
+ "async-graphql",
+ "auth",
+ "chrono",
+ "rstest",
+ "sea-query",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "uuid",
+ "validator",
+]
 
 [[package]]
 name = "tokio"
